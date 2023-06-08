@@ -1,0 +1,12 @@
+Week 1:
+
+    Attended the lab, introduced myself to the class, and found a group. Talked with my group members about the task during the lab and we all agreed to each read the project list and select preferable projects. 
+    We selected a meeting time for next week to be Tuesday 7pm and I spent the rest of the week reading the projects and choosing projects 1, 5, 8, 9. Joining the Jira, Confluence, and GitHub group.
+
+Week 2:
+
+    Attended a meeting on Tuesday to decide on a project, we ended up choosing project 1 as that was the most prefereable. As a group we read through the project specification and requirements and delegated / volunteered for work to do. 
+    Clarified the project spec and forumlated questions for Wednesday's lab.
+
+    Attended the lab on Wednesday. Asked the lab tutor some questions regarding the project specification. My group members and I each created a few user stories and from these stories we brainstormed and discussed the 8 functionalities 
+    we are required to implement. During the lab we settled on 6 core functionalities with the novel functionalities left open for further research. A couple functionalities I came up with were QR codes and guest logins and loyalty program. 
