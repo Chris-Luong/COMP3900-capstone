@@ -1,13 +1,23 @@
-Week 1:
-Group formed and named. Completed expected tasks as a group during Week 1 Lab, including: registering group on Moodle, adding members to the group, Jira registration and contact exchange.
+WEEK 1:
+
+
+Wednesday: Group formed and named. Completed expected tasks as a group during Week 1 Lab, including: registering group on Moodle, adding members to the group, Jira registration and contact exchange.
 As a group, we discussed prior backend and frontend experience. Outlined tasks to complete during the week, like choosing a project idea and set up a new meeting time to discuss those tasks.
 
-Week 2:
-On Tuesday, we decided on project 1 (wait management) and worked through the given project proposal requirements together so that everyone could see what needed to be done in one Google doc.
+WEEK 2:
+
+
+Tuesday: We decided on project 1 (wait management) and worked through the given project proposal requirements together so that everyone could see what needed to be done in one Google doc.
 We worked on compiling drawbacks and problems of existing wait management systems on a document Gungeet started. We also broke down requirements into smaller tasks to tackle over the next weeks.
 Questions and uncertainties were compiled to ask during the lab. Some user stories were made though we were unsure of the structure so left some questions for the tutorial.
 
-On Wednesday, we began writing user stories for potentially core features and discussed what 8 functionalities we should have. These were based off the user stories which we made using the
+Wednesday: We began writing user stories for potentially core features and discussed what 8 functionalities we should have. These were based off the user stories which we made using the
 information given in the project description, We had difficulties coming up with novel functions and left that to be an individual task, where each member
 would be given time to research their own ideas. We aim to discuss these ideas in our next meeting. We discussed how to structure our core features and assigned
 each to a member. Each member should try to expand on these features. We also set our weekly meetings to be on Tuesday evenings and Saturday mornings in addition to our Wednesday tutorials.
+We decided on having meetings on Monday evenings and Saturday mornings in addition to our tutorials for progress checks and discussions.
+
+Saturday: We discussed the features that we have come up with and began drafting the proposal. I worked on the notification and booking features. We discussed other ideas for our novel
+functionalities and decided sending a few to the tutor for confirmation (I suggested that an new idea for the loyalty program could reward members with a special menu or an express queue).
+I also rearranged the meeting minutes structure so that it was easier to see what the agenda, actionable and summary of each meeting was. We agreed to create user stories and storyboards
+(I will help Grace and Alan with these) by the next meeting and to start ideating the system architecture and product backlog in the next meeting.
