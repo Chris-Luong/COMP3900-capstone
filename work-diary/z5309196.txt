@@ -21,3 +21,9 @@ Saturday: We discussed the features that we have come up with and began drafting
 functionalities and decided sending a few to the tutor for confirmation (I suggested that an new idea for the loyalty program could reward members with a special menu or an express queue).
 I also rearranged the meeting minutes structure so that it was easier to see what the agenda, actionable and summary of each meeting was. We agreed to create user stories and storyboards
 (I will help Grace and Alan with these) by the next meeting and to start ideating the system architecture and product backlog in the next meeting.
+
+WEEK 3:
+
+Monday: Worked with the team on creating a draft entity-relationship diagram including the account, menu, item, booking and table. I took the meeting minutes where directed the focus of the meeting
+towards the 3 main points of the agenda - technology stack, sprint schedule and what our novel functionalities could be. I worked with Rodney on the system architecture and design. I focused on
+outlining the technology we would use in the frontend and APIs connecting it to the backend. I also wrote descriptions of our external users based on the user stories that we created.
