@@ -10,3 +10,11 @@ Week 2:
 
     Attended the lab on Wednesday. Asked the lab tutor some questions regarding the project specification. My group members and I each created a few user stories and from these stories we brainstormed and discussed the 8 functionalities 
     we are required to implement. During the lab we settled on 6 core functionalities with the novel functionalities left open for further research. A couple functionalities I came up with were QR codes and guest logins and loyalty program. 
+
+    Missed Saturday meeting, read the meeting minutes and caught up. Message the scrum leader to delegate some work to me and recieved a task to detail the novelty functionalities which i completed.
+
+Week 3:
+
+    Attended Monday meeting, consulted with team on planning structure of our project, drafting entity-relationship diagram for our database, finalising novel functionalities, and delegating future works. I presented my work completed between the last meeting and now. 
+    Brought up the topic of choosing a full stack for development, and we settled on React, Express, and MySQL. From this meeting I had the tasks to create the entity-relationship diagram from the draft, and work with Christopher on the System Architecture.
+    I designed and created a few diagrams including the entity-relationship diagram, system architecture diagram, and user interface diagram. I also wrote a part of the system architecture section outlining the back-end tech stack and their descriptions.
