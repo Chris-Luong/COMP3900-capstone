@@ -1,0 +1,19 @@
+Week 1:
+We formed the group, decided on the project and set up the meeting times. I spent some time reading through the project specs, the requirements
+and the proposal spec.
+
+Week 2:
+Tuesday: We allocated some work to every group member and decided on the parts to complete as a group - user stories and database designs.
+We discussed about the objective and the overview of the wait management system and understand the problems that we need to solve.
+Wednesday: We spent some time writing the user stories, picked and summarised the functionalities based on the user stories. We discussed the novel features
+with our tutor and decided to research and elaborate on the novel features further to discuss it in the next meeting. Then, we allocated
+the work for everyone to expand on the functionalities. I was tasked to finish the "Menu and Ordering Process" functionality.
+Saturday: We finished consolidating the core functionalities, decided that we are going to do 1-1 mapping between the user 
+and the Order. I was tasked to finish the "User Stories and Backlog" part of the proposal. While drafting the product backlog and sprints,
+I thought it would be good to confirm the sprint structure with the team. 
+
+Week 3:
+Monday: We drafted the ER diagrams for the database models as a group, we decided on the languages and frameworks we are going to use.
+We decided on doing 5 sprints and the functionality scopes for the first sprint. I was tasked to finish "Sprints" part of the proposal. TODO: After finalising the final 
+novel features, I need to add the user stories for these features to the product backlog. Check that the user stories in the proposal 
+are the correct and structured.
