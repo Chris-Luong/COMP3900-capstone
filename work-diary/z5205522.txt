@@ -18,4 +18,7 @@ On Saturday, we began our proposal draft (see meeting minutes). I was tasked wit
 Monday meetings.
 
 Week 3:
-
+My first task was to flesh out our novelty features. I ended up moving our booking feature (originally part of core 6 features) into the novelty category and decided on a loyalty program as the last
+novelty. To make up for a missing core feature, I thought it was best to split another core feature (menu ordering + management) into two. I notified the team and they agreed.
+My second task was to update our proposal draft and Jira user stories / product backlog with the novelty features. I also created epics on Jira to better organise everything.
+I edited our proposal draft to reflect changes made in my first task and updated the user story screenshots. 
