@@ -22,3 +22,7 @@ My first task was to flesh out our novelty features. I ended up moving our booki
 novelty. To make up for a missing core feature, I thought it was best to split another core feature (menu ordering + management) into two. I notified the team and they agreed.
 My second task was to update our proposal draft and Jira user stories / product backlog with the novelty features. I also created epics on Jira to better organise everything.
 I edited our proposal draft to reflect changes made in my first task and updated the user story screenshots. 
+
+My final task for the week was working further on our storyboard. I have completed a majority of the features. There is one final feature to add (waiter staff interactions and their notification centre).
+I have left this to Christopher, as he seemed more familiar with how the notification system should work. As part of the frontend section, it also gives him the chance to make changes and edits to
+what I have in the storyboard so far.
