@@ -27,4 +27,5 @@ WEEK 3:
 Monday: Worked with the team on creating a draft entity-relationship diagram including the account, menu, item, booking and table. I took the meeting minutes and directed the focus of the meeting
 towards the 3 main points of the agenda - technology stack, sprint schedule and what our novel functionalities could be. I worked with Rodney on the system architecture and design. I focused on
 outlining the technology we would use in the frontend and APIs connecting it to the backend. I also wrote descriptions of our external users based on the user stories that we created.
-I added the storyboards for notifications for wait and kitchen staff and added all storyboards to the proposal.
+I added the storyboards for notifications for wait and kitchen staff and added all storyboards to the proposal. Submitted the proposal after performing final checks on grammar, correct information, etc.
+Added some extra details to ensure that it is clear how we have worked towards achieving the successs criteria.
