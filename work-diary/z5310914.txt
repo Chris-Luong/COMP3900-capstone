@@ -1,0 +1,34 @@
+Week 1
+
+Formed group and chose a group name. Started discussing potential topics that the group was interested in using for the assignment. Registered for Jira as scrum master 
+initially but then chose to change scrum masters (made Alan the scrum master). Also discussed which group members had more experience working with backend or frontend. 
+Asked tutor some questions in relation to the general assignment spec.
+
+Week 2
+
+Agreed with team members to meet 3 times a week to work on the assignment and discuss how things are progressing (including the 2 hour tutorial we meet for on wednesdays). 
+Our group decided to go forward with project 1 (wait management project). I started a google docs for a rough outline of what was required for this project and assigned 
+each team member with a section of criteria to deal with. 
+
+During meeting we came up with our core functionalities and novel functions that we were planning to include in our proposal. I personally dealt with the introduction of 
+our project and was assigned to find out existing wait management systems and their drawbacks. I also proposed the way our main functionality for the wait management staff 
+would function. As a team we came up with user stories for each component of the project separately and aimed to combine several user stories to build a certain functionality.
+
+Week 3
+
+Completed my research on existing wait management systems and decided to include NextMe, Yelp Waitlist and WaitlistMe as the three main systems I wanted to discuss in 
+the proposal. Started articulating the starting sections of our proposal where I came up with an introduction of the issues we were targeting and the solution we were proposing. 
+
+Week 4
+
+Week 5
+
+Week 6
+
+Week 7
+
+Week 8
+
+Week 9
+
+Week 10
