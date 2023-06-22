@@ -1,0 +1,4 @@
+{
+    "secret": "secretKey",
+    "expiresIn": "1h"
+  }

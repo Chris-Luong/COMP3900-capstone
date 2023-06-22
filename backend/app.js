@@ -1,11 +1,17 @@
 const express = require('express')
 const db = require('./db/db')
 const fs = require('fs');
-const { login } = require('./controller/login');
+const { route } = require('./routes/route');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocs = require('./utils/swagger/swagger.config');
+const swaggerJSDoc = require('swagger-jsdoc');
+
 
 const port = 8800
 const app = express()
 app.use(express.json())
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(swaggerDocs)));
 
 const init_db = fs.readFileSync('init_db.sql', 'utf8');
 
@@ -31,18 +37,9 @@ app.get("/accounts", (req, res)=>{
     })
 })
 
-// middleware for role-based authorization
-function authorize(role) {
-    return function(req, res, next) {
 
-      if (req.user.role === role) {
-        // User has the required role
-        next(); 
-      } else {
-        res.status(403).json({ message: 'Access denied. You do not have the permission' });
-      }
-    };
-  }
+app.use('/backend-api', route);
 
-  
-app.post('/login', login);
+app.listen(port, ()=>{
+  console.log("Connected! Listening on localhost port %d.", port)
+})

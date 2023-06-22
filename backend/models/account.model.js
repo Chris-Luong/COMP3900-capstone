@@ -49,7 +49,9 @@ class Account {
           res = results[0];
           password = res.password;
           if (bcrypt.compareSync(pwd, password)) {
-            return role;
+            return {
+                role: res.role
+            };
           } else {
             console.log("Incorrect password");
             throw {
