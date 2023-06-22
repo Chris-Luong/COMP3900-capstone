@@ -1,18 +1,24 @@
-import express from "express"
-import mysql from "mysql"
-
+const express = require('express')
+const db = require('./db/db')
+const fs = require('fs');
+const { login } = require('./controller/login');
 
 const port = 8800
 const app = express()
+app.use(express.json())
 
-const db = mysql.createConnection({
-    host:"localhost",
-    user:"root",
-    password:"",
-    database:"queuequicker"
-})
+const init_db = fs.readFileSync('init_db.sql', 'utf8');
 
+// Execute the SQL statements
+db.query(init_db, (err, results) => {
+  if (err) {
+    console.error('Error executing SQL file:', err);
+    return;
+  }
+  console.log('DB Init Success');
+});
  
+
 app.get("/", (req, res)=>{
     res.json("Backend working!")
 })
@@ -39,52 +45,4 @@ function authorize(role) {
   }
 
   
-app.post('/login/customers', (req, res) => {
-    const { username, password } = req.body;
-
-    const query = 'SELECT * FROM accounts WHERE username = ? AND password = ? AND role = ?';
-    db.query(query, [username, password], (err, results) => {
-      if (err) { 
-        res.status(500).json({ error: 'Internal server error' });
-        return;
-      }
-  
-      if (results.length === 0) { 
-        res.status(401).json({ error: 'Invalid username or password' });
-      } else {
-
-        const user = results[0];
-        res.json({
-          id: user.id,
-          username: user.username,
-          role: user.role 
-        });
-        return res.render('admin/index', { msg: "Login Successfully", err: "" });
-      }
-    });
-  });
-
-app.post('/login/employees', (req, res) => {
-    const { username, password } = req.body;
-
-    const query = 'SELECT * FROM accounts WHERE username = ? AND password = ?';
-    db.query(query, [username, password], (err, results) => {
-      if (err) { 
-        res.status(500).json({ error: 'Internal server error' });
-        return;
-      }
-  
-      if (results.length === 0) { 
-        res.status(401).json({ error: 'Invalid username or password' });
-      } else {
-
-        const user = results[0];
-        const role = user.role;
-        return res.render('admin/index', { msg: "Login Successfully", err: "" , data: role });
-      }
-    });
-  });
-
-app.listen(port, ()=>{
-    console.log("Connected! Listening on localhost port %d.", port)
-})
+app.post('/login', login);
