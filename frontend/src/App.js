@@ -1,24 +1,38 @@
-import logo from './logo.svg';
+import { useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Register from './Components/Register';
+import LoginContext from './Components/Context/login-context';
 import './App.css';
+import Home from './Components/Home';
+import AuthRoute from './Components/Routing/AuthRoute';
+import Landing from './Components/Landing';
+import Login from './Components/Login';
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <LoginContext.Provider
+      value={{
+        isLoggedIn,
+        setIsLoggedIn
+      }}
+    >
+      <BrowserRouter>
+        <Routes>
+          <Route path="/">
+            <Route index element={<Landing />} />
+            <Route element={<AuthRoute redirectPath='/home' />}>
+              <Route path="login" element={<Login />} />
+              <Route path="register" element={<Register />} />
+            </Route>
+            <Route element={<AuthRoute redirectPath='/login' requireLogin={true} />}>
+              <Route path="home" element={<Home />} />
+            </Route>
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </LoginContext.Provider>
   );
 }
 
