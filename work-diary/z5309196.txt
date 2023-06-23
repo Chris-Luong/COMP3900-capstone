@@ -39,3 +39,6 @@ Gungeet and Alan. I also taught Gungeet some basic React concepts so he can assi
 
 Wednesday: Assigned tasks for creating the frontend. I worked with Gungeet to create the login form for customers
 and staff.
+
+I set up the login page for customers and staff, basing the styling off the register page.
+Changes were made to the staff login page such that instead of an email, a user id is required.
