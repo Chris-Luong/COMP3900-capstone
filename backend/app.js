@@ -1,17 +1,13 @@
 const express = require('express')
 const db = require('./db/db')
-const fs = require('fs');
-const { route } = require('./routes/route');
-const swaggerUi = require('swagger-ui-express');
-const swaggerDocs = require('./utils/swagger/swagger.config');
-const swaggerJSDoc = require('swagger-jsdoc');
-
+const fs = require('fs');  
+const loginRoute = require('./routes/auth.route'); 
 
 const port = 8800
 const app = express()
-app.use(express.json())
+app.use(express.json()) 
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(swaggerDocs)));
+require('./swagger-setup')(app);
 
 const init_db = fs.readFileSync('init_db.sql', 'utf8');
 
@@ -23,7 +19,7 @@ db.query(init_db, (err, results) => {
   }
   console.log('DB Init Success');
 });
- 
+   
 
 app.get("/", (req, res)=>{
     res.json("Backend working!")
@@ -38,7 +34,7 @@ app.get("/accounts", (req, res)=>{
 })
 
 
-app.use('/backend-api', route);
+app.use('/', loginRoute);
 
 app.listen(port, ()=>{
   console.log("Connected! Listening on localhost port %d.", port)

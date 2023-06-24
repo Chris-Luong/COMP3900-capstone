@@ -2,16 +2,14 @@
 
 
 const createNewAccount = `
-INSERT INTO accounts VALUES(null, ?, ?, ?, ?, NOW())
+INSERT INTO account VALUES(null, ?, ?, ?, ?, NOW())
 `;
 
 const findAllAccounts = `
-SELECT * FROM accounts 
+SELECT * FROM account 
 `;
 
-const findAccountByEmail = `
-SELECT password, role FROM accounts WHERE email = ?
-`;
+const findAccountByEmail = ' SELECT password, role FROM account WHERE email = ?';
 
 module.exports = {   
     createNewAccount,

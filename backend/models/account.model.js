@@ -1,4 +1,4 @@
-const { db } = require('../db/db'); 
+const db  = require('../db/db'); 
 const bcrypt = require('bcrypt');
 const { createNewAccount, findAccountByEmail } = require('../db/queries/accounts.queries');
 
@@ -15,66 +15,67 @@ class Account {
   }
 
 
-  static createAccount(newAccount) {
+  static createAccount(newAccount, next) {
     pwd = newAccount.password
     const saltRounds = 10;
     const salt = bcrypt.genSaltSync(saltRounds);
     const encryptedPwd = bcrypt.hashSync(pwd, salt);
     param = [newAccount.firstName, newAccount.lastName, newAccount.email, encryptedPwd, newAccount.role]
 
-    return db.query(createNewAccount, param)
-    .then(results => {
-        if (results.length) {
-          return results[0];
-        } else {
-            throw {
-                status: 422,
-                message: 'Cannot Create The Account',
-                kind: 'unprocessed'
-            };
-        }
-      })
-      .catch(error => {
+    return db.query(createNewAccount, param, (err, results) => {
+      if (err) {
         console.error(error);
-        throw error;
-      });
+        return next(err, null);
+      }
+
+      if (results.length) {
+        let result = JSON.parse(JSON.stringify(results)); 
+        return next(null, result[0])
+      } else {
+          return next ({
+              status: 422,
+              message: 'Cannot Create The Account',
+              kind: 'unprocessed'
+          }, null);
+      }
+    })
     }
 
-  static getAccountByEmail(email, pwd) {
-    return db.query(findAccountByEmail, email)
-      .then(results => {
+  static getAccountByEmail(email, pwd, next) {  
+    return db.query(findAccountByEmail, email, (err, results) => {
+      if (err) {
+        console.error(error);
+        return next(err, null);
+      }
+      
+      if (results.length) {
+        let result = JSON.parse(JSON.stringify(results)); 
+        const res = result[0];
+        const password = res.password;
 
-        if (results.length) {
-
-          res = results[0];
-          password = res.password;
-          if (bcrypt.compareSync(pwd, password)) {
-            return {
-                role: res.role
-            };
-          } else {
-            console.log("Incorrect password");
-            throw {
-                status: NOT_FOUND,
-                message: 'Incorrect Password.',
-                kind: NOT_FOUND_KIND
-            };
-          }
-
+        if (bcrypt.compareSync(pwd, password)) {
+          return next(null, {
+              role: res.role
+          });
         } else {
+          console.log("Incorrect password");
+          return next({
+              status: NOT_FOUND,
+              message: 'Incorrect Password.',
+              kind: NOT_FOUND_KIND
+            }, null);
+        }
+      } else {
 
-          console.log("Incorrect username");
-          throw {
+        console.log("Incorrect username");
+        return next({
             status: NOT_FOUND,
             message: 'Incorrect Username.',
             kind: NOT_FOUND_KIND
-          };
-        }
-      })
-      .catch(error => {
-        console.error(error);
-        throw error;
-      });
+          }, null);
+        }  
+    }
+  )
   }
 }
 

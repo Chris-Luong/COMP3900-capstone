@@ -1,5 +1,5 @@
 
-const routes =  ['../routes/*.js']
+const routes =  ['../routes/*.route.js']
 doc = {
   definition: {
     info: {
