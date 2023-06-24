@@ -2,7 +2,7 @@
 
 
 const createNewAccount = `
-INSERT INTO account VALUES(null, ?, ?, ?, ?, NOW())
+INSERT INTO account(firstname, lastname, email, password, role) VALUES(?, ?, ?, ?, ?)
 `;
 
 const findAllAccounts = `
