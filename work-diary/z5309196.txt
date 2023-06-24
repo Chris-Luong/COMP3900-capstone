@@ -36,3 +36,12 @@ WEEK 4:
 
 Monday: Took meeting minutes to decide on what actionable we had to do before Wednesday. I was tasked with setting up the frontend codebase with React and assisting in designing frontend elements with
 Gungeet and Alan. I also taught Gungeet some basic React concepts so he can assist us with front-end development.
+
+Wednesday: Assigned tasks for creating the frontend. I worked with Gungeet to create the login form for customers
+and staff.
+
+I set up the login page for customers and staff, basing the styling off the register page.
+Changes were made to the staff login page such that instead of an email, a user id is required.
+
+Saturday: Had meeting to discuss the plan for the the project demo. Assigned tasks. I will continue working on
+the login pages to make sure the correct functionality is there.
