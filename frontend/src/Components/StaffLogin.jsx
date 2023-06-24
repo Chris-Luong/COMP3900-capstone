@@ -1,4 +1,12 @@
-import { Button, Stack, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  Stack,
+  TextField,
+  Typography,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+} from "@mui/material";
 import { Link } from "react-router-dom";
 import { useState, useContext } from "react";
 import { Formik } from "formik";
@@ -30,6 +38,7 @@ const CenterCard = styled("Card")({
 const Login = () => {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("");
   const login = useContext(LoginContext);
 
   function handleSubmit(event) {

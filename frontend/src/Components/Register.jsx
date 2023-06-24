@@ -3,7 +3,7 @@ import { Button, Stack, TextField, Typography } from "@mui/material";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import LoginContext from "./Context/login-context";
-import styled from "@emotion/styled";
+import CenterCard from "./UI/CenterCard";
 import { Link } from "react-router-dom";
 
 // TOOD: match schema with acceptance criteria
@@ -19,18 +19,6 @@ const schema = Yup.object().shape({
     .oneOf([Yup.ref("password"), null], "Confirm Password does not match"),
 });
 
-const CenterCard = styled("Card")({
-  display: "flex",
-  textAlign: "left",
-  maxHeight: "700px",
-  maxWidth: "50vh",
-  margin: "auto",
-  marginTop: "15vh",
-  border: "1px solid #d7d7d7",
-  padding: "1rem",
-  borderRadius: "6px",
-});
-
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -38,6 +26,7 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const login = useContext(LoginContext);
 
+  // TODO: call register api here
   function handleSubmit(event) {
     event.preventDefault();
     console.log(name, email, password, confirmPassword);
