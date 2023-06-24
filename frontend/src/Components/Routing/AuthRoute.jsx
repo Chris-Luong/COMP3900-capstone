@@ -5,6 +5,9 @@ import PropTypes from "prop-types";
 // Route wrapper component that checks if user is logged in before displaying user-only routes; code from https://www.robinwieruch.de/react-router-private-routes/
 const AuthRoute = (props) => {
   const auth = localStorage.getItem("auth");
+  // NOTE: Check if need to make one for staff login
+  // Also check if context needed for staff or if storing user logged in is enough
+
   if (props.requireLogin === true) {
     // current path requires user to be logged in
     if (auth === null) {

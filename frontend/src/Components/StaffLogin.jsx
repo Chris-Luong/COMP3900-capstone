@@ -8,7 +8,7 @@ import styled from "@emotion/styled";
 
 // TOOD: match schema with acceptance criteria
 const schema = Yup.object().shape({
-  email: Yup.string().required("Email is required").email("Email is invalid"),
+  userId: Yup.string().required("User Id is required"),
   password: Yup.string()
     .required("Password is required")
     .min(6, "Password must be at least 6 characters")
@@ -28,15 +28,15 @@ const CenterCard = styled("Card")({
 });
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const login = useContext(LoginContext);
 
   function handleSubmit(event) {
     event.preventDefault();
-    console.log(email, password);
+    console.log(userId, password);
     localStorage.setItem("auth", true);
-    localStorage.setItem("user-email", event.email);
+    localStorage.setItem("user-id", event.userId);
     login.setIsLoggedIn(true);
   }
 
@@ -44,7 +44,7 @@ const Login = () => {
     <Formik
       validationSchema={schema}
       initialValues={{
-        email: "",
+        userId: "",
         password: "",
       }}
     >
@@ -53,15 +53,15 @@ const Login = () => {
           <CenterCard>
             <Stack spacing={2} direction='column' width='100%'>
               <Typography align='center' variant='h3'>
-                Welcome back
+                Staff Login
               </Typography>
               <TextField
-                type='email'
+                type='text'
                 variant='outlined'
                 color='secondary'
-                label='Email'
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
+                label='User Id'
+                onChange={(e) => setUserId(e.target.value)}
+                value={userId}
                 required
                 sx={{ mb: 4 }}
               />
@@ -75,13 +75,19 @@ const Login = () => {
                 required
                 sx={{ mb: 4 }}
               />
+              <RadioGroup
+                aria-label="Role"
+                name="role"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+              >
+                <FormControlLabel value="waitStaff" control={<Radio />} label="Wait Staff" />
+                <FormControlLabel value="kitchenStaff" control={<Radio />} label="Kitchen Staff" />
+                <FormControlLabel value="managementStaff" control={<Radio />} label="Management Staff" />
+              </RadioGroup>
               <Button variant='outlined' color='secondary' type='submit'>
                 Login
               </Button>
-              <Typography align='center' variant='overline'>
-                Don't have an account?{" "}
-                <Link to='../register'>Register here</Link>
-              </Typography>
             </Stack>
           </CenterCard>
         </form>
