@@ -75,14 +75,19 @@ const Login = () => {
                 required
                 sx={{ mb: 4 }}
               />
+              <RadioGroup
+                aria-label="Role"
+                name="role"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+              >
+                <FormControlLabel value="waitStaff" control={<Radio />} label="Wait Staff" />
+                <FormControlLabel value="kitchenStaff" control={<Radio />} label="Kitchen Staff" />
+                <FormControlLabel value="managementStaff" control={<Radio />} label="Management Staff" />
+              </RadioGroup>
               <Button variant='outlined' color='secondary' type='submit'>
                 Login
               </Button>
-              <Typography align='center' variant='overline'>
-                <Link to='../register'>
-                  Make a multiple choice for wait/kitchen/manager
-                </Link>
-              </Typography>
             </Stack>
           </CenterCard>
         </form>
