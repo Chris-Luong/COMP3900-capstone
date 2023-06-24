@@ -42,3 +42,6 @@ and staff.
 
 I set up the login page for customers and staff, basing the styling off the register page.
 Changes were made to the staff login page such that instead of an email, a user id is required.
+
+Saturday: Had meeting to discuss the plan for the the project demo. Assigned tasks. I will continue working on
+the login pages to make sure the correct functionality is there.
