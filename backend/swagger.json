@@ -11,6 +11,42 @@
     "http"
   ],
   "paths": {
+    "/register": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "example": "first"
+                },
+                "lastName": {
+                  "example": "last"
+                },
+                "email": {
+                  "example": "email"
+                },
+                "password": {
+                  "example": "password"
+                },
+                "role": {
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/login": {
       "post": {
         "description": "",
@@ -18,7 +54,6 @@
           {
             "name": "body",
             "in": "body",
-            "x-name": "body",
             "schema": {
               "type": "object",
               "properties": {
@@ -35,9 +70,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          }, 
-          "401": {
-            "description": "Invalid Credentials"
           }
         }
       }

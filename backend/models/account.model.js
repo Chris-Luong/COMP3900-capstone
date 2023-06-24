@@ -4,6 +4,8 @@ const { createNewAccount, findAccountByEmail } = require('../db/queries/accounts
 
 const NOT_FOUND = 401
 const NOT_FOUND_KIND = "not_found"
+const EXISTS = 409
+const EXISTS_KIND = "exists"
 
 class Account {
   constructor(firstName, lastName, email, password, role) {
@@ -14,37 +16,34 @@ class Account {
     this.role = role;
   }
 
-
   static createAccount(newAccount, next) {
-    pwd = newAccount.password
+    const pwd = newAccount.password;
     const saltRounds = 10;
     const salt = bcrypt.genSaltSync(saltRounds);
     const encryptedPwd = bcrypt.hashSync(pwd, salt);
-    param = [newAccount.firstName, newAccount.lastName, newAccount.email, encryptedPwd, newAccount.role]
+    const param = [newAccount.firstName, newAccount.lastName, newAccount.email, encryptedPwd, newAccount.role];
 
     return db.query(createNewAccount, param, (err, results) => {
-      if (err) {
-        console.error(error);
-        return next(err, null);
-      }
+      console.log("MySQL Error: " + err);
+      console.log("MySQL Result:", results);
 
-      if (results.length) {
-        let result = JSON.parse(JSON.stringify(results)); 
-        return next(null, result[0])
-      } else {
-          return next ({
-              status: 422,
-              message: 'Cannot Create The Account',
-              kind: 'unprocessed'
-          }, null);
+      if (err) {
+        return next({
+          status: EXISTS,
+          message: 'User exists with given email.',
+          kind: EXISTS_KIND
+        }, null);
       }
+      
+      let result = JSON.parse(JSON.stringify(results)); 
+      return next(null, result)
     })
     }
-
+    
   static getAccountByEmail(email, pwd, next) {  
     return db.query(findAccountByEmail, email, (err, results) => {
       if (err) {
-        console.error(error);
+        console.error(err);
         return next(err, null);
       }
       
@@ -66,7 +65,6 @@ class Account {
             }, null);
         }
       } else {
-
         console.log("Incorrect username");
         return next({
             status: NOT_FOUND,
@@ -79,5 +77,5 @@ class Account {
   }
 }
 
-module.exports = { Account, NOT_FOUND };
+module.exports = { Account, NOT_FOUND, EXISTS };
  
