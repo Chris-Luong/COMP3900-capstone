@@ -13,18 +13,18 @@ const sendRequest = (route, method, body, token = null) => {
   }
 
   return new Promise((resolve, reject) => {
-    fetch("http://localhost:8800" + route, options)
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        if (data.error) {
-          console.log(data.error);
-          reject(data.error);
-        } else {
+    fetch("http://localhost:8800" + route, options).then((res) => {
+      console.log(res);
+      if (!res.ok) {
+        res.json().then((data) => {
+          reject(data.message);
+        });
+      } else {
+        res.json().then((data) => {
           resolve(data);
-        }
-      });
+        });
+      }
+    });
   });
 };
 
