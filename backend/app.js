@@ -1,10 +1,12 @@
 const express = require('express')
 const db = require('./db/db')
+const cors = require('cors')
 
 const authRoute = require('./routes/auth.route'); 
 
 const port = 8800
 const app = express()
+app.use(cors());
 app.use(express.json()) 
 
 require('./swagger-setup')(app);
