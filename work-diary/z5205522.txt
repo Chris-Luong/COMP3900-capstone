@@ -26,3 +26,7 @@ I edited our proposal draft to reflect changes made in my first task and updated
 My final task for the week was working further on our storyboard. I have completed a majority of the features. There is one final feature to add (waiter staff interactions and their notification centre).
 I have left this to Christopher, as he seemed more familiar with how the notification system should work. As part of the frontend section, it also gives him the chance to make changes and edits to
 what I have in the storyboard so far.
+
+Week4:
+In order to get ready for the demo, I wrapped up my tasks for the Register page which included form validation and sending requests to the completed /register endpoint. I also created a restaurant entry
+page stub to get started on the guest profile Jira ticket. I fixed an issue with cors and another to do with the sendRequest function not resolving or rejecting responses properly.
