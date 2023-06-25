@@ -7,14 +7,16 @@ import {
   FormControlLabel,
   Radio,
 } from "@mui/material";
-import { Link } from "react-router-dom";
 import { useState, useContext } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import LoginContext from "./Context/login-context";
 import styled from "@emotion/styled";
+import sendRequest from "./Utils/Request";
+import { useNavigate } from "react-router-dom";
 
-// TOOD: match schema with acceptance criteria
+// TODO: Include error handling with error/required messages
+// Create API request for /staff-login or just login for both user types
 const schema = Yup.object().shape({
   userId: Yup.string().required("User Id is required"),
   password: Yup.string()
@@ -36,28 +38,53 @@ const CenterCard = styled("Card")({
 });
 
 const Login = () => {
-  const [userId, setUserId] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
+  // const [userId, setUserId] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [role, setRole] = useState("");
+  const navigate = useNavigate();
   const login = useContext(LoginContext);
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    console.log(userId, password);
-    localStorage.setItem("auth", true);
-    localStorage.setItem("user-id", event.userId);
-    login.setIsLoggedIn(true);
+  // function handleSubmit(event) {
+  //   event.preventDefault();
+  //   console.log(userId, password);
+  //   localStorage.setItem("auth", true);
+  //   localStorage.setItem("user-id", event.userId);
+  //   login.setIsLoggedIn(true);
+  // }
+
+  async function handleSubmit(values) {
+    const body = {
+      username: values.username,
+      password: values.password,
+      role: values.role,
+    };
+    try {
+      const res = await sendRequest("/login", "POST", body);
+      console.log(res.token);
+      console.log(res.message);
+      login.setIsLoggedIn(true);
+      localStorage.setItem("token", res.token);
+      localStorage.setItem("auth", true);
+      localStorage.setItem("username", values.username);
+      // NOTE: Might need a different route for staff. Discuss in next sprint.
+      navigate("/home");
+    } catch (err) {
+      alert(err);
+      console.log(err);
+    }
   }
 
   return (
     <Formik
       validationSchema={schema}
+      onSubmit={(values) => handleSubmit(values)}
       initialValues={{
         userId: "",
         password: "",
       }}
     >
-      <>
+      {/* Check if below prop things are all needed */}
+      {({ handleSubmit, handleChange, values, errors, touched }) => (
         <form onSubmit={handleSubmit}>
           <CenterCard>
             <Stack spacing={2} direction='column' width='100%'>
@@ -69,8 +96,8 @@ const Login = () => {
                 variant='outlined'
                 color='secondary'
                 label='User Id'
-                onChange={(e) => setUserId(e.target.value)}
-                value={userId}
+                onChange={handleChange}
+                value={values.userId}
                 required
                 sx={{ mb: 4 }}
               />
@@ -79,20 +106,32 @@ const Login = () => {
                 variant='outlined'
                 color='secondary'
                 label='Password'
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
+                onChange={handleChange}
+                value={values.password}
                 required
                 sx={{ mb: 4 }}
               />
               <RadioGroup
-                aria-label="Role"
-                name="role"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
+                aria-label='Role'
+                name='role'
+                value={values.role}
+                onChange={handleChange}
               >
-                <FormControlLabel value="waitStaff" control={<Radio />} label="Wait Staff" />
-                <FormControlLabel value="kitchenStaff" control={<Radio />} label="Kitchen Staff" />
-                <FormControlLabel value="managementStaff" control={<Radio />} label="Management Staff" />
+                <FormControlLabel
+                  value='waitStaff'
+                  control={<Radio />}
+                  label='Wait Staff'
+                />
+                <FormControlLabel
+                  value='kitchenStaff'
+                  control={<Radio />}
+                  label='Kitchen Staff'
+                />
+                <FormControlLabel
+                  value='managementStaff'
+                  control={<Radio />}
+                  label='Management Staff'
+                />
               </RadioGroup>
               <Button variant='outlined' color='secondary' type='submit'>
                 Login
@@ -100,7 +139,7 @@ const Login = () => {
             </Stack>
           </CenterCard>
         </form>
-      </>
+      )}
     </Formik>
   );
 };

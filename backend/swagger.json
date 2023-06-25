@@ -5,7 +5,7 @@
     "title": "REST API",
     "description": ""
   },
-  "host": "localhost:8800",
+  "host": "localhost:3000",
   "basePath": "/",
   "schemes": [
     "http"
@@ -14,32 +14,7 @@
     "/register": {
       "post": {
         "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "firstName": {
-                  "example": "first"
-                },
-                "lastName": {
-                  "example": "last"
-                },
-                "email": {
-                  "example": "email"
-                },
-                "password": {
-                  "example": "password"
-                },
-                "role": {
-                  "example": 1
-                }
-              }
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "OK"
