@@ -7,7 +7,8 @@ import {
   FormControlLabel,
   Radio,
 } from "@mui/material";
-import { useState, useContext } from "react";
+import CenterCard from "./UI/CenterCard";
+import { useContext } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import LoginContext from "./Context/login-context";
@@ -18,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 // TODO: Include error handling with error/required messages
 // Create API request for /staff-login or just login for both user types
 const schema = Yup.object().shape({
+  // TODO: Check how long userId is expected to be
   userId: Yup.string().required("User Id is required"),
   password: Yup.string()
     .required("Password is required")
@@ -25,19 +27,7 @@ const schema = Yup.object().shape({
     .max(40, "Password must not exceed 40 characters"),
 });
 
-const CenterCard = styled("Card")({
-  display: "flex",
-  textAlign: "left",
-  maxHeight: "700px",
-  maxWidth: "50vh",
-  margin: "auto",
-  marginTop: "15vh",
-  border: "1px solid #d7d7d7",
-  padding: "1rem",
-  borderRadius: "6px",
-});
-
-const Login = () => {
+const StaffLogin = () => {
   // const [userId, setUserId] = useState("");
   // const [password, setPassword] = useState("");
   // const [role, setRole] = useState("");
@@ -81,11 +71,12 @@ const Login = () => {
       initialValues={{
         userId: "",
         password: "",
+        role: "",
       }}
     >
       {/* Check if below prop things are all needed */}
       {({ handleSubmit, handleChange, values, errors, touched }) => (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
           <CenterCard>
             <Stack spacing={2} direction='column' width='100%'>
               <Typography align='center' variant='h3'>
@@ -96,20 +87,24 @@ const Login = () => {
                 variant='outlined'
                 color='secondary'
                 label='User Id'
+                name='userId'
                 onChange={handleChange}
                 value={values.userId}
+                error={touched.userId && errors.userId}
+                helperText={touched.userId && errors.userId}
                 required
-                sx={{ mb: 4 }}
               />
               <TextField
                 type='password'
                 variant='outlined'
                 color='secondary'
                 label='Password'
+                name='password'
                 onChange={handleChange}
                 value={values.password}
+                error={touched.password && errors.password}
+                helperText={touched.password && errors.password}
                 required
-                sx={{ mb: 4 }}
               />
               <RadioGroup
                 aria-label='Role'
@@ -144,4 +139,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default StaffLogin;
