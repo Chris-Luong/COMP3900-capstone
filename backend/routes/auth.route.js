@@ -1,5 +1,6 @@
 const express = require('express');
-const loginRoute = express.Router();
+const router = express.Router();
+const register = require('../controller/register')
 const login = require('../controller/login');
 
 /**
@@ -32,6 +33,6 @@ const login = require('../controller/login');
  *       401:
  *         description: Invalid credentials
  */
-
-loginRoute.post('/login', login);
-module.exports = loginRoute;
+router.post('/register', register);
+router.post('/login', login);
+module.exports = router;
