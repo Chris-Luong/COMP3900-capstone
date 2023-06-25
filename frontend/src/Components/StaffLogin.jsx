@@ -12,15 +12,16 @@ import { useContext } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import LoginContext from "./Context/login-context";
-import styled from "@emotion/styled";
 import sendRequest from "./Utils/Request";
 import { useNavigate } from "react-router-dom";
 
 // TODO: Include error handling with error/required messages
 // Create API request for /staff-login or just login for both user types
 const schema = Yup.object().shape({
-  // TODO: Check how long userId is expected to be
-  userId: Yup.string().required("User Id is required"),
+  // TODO: Check how long email is expected to be
+  email: Yup.string()
+    .required("Email is required")
+    .email("Please enter a valid email"),
   password: Yup.string()
     .required("Password is required")
     .min(6, "Password must be at least 6 characters")
@@ -28,7 +29,7 @@ const schema = Yup.object().shape({
 });
 
 const StaffLogin = () => {
-  // const [userId, setUserId] = useState("");
+  // const [email, setEmail] = useState("");
   // const [password, setPassword] = useState("");
   // const [role, setRole] = useState("");
   const navigate = useNavigate();
@@ -36,15 +37,16 @@ const StaffLogin = () => {
 
   // function handleSubmit(event) {
   //   event.preventDefault();
-  //   console.log(userId, password);
+  //   console.log(email, password);
   //   localStorage.setItem("auth", true);
-  //   localStorage.setItem("user-id", event.userId);
+  //   localStorage.setItem("email", event.email);
   //   login.setIsLoggedIn(true);
   // }
 
+  // TODO: test if POST req works properly
   async function handleSubmit(values) {
     const body = {
-      username: values.username,
+      email: values.email,
       password: values.password,
       role: values.role,
     };
@@ -55,10 +57,11 @@ const StaffLogin = () => {
       login.setIsLoggedIn(true);
       localStorage.setItem("token", res.token);
       localStorage.setItem("auth", true);
-      localStorage.setItem("username", values.username);
+      localStorage.setItem("user-email", values.email);
       // NOTE: Might need a different route for staff. Discuss in next sprint.
       navigate("/home");
     } catch (err) {
+      // NOTE: might need a incorrect password message
       alert(err);
       console.log(err);
     }
@@ -69,7 +72,7 @@ const StaffLogin = () => {
       validationSchema={schema}
       onSubmit={(values) => handleSubmit(values)}
       initialValues={{
-        userId: "",
+        email: "",
         password: "",
         role: "",
       }}
@@ -83,15 +86,15 @@ const StaffLogin = () => {
                 Staff Login
               </Typography>
               <TextField
-                type='text'
+                type='email'
                 variant='outlined'
                 color='secondary'
-                label='User Id'
-                name='userId'
+                label='Email'
+                name='email'
                 onChange={handleChange}
-                value={values.userId}
-                error={touched.userId && errors.userId}
-                helperText={touched.userId && errors.userId}
+                value={values.email}
+                error={touched.email && errors.email}
+                helperText={touched.email && errors.email}
                 required
               />
               <TextField
