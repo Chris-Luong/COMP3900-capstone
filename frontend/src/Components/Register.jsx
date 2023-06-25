@@ -1,75 +1,98 @@
-import {useState, useContext} from "react";
+import { useContext } from "react";
 import { Button, Stack, TextField, Typography } from "@mui/material";
-import { Formik } from 'formik';
-import * as Yup from 'yup';
+import { Formik } from "formik";
+import { useNavigate } from "react-router-dom";
+import * as Yup from "yup";
 import LoginContext from "./Context/login-context";
-import styled from "@emotion/styled";
+import CenterCard from "./UI/CenterCard";
 import { Link } from "react-router-dom";
+import sendRequest from "./Utils/Request";
 
 // TOOD: match schema with acceptance criteria
 const schema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
+  firstName: Yup.string().required("First name is required"),
+  lastName: Yup.string().required("Last name is required"),
   email: Yup.string().required("Email is required").email("Email is invalid"),
   password: Yup.string()
     .required("Password is required")
     .min(6, "Password must be at least 6 characters")
-    .max(40, "Password must not exceed 40 characters"),
+    .max(40, "Password must not exceed 10 characters"),
   confirm_password: Yup.string()
     .required("Confirm Password is required")
     .oneOf([Yup.ref("password"), null], "Confirm Password does not match"),
 });
 
-const CenterCard = styled("Card")({
-  display: "flex",
-  textAlign: "left",
-  maxHeight: "700px",
-  maxWidth: "50vh",
-  margin: "auto",
-  marginTop: "15vh",
-  border: "1px solid #d7d7d7",
-  padding: "1rem",
-  borderRadius: "6px",
-});
-
 const Register = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const navigate = useNavigate();
   const login = useContext(LoginContext);
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    console.log(name, email, password, confirmPassword);
-    localStorage.setItem("auth", true);
-    localStorage.setItem("user-email", event.email);
-    login.setIsLoggedIn(true);
+  async function handleSubmit(values) {
+    const body = {
+      firstName: values.firstName,
+      lastName: values.lastName,
+      email: values.email,
+      password: values.password,
+      role: 1
+    };
+    try {
+      const res = await sendRequest("/register", "POST", body);
+      console.log(res.token);
+      console.log(res.message);
+      login.setIsLoggedIn(true);
+      localStorage.setItem("token", res.token);
+      localStorage.setItem("auth", true);
+      localStorage.setItem("user-email", values.email);
+      navigate('/home');
+    } catch (err) {
+      alert(err);
+      console.log(err);
+    }
   }
 
   return (
     <Formik
       validationSchema={schema}
+      onSubmit={(values) => handleSubmit(values)}
       initialValues={{
-        name: "",
+        firstName: "",
+        lastName: "",
         email: "",
         password: "",
         confirm_password: "",
       }}
     >
-      <>
-        <form onSubmit={handleSubmit}>
+      {({ handleSubmit, handleChange, values, errors, touched }) => (
+        <form onSubmit={handleSubmit} noValidate>
           <CenterCard>
             <Stack spacing={2} direction="column" width="100%">
-              <Typography align='center' variant="h3">
+              <Typography align="center" variant="h3">
                 Welcome to QueueQuicker
+              </Typography>
+              <Typography align="center" variant="body1">
+                Create an account for booking and loyalty program management
               </Typography>
               <TextField
                 type="text"
                 variant="outlined"
                 color="secondary"
-                label="Name"
-                onChange={(e) => setName(e.target.value)}
-                value={name}
+                label="First Name"
+                name="firstName"
+                onChange={handleChange}
+                value={values.firstName}
+                error={touched.email && errors.firstName}
+                helperText={touched.email && errors.firstName}
+                required
+              />
+              <TextField
+                type="text"
+                variant="outlined"
+                color="secondary"
+                label="Last Name"
+                name="lastName"
+                onChange={handleChange}
+                value={values.lastName}
+                error={touched.lastName && errors.lastName}
+                helperText={touched.lastName && errors.lastName}
                 required
               />
               <TextField
@@ -77,41 +100,47 @@ const Register = () => {
                 variant="outlined"
                 color="secondary"
                 label="Email"
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
+                name="email"
+                onChange={handleChange}
+                value={values.email}
+                error={touched.email && errors.email}
+                helperText={touched.email && errors.email}
                 required
-                sx={{ mb: 4 }}
               />
               <TextField
                 type="password"
                 variant="outlined"
                 color="secondary"
                 label="Password"
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
+                name="password"
+                onChange={handleChange}
+                value={values.password}
+                error={touched.password && errors.password}
+                helperText={touched.password && errors.password}
                 required
-                sx={{ mb: 4 }}
               />
               <TextField
                 type="password"
                 variant="outlined"
                 color="secondary"
                 label="Confirm Password"
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                value={confirmPassword}
+                name="confirm_password"
+                onChange={handleChange}
+                value={values.confirm_password}
+                error={touched.confirm_password && errors.confirm_password}
+                helperText={touched.confirm_password && errors.confirm_password}
                 required
-                sx={{ mb: 4 }}
               />
-              <Button variant="outlined" color="secondary" type="submit">
+              <Button type="submit" variant="outlined" color="secondary">
                 Register
               </Button>
-              <Typography align='center' variant='overline'>
+              <Typography align="center" variant="overline">
                 Already have an account? <Link to="../login">Login here</Link>
               </Typography>
             </Stack>
           </CenterCard>
         </form>
-      </>
+      )}
     </Formik>
   );
 };

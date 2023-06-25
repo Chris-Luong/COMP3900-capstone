@@ -4,7 +4,7 @@ import { useState, useContext } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import LoginContext from "./Context/login-context";
-import styled from "@emotion/styled";
+import CenterCard from "./UI/CenterCard";
 
 // TOOD: match schema with acceptance criteria
 const schema = Yup.object().shape({
@@ -13,18 +13,6 @@ const schema = Yup.object().shape({
     .required("Password is required")
     .min(6, "Password must be at least 6 characters")
     .max(40, "Password must not exceed 40 characters"),
-});
-
-const CenterCard = styled("Card")({
-  display: "flex",
-  textAlign: "left",
-  maxHeight: "700px",
-  maxWidth: "50vh",
-  margin: "auto",
-  marginTop: "15vh",
-  border: "1px solid #d7d7d7",
-  padding: "1rem",
-  borderRadius: "6px",
 });
 
 const Login = () => {
