@@ -16,9 +16,7 @@ import sendRequest from "./Utils/Request";
 import { useNavigate } from "react-router-dom";
 
 // TODO: Include error handling with error/required messages
-// Create API request for /staff-login or just login for both user types
 const schema = Yup.object().shape({
-  // TODO: Check how long email is expected to be
   email: Yup.string()
     .required("Email is required")
     .email("Please enter a valid email"),
@@ -29,19 +27,8 @@ const schema = Yup.object().shape({
 });
 
 const StaffLogin = () => {
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [role, setRole] = useState("");
   const navigate = useNavigate();
   const login = useContext(LoginContext);
-
-  // function handleSubmit(event) {
-  //   event.preventDefault();
-  //   console.log(email, password);
-  //   localStorage.setItem("auth", true);
-  //   localStorage.setItem("email", event.email);
-  //   login.setIsLoggedIn(true);
-  // }
 
   // TODO: test if POST req works properly
   async function handleSubmit(values) {
@@ -58,7 +45,6 @@ const StaffLogin = () => {
       localStorage.setItem("token", res.token);
       localStorage.setItem("auth", true);
       localStorage.setItem("user-email", values.email);
-      // NOTE: Might need a different route for staff. Discuss in next sprint.
       navigate("/home");
     } catch (err) {
       // NOTE: might need a incorrect password message
