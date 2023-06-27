@@ -17,3 +17,17 @@ Monday: We drafted the ER diagrams for the database models as a group, we decide
 We decided on doing 5 sprints and the functionality scopes for the first sprint. I was tasked to finish "Sprints" part of the proposal. TODO: After finalising the final 
 novel features, I need to add the user stories for these features to the product backlog. Check that the user stories in the proposal 
 are the correct and structured.
+Wednesday: We worked on finalising the proposal and refine the user stories. I was assigned to work on describing how the novel features differentiate our
+system to the existing systems. From the lecture, we should describe the acceptance criteria in the Jira tickets. So, I spent 
+some time adding the acceptance criteria to the Jira tickets.
+Sunday: Discussed to do database setups and set up the local dev environment for backend.
+
+Week 4
+Monday: We discussed what to finish by Wednesday. For the backend, we will finish a backend API and set up the database. I discussed with 
+Rod, he will be finishing the datbaase setup and I will do the login function API.
+Wednesday: We discussed what to finish by Saturday and we aim for finishing all backend APIs by Saturday so that 
+we can integrate with the frontend on the following days. After the meeting, I spent some time setting up the Msyql database
+on my local dev enviroment. I spent a few hours fixing the backend so that it is connecting to the database.
+Thursday: Worked on the Login API and set up swagger for backend testing. 
+Friday: Login API is complete and tested successfully.
+Saturday: We discussed about how to implement the guest profile. I raised a pull request to merge backend-loginn branch to master.
