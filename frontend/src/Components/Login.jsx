@@ -1,12 +1,14 @@
 import { Button, Stack, TextField, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import LoginContext from "./Context/login-context";
 import CenterCard from "./UI/CenterCard";
+import sendRequest from "./Utils/Request";
+import { useNavigate } from "react-router-dom";
+import jwtDecode from "jwt-decode";
 
-// TOOD: match schema with acceptance criteria
 const schema = Yup.object().shape({
   email: Yup.string().required("Email is required").email("Email is invalid"),
   password: Yup.string()
@@ -16,65 +18,85 @@ const schema = Yup.object().shape({
 });
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const login = useContext(LoginContext);
+  const navigate = useNavigate();
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    console.log(email, password);
-    localStorage.setItem("auth", true);
-    localStorage.setItem("user-email", event.email);
-    localStorage.setItem("role", "Customer");
-    login.setIsLoggedIn(true);
+  async function handleSubmit(values) {
+    const body = {
+      email: values.email,
+      password: values.password,
+      role: values.role,
+    };
+    try {
+      const res = await sendRequest("/login", "POST", body);
+      console.log(res.token);
+      console.log(res.message);
+      login.setIsLoggedIn(true);
+      localStorage.setItem("token", res.token);
+      localStorage.setItem("auth", true);
+      localStorage.setItem("user-email", values.email);
+      let token = jwtDecode(res.token);
+      localStorage.setItem("role", token.role);
+      navigate("/home");
+    } catch (err) {
+      alert(err);
+      console.log(err);
+    }
   }
 
   return (
     <Formik
       validationSchema={schema}
+      onSubmit={(values) => handleSubmit(values)}
       initialValues={{
         email: "",
         password: "",
+        role: "",
       }}
     >
-      <>
-        <form onSubmit={handleSubmit}>
+      {/* Check if below prop things are all needed */}
+      {({ handleSubmit, handleChange, values, errors, touched }) => (
+        <form onSubmit={handleSubmit} noValidate>
           <CenterCard>
-            <Stack spacing={2} direction='column' width='100%'>
-              <Typography align='center' variant='h3'>
-                Welcome back
+            <Stack spacing={2} direction="column" width="100%">
+              <Typography align="center" variant="h3">
+                Welcome Back
               </Typography>
               <TextField
-                type='email'
-                variant='outlined'
-                color='secondary'
-                label='Email'
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
+                type="email"
+                variant="outlined"
+                color="secondary"
+                label="Email"
+                name="email"
+                onChange={handleChange}
+                value={values.email}
+                error={touched.email && errors.email}
+                helperText={touched.email && errors.email}
                 required
-                sx={{ mb: 4 }}
               />
               <TextField
-                type='password'
-                variant='outlined'
-                color='secondary'
-                label='Password'
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
+                type="password"
+                variant="outlined"
+                color="secondary"
+                label="Password"
+                name="password"
+                onChange={handleChange}
+                value={values.password}
+                error={touched.password && errors.password}
+                helperText={touched.password && errors.password}
                 required
-                sx={{ mb: 4 }}
               />
-              <Button variant='outlined' color='secondary' type='submit'>
+              <Button variant="outlined" color="secondary" type="submit">
                 Login
               </Button>
-              <Typography align='center' variant='overline'>
+              <Typography align="center" variant="overline">
                 Don't have an account?{" "}
-                <Link to='../register'>Register here</Link>
+                <Link to="../register">Register here</Link>
               </Typography>
             </Stack>
           </CenterCard>
         </form>
-      </>
+      )}
     </Formik>
   );
 };

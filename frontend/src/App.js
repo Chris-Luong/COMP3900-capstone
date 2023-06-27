@@ -3,11 +3,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Register from "./Components/Register";
 import LoginContext from "./Components/Context/login-context";
 import RestaurantContext from "./Components/Context/restaurant-context";
-import RestaurantContext from "./Components/Context/restaurant-context";
 import "./App.css";
 import Home from "./Components/Home";
 import AuthRoute from "./Components/Routing/AuthRoute";
-import MenuAuthRoute from "./Components/Routing/MenuAuthRoute";
 import MenuAuthRoute from "./Components/Routing/MenuAuthRoute";
 import Landing from "./Components/Landing";
 import Login from "./Components/Login";
@@ -18,7 +16,6 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isCheckedIn, setIsCheckedIn] = useState(false);
   const [role, setRole] = useState(null);
-  const [isCheckedIn, setIsCheckedIn] = useState(false);
 
   return (
     // TODO: combine contexts and auth routes
