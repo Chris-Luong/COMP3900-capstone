@@ -1,14 +1,35 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { InputBase, Button, Typography, Stack } from "@mui/material";
-import CenterCard from "./UI/CenterCard";
+import CenterCard from "../UI/CenterCard";
 import IconButton from "@mui/material/IconButton";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import Paper from "@mui/material/Paper";
+import sendRequest from "../Utils/Request";
+import RestaurantContext from "../Context/restaurant-context";
+import { useNavigate } from "react-router-dom";
 
-const Restaurant = () => {
+const RestaurantCheckIn = () => {
   const [bookingNumber, setBookingNumber] = useState("");
+  const checkIn = useContext(RestaurantContext);
+  const navigate = useNavigate();
 
-  // TODO: call login api here
+  async function guestCheckIn() {
+    const body = {
+      email: "guest1",
+      password: "temp123",
+    };
+    try {
+      // TODO: replace with more appropriate endpoint, e.g. /guest-checkin
+      const res = await sendRequest("/login", "POST", body);
+      checkIn.setIsCheckedIn(true);
+      localStorage.setItem("token", res.token);
+      localStorage.setItem("checkedIn", true);
+      navigate('/restaurant');
+    } catch (err) {
+      alert(err);
+      console.log(err);
+    }
+  };
 
   return (
     <CenterCard>
@@ -35,9 +56,9 @@ const Restaurant = () => {
           <Button
             variant="outlined"
             type="button"
-            onClick={(e) => console.log("signed in as guest")}
+            onClick={() => guestCheckIn()}
           >
-            Sign In as Guest
+            Check In as Guest
           </Button>
         </Typography>
       </Stack>
@@ -45,4 +66,4 @@ const Restaurant = () => {
   );
 };
 
-export default Restaurant;
+export default RestaurantCheckIn;
