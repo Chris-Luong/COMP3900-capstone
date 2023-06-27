@@ -10,3 +10,13 @@ CREATE TABLE IF NOT EXISTS account (
     password VARCHAR(255) NOT NULL,
     role ENUM('Customer', 'Wait Staff', 'Kitchen Staff', 'Manager')
 );
+
+INSERT IGNORE INTO account(firstname, lastname, email, password, role) VALUES("guest", "account", "guest1", "temp", 1);
+
+INSERT IGNORE INTO account(firstname, lastname, email, password, role) VALUES("guest", "account", "guest2", "temp", 1);
+
+INSERT IGNORE INTO account(firstname, lastname, email, password, role) VALUES("guest", "account", "guest3", "temp", 1);
+
+INSERT IGNORE INTO account(firstname, lastname, email, password, role) VALUES("guest", "account", "guest4", "temp", 1);
+
+INSERT IGNORE INTO account(firstname, lastname, email, password, role) VALUES("guest", "account", "guest5", "temp", 1);
