@@ -15,10 +15,11 @@ const RestaurantCheckIn = () => {
 
   async function guestCheckIn() {
     const body = {
-      email: "guest1@email.com",
-      password: "123123",
+      email: "guest1",
+      password: "temp123",
     };
     try {
+      // TODO: replace with more appropriate endpoint, e.g. /guest-checkin
       const res = await sendRequest("/login", "POST", body);
       checkIn.setIsCheckedIn(true);
       localStorage.setItem("token", res.token);
