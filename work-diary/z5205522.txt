@@ -30,3 +30,6 @@ what I have in the storyboard so far.
 Week4:
 In order to get ready for the demo, I wrapped up my tasks for the Register page which included form validation and sending requests to the completed /register endpoint. I also created a restaurant entry
 page stub to get started on the guest profile Jira ticket. I fixed an issue with cors and another to do with the sendRequest function not resolving or rejecting responses properly.
+
+I completed the functionality for guest profile and merged the staff and customer login pages after discussing with the team. I added new insert statements to create default staff accounts during 
+database initialisation. Minor tasks included changing register so it redirects to login and worked on routing to display the appropriate components based on the logged in account's role. 
