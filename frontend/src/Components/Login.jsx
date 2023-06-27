@@ -25,6 +25,7 @@ const Login = () => {
     console.log(email, password);
     localStorage.setItem("auth", true);
     localStorage.setItem("user-email", event.email);
+    localStorage.setItem("role", "Customer");
     login.setIsLoggedIn(true);
   }
 
