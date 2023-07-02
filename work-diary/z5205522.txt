@@ -33,3 +33,9 @@ page stub to get started on the guest profile Jira ticket. I fixed an issue with
 
 I completed the functionality for guest profile and merged the staff and customer login pages after discussing with the team. I added new insert statements to create default staff accounts during 
 database initialisation. Minor tasks included changing register so it redirects to login and worked on routing to display the appropriate components based on the logged in account's role. 
+
+Week5:
+After the demo and retrospective, we planned out and started our second sprint. Rodney and I were tasked with the "Menu Search, Filter and Sort" and "Manager Interactions" epics, while Grace,
+Gungeet and Christopher were tasked with the big "Menu Ordering" epic. However, as Christopher was having trouble with MySQL and hence couldn't begin the epic, I thought that it was best if
+I got started on it. I worked on the Jira ticket MN3900-2. I defined and created new tables for menu items and categories, then made a new query and an API endpoint to retrieve all menu
+items from the database into a JSON object. On the frontend side, I worked on Menu.jsx to display cards for each item that was fetched using this new endpoint. We can now see a basic menu.
