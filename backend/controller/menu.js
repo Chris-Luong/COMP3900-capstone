@@ -8,9 +8,6 @@ menu = (req, res) => {
     if (!result) {
       return res.status(NOT_FOUND).json({ message: "Items Not Found" });
     }
-    console.log("================================");
-    console.log(result[0].name);
-    console.log("================================");
     res.status(200).json({items: result}); 
   });
 };
