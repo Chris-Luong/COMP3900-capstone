@@ -2,8 +2,7 @@ Week 1:
 
 Group formed and named. Completed expected tasks as a group during Week 1 Lab, including: registering group on Moodle, adding members to the group, Jira registration and contact exchange.
 As a group, we discussed prior backend and frontend experience. Outlined tasks to complete during the week and set up a new meeting time to discuss those tasks.
-
-
+============================================================================================================================================================================================================
 Week 2:
 
 On Tuesday, we decided on a project (wait management) and worked through the given project requirements together so that everyone was on the same page. 
@@ -16,8 +15,9 @@ each to a member. Each member should try to expand on these features.
 
 On Saturday, we began our proposal draft (see meeting minutes). I was tasked with creating a simple storyboard that covered at least the first 2-3 sprints, which I completed for discussion during our 
 Monday meetings.
-
+============================================================================================================================================================================================================
 Week 3:
+
 My first task was to flesh out our novelty features. I ended up moving our booking feature (originally part of core 6 features) into the novelty category and decided on a loyalty program as the last
 novelty. To make up for a missing core feature, I thought it was best to split another core feature (menu ordering + management) into two. I notified the team and they agreed.
 My second task was to update our proposal draft and Jira user stories / product backlog with the novelty features. I also created epics on Jira to better organise everything.
@@ -26,7 +26,19 @@ I edited our proposal draft to reflect changes made in my first task and updated
 My final task for the week was working further on our storyboard. I have completed a majority of the features. There is one final feature to add (waiter staff interactions and their notification centre).
 I have left this to Christopher, as he seemed more familiar with how the notification system should work. As part of the frontend section, it also gives him the chance to make changes and edits to
 what I have in the storyboard so far.
-
+============================================================================================================================================================================================================
 Week4:
+
 In order to get ready for the demo, I wrapped up my tasks for the Register page which included form validation and sending requests to the completed /register endpoint. I also created a restaurant entry
 page stub to get started on the guest profile Jira ticket. I fixed an issue with cors and another to do with the sendRequest function not resolving or rejecting responses properly.
+
+I completed the functionality for guest profile and merged the staff and customer login pages after discussing with the team. I added new insert statements to create default staff accounts during 
+database initialisation. Minor tasks included changing register so it redirects to login and worked on routing to display the appropriate components based on the logged in account's role. 
+============================================================================================================================================================================================================
+Week5:
+
+After the demo and retrospective, we planned out and started our second sprint. Rodney and I were tasked with the "Menu Search, Filter and Sort" and "Manager Interactions" epics, while Grace,
+Gungeet and Christopher were tasked with the big "Menu Ordering" epic. However, as Christopher was having trouble with MySQL and hence couldn't begin the epic, I thought that it was best if
+I got started on it. I worked on the Jira ticket MN3900-2. I defined and created new tables for menu items and categories, then made a new query and an API endpoint to retrieve all menu
+items from the database into a JSON object. On the frontend side, I worked on Menu.jsx to display cards for each item that was fetched using this new endpoint. We can now see a basic menu.
+============================================================================================================================================================================================================

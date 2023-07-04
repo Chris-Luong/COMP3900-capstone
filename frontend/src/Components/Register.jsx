@@ -1,9 +1,7 @@
-import { useContext } from "react";
 import { Button, Stack, TextField, Typography } from "@mui/material";
 import { Formik } from "formik";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
-import LoginContext from "./Context/login-context";
 import CenterCard from "./UI/CenterCard";
 import { Link } from "react-router-dom";
 import sendRequest from "./Utils/Request";
@@ -16,7 +14,7 @@ const schema = Yup.object().shape({
   password: Yup.string()
     .required("Password is required")
     .min(6, "Password must be at least 6 characters")
-    .max(40, "Password must not exceed 10 characters"),
+    .max(10, "Password must not exceed 10 characters"),
   confirm_password: Yup.string()
     .required("Confirm Password is required")
     .oneOf([Yup.ref("password"), null], "Confirm Password does not match"),
@@ -24,7 +22,6 @@ const schema = Yup.object().shape({
 
 const Register = () => {
   const navigate = useNavigate();
-  const login = useContext(LoginContext);
 
   async function handleSubmit(values) {
     const body = {
@@ -38,11 +35,8 @@ const Register = () => {
       const res = await sendRequest("/register", "POST", body);
       console.log(res.token);
       console.log(res.message);
-      login.setIsLoggedIn(true);
-      localStorage.setItem("token", res.token);
-      localStorage.setItem("auth", true);
-      localStorage.setItem("user-email", values.email);
-      navigate('/home');
+      alert(res.message);
+      navigate('/login');
     } catch (err) {
       alert(err);
       console.log(err);
