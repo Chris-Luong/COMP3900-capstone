@@ -1,10 +1,9 @@
 Week 1:
-
     Attended the lab, introduced myself to the class, and found a group. Talked with my group members about the task during the lab and we all agreed to each read the project list and select preferable projects. 
     We selected a meeting time for next week to be Tuesday 7pm and I spent the rest of the week reading the projects and choosing projects 1, 5, 8, 9. Joining the Jira, Confluence, and GitHub group.
 
-Week 2:
 
+Week 2:
     Attended a meeting on Tuesday to decide on a project, we ended up choosing project 1 as that was the most prefereable. As a group we read through the project specification and requirements and delegated / volunteered for work to do. 
     Clarified the project spec and forumlated questions for Wednesday's lab.
 
@@ -13,8 +12,43 @@ Week 2:
 
     Missed Saturday meeting, read the meeting minutes and caught up. Message the scrum leader to delegate some work to me and recieved a task to detail the novelty functionalities which i completed.
 
-Week 3:
 
+Week 3:
     Attended Monday meeting, consulted with team on planning structure of our project, drafting entity-relationship diagram for our database, finalising novel functionalities, and delegating future works. I presented my work completed between the last meeting and now. 
     Brought up the topic of choosing a full stack for development, and we settled on React, Express, and MySQL. From this meeting I had the tasks to create the entity-relationship diagram from the draft, and work with Christopher on the System Architecture.
     I designed and created a few diagrams including the entity-relationship diagram, system architecture diagram, and user interface diagram. I also wrote a part of the system architecture section outlining the back-end tech stack and their descriptions.
+
+
+Week 4:
+    Attended Monday meeting, discussed with the team about setting up the project and codebase. Began researching into how to setup the backend and codebase.  I setup the backend codebase by writing some preliminary code, importing the necessary modules and connected 
+    the backend to mysql
+
+    Attended Wednesday meeting, I shared the process of setting up the backend with the team and showed the team how to start it. Assigned and began working on the backend code for register functionalities.
+
+    Attended Saturday meeting, the backend was refactorised and began going over the new codebase. Finished implementation of registration functionalities and updated the team on how to use these functions.
+
+
+Week 5:
+    Attended Demo A, afterwards, myself along with the team began and finished the retrospective task. 
+    Attended Saturday meeting, talked about the upcoming sprint and allocating tasks, I have taken on 8 user stories for this sprint and also will be helping the design of the frontend.
+
+
+Week 6:
+    Attended Monday meeting, finished a basic design for the menu page and presented it to the team, and began coding for the backend to implement some user stories functionality for the menu system.
+    
+
+
+Week 7:
+    pass
+
+
+Week 8:
+    pass
+
+
+Week 9:
+    pass
+
+
+Week 10:
+    pass
