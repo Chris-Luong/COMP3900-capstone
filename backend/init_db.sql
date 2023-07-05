@@ -27,8 +27,8 @@ CREATE TABLE IF NOT EXISTS menuItems (
 CREATE TABLE IF NOT EXISTS categories (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    -- createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    -- updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS menuItemsCategories (
@@ -65,8 +65,8 @@ INSERT INTO categories (name) VALUES
     ('Breakfast'),
     ('Lunch'),
     ('Dinner'),
-    ('Pizzas'),
-    ('Burgers')
+    ('Pizza'),
+    ('Burger')
 ;
 
 INSERT INTO menuItems (name, description, price) VALUES

@@ -3,6 +3,7 @@ const router = express.Router();
 const register = require('../controller/register')
 const login = require('../controller/login');
 const menu = require('../controller/menu');
+const categories = require('../controller/categories');
 
 /**
  * @swagger
@@ -37,4 +38,5 @@ const menu = require('../controller/menu');
 router.post('/register', register);
 router.post('/login', login);
 router.get('/menu', menu);
+router.get('/categories', categories);
 module.exports = router;
