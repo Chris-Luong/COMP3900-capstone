@@ -8,14 +8,26 @@ const EXISTS = 409;
 const EXISTS_KIND = "exists";
 
 class Menu {
-  constructor(name, description, price, availability) {
-    this.name = name;
-    this.description = description;
-    this.price = price;
-    this.availability = availability;
-  }
 
-  static getFilteredMenuItems(search=null, category=null, min_price, max_price, sort_type, sort_order, cb) {
+  /**
+   * The callback to return the error or result of this function
+   * @callback cb
+   * @param {object}        error            The error if encountered, null otherwise
+   * @param {object}        result            The result if successful, null otherwise
+   */
+  /**
+   * This function is used to get menu items with specific filters, sort, and search.
+   * @param {string}        search           String that is used to search menu items
+   * @param {string}        category         String that is used to filter menu items by category
+   * @param {int}           min_price        Minimum price of the menu items
+   * @param {int}           min_price        Maximum price of the menu items
+   * @param {string}        sort_type        The type to sort menu items by
+   * @param {string}        sort_order       The order to sort menu items by
+   * @param {callback}      cb
+   * 
+   * @returns {null}
+   */
+  static getFilteredMenuItems(search=null, category=null, min_price=0, max_price=100, sort_type="alpha", sort_order="ASC", cb) {
     let final_query = getAllMenuItems;
     let params = [];
     if (category) {
@@ -38,12 +50,8 @@ class Menu {
     }
     params.push(max_price, min_price);
     final_query += sortMenuItems + " menuitems." + sort_type + ' ' + sort_order;
-    console.log(final_query);
-    console.log(params);
 
-    return db.query(final_query, params, (err, result) => {
-      console.log("MySQL Error: " + err);
-      console.log("MySQL Result:", result);
+    db.query(final_query, params, (err, result) => {
       if (err) {
         return cb({
           status: 500,
@@ -54,7 +62,6 @@ class Menu {
       let res = JSON.parse(JSON.stringify(result));
       return cb(null, res);
     })
-
   }
 }
 
