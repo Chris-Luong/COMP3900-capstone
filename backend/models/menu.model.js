@@ -23,6 +23,7 @@ class Menu {
       params.push(category);
     }
     if (search) {
+      search = '%' + search + '%';
       if (category) {
         final_query += searchMenuItemsAND;
       } else {
@@ -36,8 +37,7 @@ class Menu {
       final_query += filterPrice;
     }
     params.push(max_price, min_price);
-    final_query += sortMenuItems;
-    params.push("menuitems." + sort_type, sort_order);
+    final_query += sortMenuItems + " menuitems." + sort_type + ' ' + sort_order;
     console.log(final_query);
     console.log(params);
 
