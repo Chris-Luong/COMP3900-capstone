@@ -39,6 +39,23 @@ CREATE TABLE IF NOT EXISTS menuItemsCategories (
     FOREIGN KEY (categoryId) REFERENCES categories(id)
 );
 
+CREATE TABLE IF NOT EXISTS orders (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    tableId INT UNSIGNED,
+    accountId BIGINT UNSIGNED,
+    orderTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (accountId) REFERENCES account(accountId)
+);
+
+CREATE TABLE IF NOT EXISTS orderItems (
+  itemId INT UNSIGNED,
+  orderId INT UNSIGNED,
+  quantity INT UNSIGNED NOT NULL,
+  note VARCHAR(255),
+  PRIMARY KEY(itemId, orderId),
+  FOREIGN KEY (orderId) REFERENCES orders(id),
+  FOREIGN KEY (itemId) REFERENCES menuItems(id)
+);
 
 -- guest accounts have password 'temp123'
 INSERT IGNORE INTO account(firstname, lastname, email, password, role) VALUES("guest", "account", "guest1", "$2b$10$4oKl80KpkMLh8kl4uA1ToOU/cX6lzjc3W8UXXCC5KUmnfkk8E6dNW", 1);
@@ -96,5 +113,6 @@ INSERT INTO menuItemsCategories (itemId, categoryId) VALUES
     (7, 2),
     (8, 2), -- Fish and Chips - Lunch
     (9, 3); -- Dish for Dinner - Dinner
+
 
 

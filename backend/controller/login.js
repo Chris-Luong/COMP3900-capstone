@@ -11,7 +11,7 @@ login = (req, res) => {
       return res.status(NOT_FOUND).json({ message: "User Not Found" });
     }
     const token = JWTencode(result);
-    res.status(200).json({ message: "Login Successful", token: token }); 
+    return res.status(200).json({ message: "Login Successful", token: token }); 
   });
 };
 
