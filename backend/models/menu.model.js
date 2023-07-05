@@ -1,5 +1,5 @@
 const db = require("../db/db");
-const { getAllMenuItems } = require("../db/queries/menu.queries");
+const { getAllMenuItems, filterCategory, searchMenuItemsAND, searchMenuItems, filterPrice, filterPriceAND, sortMenuItems } = require("../db/queries/menu.queries");
 
 // TODO: create constants for universal error codes and messages
 const NOT_FOUND = 401;
@@ -15,25 +15,46 @@ class Menu {
     this.availability = availability;
   }
 
-  static getAllMenuItems(next) {
-    return db.query(getAllMenuItems, [], (err, results) => {
-      console.log("MySQL Error: " + err);
-      console.log("MySQL Result:", results);
-
-      if (err) {
-        return next(
-          {
-            status: EXISTS,
-            message: "Error retrieving menu items",
-            kind: EXISTS_KIND,
-          },
-          null
-        );
+  static getFilteredMenuItems(search=null, category=null, min_price, max_price, sort_type, sort_order, cb) {
+    let final_query = getAllMenuItems;
+    let params = [];
+    if (category) {
+      final_query += filterCategory;
+      params.push(category);
+    }
+    if (search) {
+      if (category) {
+        final_query += searchMenuItemsAND;
+      } else {
+        final_query += searchMenuItems;
       }
+      params.push(search);
+    }
+    if (category || search) {
+      final_query += filterPriceAND;
+    } else {
+      final_query += filterPrice;
+    }
+    params.push(max_price, min_price);
+    final_query += sortMenuItems;
+    params.push("menuitems." + sort_type, sort_order);
+    console.log(final_query);
+    console.log(params);
 
-      let result = JSON.parse(JSON.stringify(results));
-      return next(null, result);
-    });
+    return db.query(final_query, params, (err, result) => {
+      console.log("MySQL Error: " + err);
+      console.log("MySQL Result:", result);
+      if (err) {
+        return cb({
+          status: 500,
+          message: "Backend internal Error.",
+          kind: "Internal server error."
+        }, null);
+      }
+      let res = JSON.parse(JSON.stringify(result));
+      return cb(null, res);
+    })
+
   }
 }
 
