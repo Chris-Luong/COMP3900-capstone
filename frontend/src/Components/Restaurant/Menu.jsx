@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import {
   Card,
+  CardActions,
   CardHeader,
   CardContent,
   Typography,
@@ -8,16 +9,28 @@ import {
   CircularProgress,
   Grid,
 } from "@mui/material";
+import Box from '@mui/material/Box';
 import { getAllMenuItems, getAllCategories } from "../Helper";
+import Modal from '@mui/material/Modal';
 import FilterModal from "../UI/FilterModal";
 
 const MenuItemCard = ({ name, description, price, availability, onClick }) => {
   // TODO: add item image
   // for now, display all this info in the card, but for final version, will only
   // want to show name, image and price. description will be added in modal
+  const [showModal, setShowModal] = useState(false);
+
+  const openModal = () => {
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
 
   return (
-    <Grid item onClick={onClick}>
+    <div>
+    <Grid item onClick={openModal}>
       {availability === 1 && (
         <Card
           variant="outlined"
@@ -30,9 +43,9 @@ const MenuItemCard = ({ name, description, price, availability, onClick }) => {
             <Typography>${price}</Typography>
           </CardContent>
           {/* add to order should be in the modal */}
-          {/* <CardActions>
+          {<CardActions>
             <Button size="small">Add to Order</Button>
-          </CardActions> */}
+          </CardActions> }
           <style>
             {`
               .highlight-card-on-hover:hover {
@@ -56,7 +69,44 @@ const MenuItemCard = ({ name, description, price, availability, onClick }) => {
           </Typography>
         </Card>
       )}
-    </Grid>
+      </Grid>
+
+      <Modal
+      open={showModal}
+      onClose={closeModal}
+      aria-labelledby="modal-title"
+      aria-describedby="modal-description"
+    >
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 400,
+          bgcolor: 'background.paper',
+          boxShadow: 24,
+          p: 4,
+        }}
+      >
+        <Typography id="modal-title" variant="h6" component="h2">
+          {name}
+        </Typography>
+
+        <Typography id="modal-description" variant="body1" mt={2}>
+          {description}
+        </Typography>
+
+        <Typography variant="body1" mt={2}>
+          Price: {price}
+        </Typography>
+
+        <Button variant="contained" onClick={closeModal} mt={3}>
+          Close
+        </Button>
+      </Box>
+    </Modal>
+  </div>
   );
 };
 
