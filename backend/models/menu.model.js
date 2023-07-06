@@ -1,5 +1,5 @@
 const db = require("../db/db");
-const { getAllMenuItems, getCategories, filterCategory, searchMenuItemsAND, searchMenuItems, filterPrice, filterPriceAND, sortMenuItems } = require("../db/queries/menu.queries");
+const { getAllMenuItems, getCategories, filterCategory, searchMenuItemsAND, searchMenuItems, filterPrice, filterPriceAND, sortMenuItems, insertMenuItem, insertMenuItemCategories, deleteMenuItem, deleteMenuItemCategories, getCategory } = require("../db/queries/menu.queries");
 
 // TODO: create constants to share between all *.model.js files
 const NOT_FOUND = 401;
@@ -11,7 +11,89 @@ class Menu {
    * The callback to return the error or result of this function
    * @callback cb
    * @param {object}        error            The error if encountered, null otherwise
-   * @param {object}        result            The result if successful, null otherwise
+   * @param {object}        result           The result if successful, null otherwise
+   */
+  /**
+   * Add an item to the menu with along with given parameters.
+   * 
+   */
+  static addMenuItem(name, description, ingredients, categories, price, thumb, cb) {
+    const menuValues = [name, description, ingredients, price, thumb];
+    let itemId;
+    db.query(insertMenuItem, menuValues, (err, result) => {
+      if (err) {
+        cb({
+          status: 500,
+          message: "Failed to add item to menu",
+          kind: "Internal Server Error."
+        }, null);
+        return;
+      }
+      itemId = result.insertId;
+    });
+
+    categories.forEach((category) => {
+      db.query(getCategory, category, (err, result) => {
+        if (err) {
+          cb({
+            status: 500,
+            message: "Failed to category id",
+            kind: "Internal Server Error."
+          }, null);
+          return;
+        }
+        console.log(result[0].id);
+        const categoryValues = [itemId, result[0].id];
+        db.query(insertMenuItemCategories, categoryValues, (err) => {
+          if (err) {
+            cb({
+              status: 500,
+              message: "Failed to add category to menu item",
+              kind: "Internal Server Error."
+            }, null);
+            return;
+          }
+        });
+      });
+    });
+    cb(null, {message: "Successfully added item to the menu!"});
+    return;
+  }
+
+  /**
+   * 
+   */
+  static removeMenuItem(id, cb) {
+    db.query(deleteMenuItemCategories, id, (err) => {
+      if (err) {
+        cb({
+          status: 500,
+          message: "Failed to delete category from menu item",
+          kind: "Internal Server Error"
+        }, null);
+        return;
+      }
+    })
+    db.query(deleteMenuItem, id, (err, result) => {
+      if (err) {
+        cb({
+          status: 500,
+          message: "Failed to delete item from menu",
+          kind: "Internal Server Error"
+        }, null);
+        return;
+      }
+      cb(null, {message: "Successfully deleted item from menu"});
+    })
+    return;
+  }
+
+
+  /**
+   * The callback to return the error or result of this function
+   * @callback cb
+   * @param {object}        error            The error if encountered, null otherwise
+   * @param {object}        result           The result if successful, null otherwise
    */
   /**
    * This function is used to get menu items with specific filters, sort, and search.
@@ -51,15 +133,17 @@ class Menu {
 
     db.query(final_query, params, (err, result) => {
       if (err) {
-        return cb({
+        cb({
           status: 500,
-          message: "Backend internal Error.",
+          message: "Failed to retrieve menu items",
           kind: "Internal server error."
         }, null);
+        return;
       }
       let res = JSON.parse(JSON.stringify(result));
-      return cb(null, res);
+      cb(null, res);
     })
+    return;
   }
 
   static getCategories(next) {
