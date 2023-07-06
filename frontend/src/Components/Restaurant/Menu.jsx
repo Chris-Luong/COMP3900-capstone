@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import {
   Card,
-  CardActions,
   CardHeader,
   CardContent,
   Typography,
@@ -13,21 +12,56 @@ import Box from '@mui/material/Box';
 import { getAllMenuItems, getAllCategories } from "../Helper";
 import Modal from '@mui/material/Modal';
 import FilterModal from "../UI/FilterModal";
+import sendRequest from "../Utils/Request";
 
-const MenuItemCard = ({ name, description, price, availability, onClick }) => {
+const MenuItemCard = ({ key, name, description, price, availability, onClick }) => {
   // TODO: add item image
   // for now, display all this info in the card, but for final version, will only
   // want to show name, image and price. description will be added in modal
   const [showModal, setShowModal] = useState(false);
+  const [quantity, setQuantity] = useState(1);
 
   const openModal = () => {
     setShowModal(true);
+  };
+
+  const handleQuantityChange = (newQuantity) => {
+    setQuantity(newQuantity);
   };
 
   const closeModal = () => {
     setShowModal(false);
   };
 
+  async function handleAddToCart(values) {
+    const body = {
+      itemId: key,
+      quantity: values.quantity
+    };
+
+    try {
+      const response = await sendRequest("/orderItem/add", "POST", body);
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data.message);
+        alert(data.message);
+        // Perform any additional logic after adding the item to the cart
+      } else {
+        throw new Error("Failed to add item to cart");
+      }
+    } catch (error) {
+      alert(error);
+      console.log(error);
+    }
+  }
+  const handleIncrementQuantity = () => {
+    setQuantity((prevQuantity) => prevQuantity + 1);
+  };
+
+  const handleDecrementQuantity = () => {
+    setQuantity((prevQuantity) => Math.max(prevQuantity - 1, 1));
+  };
   return (
     <div>
     <Grid item onClick={openModal}>
@@ -43,9 +77,9 @@ const MenuItemCard = ({ name, description, price, availability, onClick }) => {
             <Typography>${price}</Typography>
           </CardContent>
           {/* add to order should be in the modal */}
-          {<CardActions>
+          {/*<CardActions>
             <Button size="small">Add to Order</Button>
-          </CardActions> }
+      </CardActions> */}
           <style>
             {`
               .highlight-card-on-hover:hover {
@@ -101,9 +135,19 @@ const MenuItemCard = ({ name, description, price, availability, onClick }) => {
           Price: {price}
         </Typography>
 
-        <Button variant="contained" onClick={closeModal} mt={3}>
-          Close
-        </Button>
+        <Typography variant="body1" component="div" mt={2}>
+            Quantity:
+            <Button onClick={handleDecrementQuantity}>-</Button>
+            {quantity}
+            <Button onClick={handleIncrementQuantity}>+</Button>
+          </Typography>
+
+        <Button variant="contained" onClick={handleAddToCart} mt={3}>
+            Add to Cart
+      </Button>
+      <Grid container justifyContent="flex-end">
+      <Button onClick={closeModal}>Close</Button>
+    </Grid>
       </Box>
     </Modal>
   </div>
