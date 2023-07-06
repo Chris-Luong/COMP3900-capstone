@@ -34,6 +34,8 @@ const MenuItemCard = ({ key, name, description, price, availability, onClick }) 
   };
 
   async function handleAddToCart(values) {
+    // TODO: include values.orderId in the body
+    // Need to implement in a way such that an order is created and the orderId is forwarded 
     const body = {
       itemId: key,
       quantity: values.quantity
@@ -46,7 +48,6 @@ const MenuItemCard = ({ key, name, description, price, availability, onClick }) 
         const data = await response.json();
         console.log(data.message);
         alert(data.message);
-        // Perform any additional logic after adding the item to the cart
       } else {
         throw new Error("Failed to add item to cart");
       }
