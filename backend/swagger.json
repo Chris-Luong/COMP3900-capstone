@@ -52,7 +52,48 @@
     "/menu": {
       "get": {
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "type": "string",
+            "description": "Search term for menu items"
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "type": "string",
+            "description": "Category of menu items"
+          },
+          {
+            "name": "min_price",
+            "in": "query",
+            "type": "number",
+            "format": "float",
+            "description": "Minimum price of menu items"
+          },
+          {
+            "name": "max_price",
+            "in": "query",
+            "type": "number",
+            "format": "float",
+            "description": "Maximum price of menu items"
+          },
+          {
+            "name": "sort_type",
+            "in": "query",
+            "type": "string",
+            "enum": ["price", "name"],
+            "description": "Sorting type for menu items"
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "type": "string",
+            "enum": ["ASC", "DESC"],
+            "description": "Sorting order for menu items"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"

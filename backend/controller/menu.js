@@ -1,7 +1,8 @@
 const { Menu, NOT_FOUND } = require('../models/menu.model');
 
 menu = (req, res) => {
-  Menu.getAllMenuItems((err, result) => {
+  const { search, category, min_price, max_price, sort_type, sort_order } = req.query;
+  Menu.getFilteredMenuItems(search, category, min_price, max_price, sort_type, sort_order, (err, result) => {
     if (err) {
       return res.status(err.status).json({ message: err.message });
     }
