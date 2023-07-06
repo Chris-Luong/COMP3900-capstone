@@ -1,11 +1,9 @@
 const db = require("../db/db");
 const { getAllMenuItems, getCategories, filterCategory, searchMenuItemsAND, searchMenuItems, filterPrice, filterPriceAND, sortMenuItems } = require("../db/queries/menu.queries");
 
-// TODO: create constants for universal error codes and messages
+// TODO: create constants to share between all *.model.js files
 const NOT_FOUND = 401;
-const NOT_FOUND_KIND = "not_found";
 const EXISTS = 409;
-const EXISTS_KIND = "exists";
 
 class Menu {
 
@@ -27,7 +25,7 @@ class Menu {
    * 
    * @returns {null}
    */
-  static getFilteredMenuItems(search=null, category=null, min_price=0, max_price=100, sort_type="alpha", sort_order="ASC", cb) {
+  static getFilteredMenuItems(search=null, category=null, min_price=0, max_price=100, sort_type="name", sort_order="ASC", cb) {
     let final_query = getAllMenuItems;
     let params = [];
     if (category) {
@@ -69,9 +67,9 @@ class Menu {
       if (err) {
         return next(
           {
-            status: EXISTS,
+            status: 500,
             message: "Error retrieving categories",
-            kind: EXISTS_KIND,
+            kind: "Internal server error."
           },
           null
         );
