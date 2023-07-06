@@ -21,7 +21,7 @@ addItem = (req, res) => {
 }
 
 removeItem = (req, res) => {
-  const id = req.body;
+  const id = req.body.id;
   Menu.removeMenuItem(id, (err, result) => {
     if (err) {
       return res.status(err.status).json({ message: err.message });

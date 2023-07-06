@@ -43,7 +43,7 @@ WHERE menuItems.id = ?
 
 const deleteMenuItemCategories = `
 DELETE FROM menuItemsCategories
-WHERE menuItemsCategories.id = ?
+WHERE menuItemsCategories.itemId = ?
 `
 
 const insertMenuItem = `

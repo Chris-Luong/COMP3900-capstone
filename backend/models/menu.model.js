@@ -9,13 +9,21 @@ class Menu {
 
   /**
    * The callback to return the error or result of this function
-   * @callback cb
+   * @callback callback
    * @param {object}        error            The error if encountered, null otherwise
    * @param {object}        result           The result if successful, null otherwise
    */
   /**
    * Add an item to the menu with along with given parameters.
+   * @param {string}        name             The name of the menu item
+   * @param {string}        description      The description of the menu item
+   * @param {string}        ingredients      The ingredients of the menu item
+   * @param {string}        categories       The menu item's categories
+   * @param {int}           price            The price of the menu item
+   * @param {string}        thumb            The path of the image
+   * @param {callback}      cb               Callback function
    * 
+   * @returns {null}
    */
   static addMenuItem(name, description, ingredients, categories, price, thumb, cb) {
     const menuValues = [name, description, ingredients, price, thumb];
@@ -42,7 +50,6 @@ class Menu {
           }, null);
           return;
         }
-        console.log(result[0].id);
         const categoryValues = [itemId, result[0].id];
         db.query(insertMenuItemCategories, categoryValues, (err) => {
           if (err) {
@@ -61,10 +68,20 @@ class Menu {
   }
 
   /**
+   * The callback to return the error or result of this function
+   * @callback callback
+   * @param {object}        error            The error if encountered, null otherwise
+   * @param {object}        result           The result if successful, null otherwise
+   */
+  /**
+   * Remove an item to the menu using the db menuItem id.
+   * @param {int}           id               The id of the db entry of the menu item 
+   * @param {callback}      cb               Callback function
    * 
+   * @returns {null}
    */
   static removeMenuItem(id, cb) {
-    db.query(deleteMenuItemCategories, id, (err) => {
+    db.query(deleteMenuItemCategories, [id], (err) => {
       if (err) {
         cb({
           status: 500,
@@ -73,8 +90,8 @@ class Menu {
         }, null);
         return;
       }
-    })
-    db.query(deleteMenuItem, id, (err, result) => {
+    });
+    db.query(deleteMenuItem, [id], (err, result) => {
       if (err) {
         cb({
           status: 500,
@@ -83,15 +100,15 @@ class Menu {
         }, null);
         return;
       }
-      cb(null, {message: "Successfully deleted item from menu"});
-    })
+    });
+    cb(null, {message: "Successfully deleted item from menu"});
     return;
   }
 
 
   /**
    * The callback to return the error or result of this function
-   * @callback cb
+   * @callback callback
    * @param {object}        error            The error if encountered, null otherwise
    * @param {object}        result           The result if successful, null otherwise
    */
@@ -103,7 +120,7 @@ class Menu {
    * @param {int}           min_price        Maximum price of the menu items
    * @param {string}        sort_type        The type to sort menu items by
    * @param {string}        sort_order       The order to sort menu items by
-   * @param {callback}      cb
+   * @param {callback}      cb               Callback function
    * 
    * @returns {null}
    */
