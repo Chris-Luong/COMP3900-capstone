@@ -42,3 +42,10 @@ Gungeet and Christopher were tasked with the big "Menu Ordering" epic. However, 
 I got started on it. I worked on the Jira ticket MN3900-2. I defined and created new tables for menu items and categories, then made a new query and an API endpoint to retrieve all menu
 items from the database into a JSON object. On the frontend side, I worked on Menu.jsx to display cards for each item that was fetched using this new endpoint. We can now see a basic menu.
 ============================================================================================================================================================================================================
+Week6:
+
+Talked with Rodney about how to design the menu screen and how we could 
+incorporate filters and the order screen.
+Added a simple filter modal that pops up on a button click. Currently does not
+filter anything (will send a backend request that Rodney is working on).
+============================================================================================================================================================================================================

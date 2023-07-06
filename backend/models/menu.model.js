@@ -1,5 +1,5 @@
 const db = require("../db/db");
-const { getAllMenuItems } = require("../db/queries/menu.queries");
+const { getAllMenuItems, getCategories } = require("../db/queries/menu.queries");
 
 // TODO: create constants for universal error codes and messages
 const NOT_FOUND = 401;
@@ -25,6 +25,24 @@ class Menu {
           {
             status: EXISTS,
             message: "Error retrieving menu items",
+            kind: EXISTS_KIND,
+          },
+          null
+        );
+      }
+
+      let result = JSON.parse(JSON.stringify(results));
+      return next(null, result);
+    });
+  }
+
+  static getCategories(next) {
+    return db.query(getCategories, [], (err, results) => {
+      if (err) {
+        return next(
+          {
+            status: EXISTS,
+            message: "Error retrieving categories",
             kind: EXISTS_KIND,
           },
           null
