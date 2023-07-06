@@ -2,6 +2,10 @@ const getAllMenuItems = `
 SELECT menuitems.* FROM menuItems
 `;
 
+const getCategories = `
+  SELECT * FROM categories
+`;
+
 const filterCategory = `
 JOIN menuitemscategories ON menuitems.id = menuitemscategories.itemId
 JOIN categories ON menuitemscategories.categoryId = categories.id
@@ -29,6 +33,7 @@ AND menuitems.name LIKE ?
 
 module.exports = {
   getAllMenuItems,
+  getCategories,
   filterCategory,
   sortMenuItems,
   searchMenuItems,
