@@ -151,7 +151,7 @@
               "type": "object",
               "properties": {
                 "id": {
-                  "example": "any"
+                  "example": 10
                 }
               }
             }
