@@ -8,6 +8,7 @@ import { getAllMenuItems, getAllCategories, applyFilters } from "../Helper";
 import FilterModal from "../UI/FilterModal";
 import MenuItemCard from "../UI/MenuItemCard";
 
+
 const sortByValues = {
   1: {
     by: "name",
@@ -29,6 +30,7 @@ const sortByValues = {
     label: "Price (DESC)",
     order: "DESC",
   },
+
 };
 
 const Menu = () => {
