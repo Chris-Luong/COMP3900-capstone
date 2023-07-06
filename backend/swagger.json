@@ -140,6 +140,64 @@
         }
       }
     },
+    "/menu/edit": {
+      "put": {
+        "description": "Edit a menu item",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "type": "integer",
+            "description": "ID of the menu item"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "type": "string",
+            "description": "Name of the menu item"
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "type": "string",
+            "description": "Description of the menu item"
+          },
+          {
+            "name": "ingredients",
+            "in": "query",
+            "type": "string",
+            "description": "Ingredients of the menu item"
+          },
+          {
+            "name": "categories",
+            "in": "query",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "description": "Categories of the menu item"
+          },
+          {
+            "name": "price",
+            "in": "query",
+            "type": "int",
+            "description": "Price of the menu item"
+          },
+          {
+            "name": "thumbnail",
+            "in": "query",
+            "type": "string",
+            "description": "Path of the image"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/menu/remove": {
       "delete": {
         "description": "",

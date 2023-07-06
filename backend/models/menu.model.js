@@ -1,5 +1,18 @@
 const db = require("../db/db");
-const { getAllMenuItems, getCategories, filterCategory, searchMenuItemsAND, searchMenuItems, filterPrice, filterPriceAND, sortMenuItems, insertMenuItem, insertMenuItemCategories, deleteMenuItem, deleteMenuItemCategories, getCategory } = require("../db/queries/menu.queries");
+const { getAllMenuItems,
+        getCategories, 
+        filterCategory, 
+        searchMenuItemsAND, 
+        searchMenuItems, 
+        filterPrice, 
+        filterPriceAND, 
+        sortMenuItems, 
+        insertMenuItem, 
+        insertMenuItemCategories, 
+        deleteMenuItem, 
+        deleteMenuItemCategories, 
+        getCategory,
+        updateMenuItem } = require("../db/queries/menu.queries");
 
 // TODO: create constants to share between all *.model.js files
 const NOT_FOUND = 401;
@@ -45,7 +58,7 @@ class Menu {
         if (err) {
           cb({
             status: 500,
-            message: "Failed to category id",
+            message: "Failed to get category id",
             kind: "Internal Server Error."
           }, null);
           return;
@@ -64,6 +77,55 @@ class Menu {
       });
     });
     cb(null, {message: "Successfully added item to the menu!"});
+    return;
+  }
+
+  static editMenuItem(id, name, description, ingredients, categories, price, thumb, cb) {
+    const menuItemValues = [name, description, ingredients, price, thumb, id];
+    db.query(updateMenuItem, menuItemValues, (err) => {
+      if (err) {
+        cb({
+          status: 500,
+          message: "Failed to update menu item",
+          kind: "Internal Server Error."
+        }, null);
+        return;
+      }
+    });
+    db.query(deleteMenuItemCategories, id, (err) => {
+      if (err) {
+        cb({
+          status: 500,
+          message: "Failed to delete categories from item",
+          kind: "Internal Server Error."
+        }, null);
+        return;
+      }
+    });
+    categories.forEach((category) => {
+      db.query(getCategory, category, (err, result) => {
+        if (err) {
+          cb({
+            status: 500,
+            message: "Failed to get category id",
+            kind: "Internal Server Error."
+          }, null);
+          return;
+        }
+        const categoryValues = [id, result[0].id];
+        db.query(insertMenuItemCategories, categoryValues, (err) => {
+          if (err) {
+            cb({
+              status: 500,
+              message: "Failed to add category to menu item",
+              kind: "Internal Server Error."
+            }, null);
+            return;
+          }
+        });
+      });
+    });
+    cb(null, {message: "Successfully updated item to the menu!"});
     return;
   }
 

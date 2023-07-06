@@ -56,6 +56,12 @@ INSERT INTO menuItemsCategories (itemId, categoryId)
 VALUES (?, ?)
 `
 
+const updateMenuItem = `
+UPDATE menuItems
+SET name = ?, description = ?, ingredients = ?, price = ?, thumbnail = ?
+WHERE menuItems.id = ?
+`
+
 module.exports = {
   getAllMenuItems,
   getCategories,
@@ -69,5 +75,6 @@ module.exports = {
   deleteMenuItem,
   deleteMenuItemCategories,
   insertMenuItem,
-  insertMenuItemCategories
+  insertMenuItemCategories,
+  updateMenuItem
 };
