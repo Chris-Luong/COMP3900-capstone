@@ -101,6 +101,69 @@
         }
       }
     },
+    "/menu/add": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "Hot Apple Pie"
+                },
+                "description": {
+                  "example": "Yummy!"
+                },
+                "ingredients": {
+                  "example": "Apple, Sugar, Flour, Water"
+                },
+                "categories": {
+                  "example": ["Breakfast", "Lunch", "Dinner"]
+                },
+                "price": {
+                  "example": 4.99
+                },
+                "thumb": {
+                  "example": ""
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/menu/remove": {
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/orderItem/createOrder": {
       "post": {
         "description": "",

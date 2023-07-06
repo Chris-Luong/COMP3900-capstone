@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const register = require('../controller/register')
 const login = require('../controller/login');
-const menu = require('../controller/menu');
+const {menu, addItem, removeItem} = require('../controller/menu');
 const categories = require('../controller/categories');
 const { viewOrders, addMenuItems, createOrder } = require('../controller/orderItem');
 
@@ -41,6 +41,8 @@ const { viewOrders, addMenuItems, createOrder } = require('../controller/orderIt
 router.post('/register', register);
 router.post('/login', login);
 router.get('/menu', menu);
+router.post('/menu/add', addItem);
+router.delete('/menu/remove', removeItem);
 router.get('/categories', categories);
  /**
  * @swagger

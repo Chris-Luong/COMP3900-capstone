@@ -6,11 +6,32 @@ menu = (req, res) => {
     if (err) {
       return res.status(err.status).json({ message: err.message });
     }
-    if (!result) {
-      return res.status(NOT_FOUND).json({ message: "Items Not Found" });
-    }
-    res.status(200).json({items: result}); 
+    res.status(200).json(result); 
   });
 };
 
-module.exports = menu;
+addItem = (req, res) => {
+  const {name, description, ingredients, categories, price, thumb} = req.body;
+  Menu.addMenuItem(name, description, ingredients, categories, price, thumb, (err, result) => {
+    if (err) {
+      return res.status(err.status).json({ message: err.message });
+    }
+    res.status(200).json(result); 
+  })
+}
+
+removeItem = (req, res) => {
+  const id = req.body.id;
+  Menu.removeMenuItem(id, (err, result) => {
+    if (err) {
+      return res.status(err.status).json({ message: err.message });
+    }
+    res.status(200).json(result); 
+  })
+}
+
+module.exports = {
+  menu,
+  addItem,
+  removeItem
+};
