@@ -3,27 +3,19 @@ import {
   Typography,
   Button,
   Card,
-  CardContent,
-  CardActions,
   TextField,
-  FormLabel,
-  FormControl,
   FormGroup,
   FormControlLabel,
-  Checkbox,
   DialogActions,
   IconButton,
   Slider,
   MenuItem,
-  CircularProgress,
+  DialogTitle,
+  DialogContent,
+  Radio,
+  RadioGroup,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import { useState, useEffect } from "react";
-import { getAllCategories } from "../Helper";
 
 const style = {
   position: "absolute",
@@ -35,18 +27,26 @@ const style = {
   borderRadius: "15px",
 };
 
-const checkBoxStyle = {
+const radioStyle = {
   display: "grid",
   gridTemplateColumns: "repeat(3, 1fr)",
 };
 
+/*
+  TODO: user may add inputs into modal and then click the Close button.
+        filter inputs will then be saved in the modal, but not be applied.
+        might be good ux to indicate this 
+        e.g., search bar is green is currently applied, or helper text appears
+        saying what is being filtered
+*/
 const FilterModal = ({
   showFilter,
   toggleFilter,
   searchString,
   setSearchString,
   categories,
-  setCategories,
+  selectedCategory,
+  setSelectedCategory,
   price,
   setPrice,
   sortByValues,
@@ -59,30 +59,9 @@ const FilterModal = ({
     setPrice(newPrice);
   };
 
-  const toggleCategoryCheckbox = (categoryId) => {
-    const selectedCategories = {
-      ...categories,
-      [categoryId]: {
-        name: categories[categoryId].name,
-        selected: !categories[categoryId].selected,
-      },
-    };
-    setCategories(selectedCategories);
+  const handleCategoryRadioChange = (e) => {
+    setSelectedCategory(e.target.value);
   };
-
-  // console.log(Object.keys(categories));
-
-  // const [loading, setLoading] = useState(false);
-  // useEffect(() => {
-  //   setLoading(true);
-  //   const getCategories = async () => {
-  //     let itemsData = await getAllCategories();
-  //     setCategories(itemsData);
-  //     console.log(itemsData);
-  //     setLoading(false);
-  //   };
-  //   getCategories();
-  // }, []);
 
   return (
     <Modal open={showFilter}>
@@ -112,37 +91,22 @@ const FilterModal = ({
             />
           </FormGroup>
           <Typography variant="h6">Category</Typography>
-          <FormGroup sx={checkBoxStyle}>
-            {/* {categories.forEach((category) => (
-              <FormControlLabel
-                key={category.name}
-                control={
-                  <Checkbox
-                    checked={categories.categories[category.name]}
-                    onChange={() => console.log(`${category.name} changed`)}
-                    name={category.name}
-                  />
-                }
-                label={category.name}
-              />
-            ))} */}
-
+          <RadioGroup
+            sx={radioStyle}
+            onChange={handleCategoryRadioChange}
+            defaultValue=""
+            value={selectedCategory}
+          >
+            <FormControlLabel value="" control={<Radio />} label="All" />
             {Object.keys(categories).map((c) => (
               <FormControlLabel
                 key={c}
-                control={
-                  <Checkbox
-                    checked={categories[c].selected}
-                    onChange={() => {
-                      toggleCategoryCheckbox(c);
-                    }}
-                    name={c}
-                  />
-                }
-                label={categories[c].name}
+                value={categories[c]}
+                control={<Radio />}
+                label={categories[c]}
               />
             ))}
-          </FormGroup>
+          </RadioGroup>
           <Typography variant="h6">Price</Typography>
           <Slider
             value={price}
@@ -151,9 +115,9 @@ const FilterModal = ({
           />
           <Typography variant="h6">Sort</Typography>
           <TextField select fullWidth value={sort} onChange={handleSortChange}>
-            {sortByValues.map((value) => (
-              <MenuItem key={value} value={value}>
-                {value}
+            {Object.keys(sortByValues).map((id) => (
+              <MenuItem key={id} value={id}>
+                {sortByValues[id].label}
               </MenuItem>
             ))}
           </TextField>
