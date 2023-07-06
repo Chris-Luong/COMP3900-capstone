@@ -5,11 +5,7 @@ import sendRequest from "./Utils/Request";
 export const getAllMenuItems = async () => {
   try {
     const res = await sendRequest("/menu", "GET");
-    const items = [];
-    for (const item in res.items) {
-      items.push(res.items[item]);
-    }
-    return items;
+    return res.items;
   } catch (err) {
     console.log(err);
     return [];
@@ -24,6 +20,31 @@ export const getAllCategories = async () => {
       categories.push(res.categories[category]);
     }
     return categories;
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+};
+
+export const applyFilters = async (
+  search,
+  category,
+  minPrice,
+  maxPrice,
+  sortType,
+  sortOrder
+) => {
+  try {
+    let url = "/menu?";
+    url += search ? `&search=${search}` : "";
+    url += category ? `&category=${category}` : "";
+    url += minPrice || minPrice === 0 ? `&min_price=${minPrice}` : "";
+    url += maxPrice | (maxPrice === 0) ? `&max_price=${maxPrice}` : "";
+    url += sortType ? `&sort_type=${sortType}` : "";
+    url += sortOrder ? `&sort_order=${sortOrder}` : "";
+
+    const res = await sendRequest(url, "GET");
+    return res.items;
   } catch (err) {
     console.log(err);
     return [];

@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import {
-  Card,
-  CardHeader,
-  CardContent,
-  Typography,
   Button,
   CircularProgress,
   Grid,
 } from "@mui/material";
+import { getAllMenuItems, getAllCategories, applyFilters } from "../Helper";
+import FilterModal from "../UI/FilterModal";
+import MenuItemCard from "../UI/MenuItemCard";
 import Box from '@mui/material/Box';
 import { getAllMenuItems, getAllCategories } from "../Helper";
 import Modal from '@mui/material/Modal';
@@ -153,14 +152,31 @@ const MenuItemCard = ({ key, name, description, price, availability, onClick }) 
     </Modal>
   </div>
   );
-};
 
-const sortByValues = [
-  "Alphabetical (ASC)",
-  "Alphabetical (DESC)",
-  "Price (ASC)",
-  "Price (DESC)",
-];
+
+const sortByValues = {
+  1: {
+    by: "name",
+    label: "Alphabetical (ASC)",
+    order: "ASC",
+  },
+  2: {
+    by: "name",
+    label: "Alphabetical (DESC)",
+    order: "DESC",
+  },
+  3: {
+    by: "price",
+    label: "Price (ASC)",
+    order: "ASC",
+  },
+  4: {
+    by: "price",
+    label: "Price (DESC)",
+    order: "DESC",
+  },
+
+};
 
 const Menu = () => {
   const [menuItems, setMenuItems] = useState([]);
@@ -169,11 +185,11 @@ const Menu = () => {
 
   const [searchString, setSearchString] = useState("");
   const [categories, setCategories] = useState({});
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [price, setPrice] = useState([0, 100]);
-  const [sort, setSort] = useState(sortByValues[0]);
+  const [sort, setSort] = useState(1);
 
   const toggleFilter = () => {
-    // TODO: send filters to backend here
     setShowFilter(!showFilter);
   };
 
@@ -181,22 +197,33 @@ const Menu = () => {
     setSort(e.target.value);
   };
 
-  // TODO: reduce code repetition
-  const clearFilters = () => {
-    let unselectCategories = {};
-    Object.keys(categories).forEach(c => {
-      unselectCategories[c] = {
-        "name": categories[c].name,
-        "selected": false
-      }
-    });
-    console.log(unselectCategories);
-    // console.log(Object.keys(categories))
-    setCategories(unselectCategories);
+  const handleFilters = async () => {
+    setLoading(true);
+    let itemsData = await applyFilters(
+      searchString,
+      selectedCategory,
+      price[0],
+      price[1],
+      sortByValues[sort].by,
+      sortByValues[sort].order
+    );
+    console.log(itemsData);
+    setMenuItems(itemsData);
+
+    toggleFilter();
+    setLoading(false);
+  };
+
+  const clearFilters = async () => {
+    setSelectedCategory("");
     setSearchString("");
     setPrice([0, 100]);
-    setSort(sortByValues[0]);
-    // send filters to backend here
+    setSort(1);
+    setLoading(true);
+    let itemsData = await getAllMenuItems();
+    setMenuItems(itemsData);
+    toggleFilter();
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -206,11 +233,9 @@ const Menu = () => {
       setMenuItems(itemsData);
       let categoriesData = await getAllCategories();
       let categoriesObject = {};
-      categoriesData.forEach(c => {
-        categoriesObject[c.id] = {
-          "name": c.name,
-          "selected": false
-        };
+      categoriesData.forEach((c) => {
+        // categories have id:name key:value pairs
+        categoriesObject[c.id] = c.name;
       });
       setCategories(categoriesObject);
       setLoading(false);
@@ -246,19 +271,15 @@ const Menu = () => {
               searchString={searchString}
               setSearchString={setSearchString}
               categories={categories}
-              setCategories={setCategories}
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
               price={price}
               setPrice={setPrice}
               sortByValues={sortByValues}
               sort={sort}
               handleSortChange={handleSortChange}
               clearFilters={clearFilters}
-              onSubmit={() => {
-                console.log(
-                  `search: ${searchString}, price: ${price}, categories: ${categories}, sort: ${sort}`
-                );
-                toggleFilter();
-              }}
+              onSubmit={handleFilters}
             />
           </Grid>
         </>
