@@ -1,71 +1,37 @@
 import { useState, useEffect } from "react";
 import {
-  Card,
-  CardHeader,
-  CardContent,
-  Typography,
   Button,
   CircularProgress,
   Grid,
 } from "@mui/material";
-import { getAllMenuItems, getAllCategories } from "../Helper";
+import { getAllMenuItems, getAllCategories, applyFilters } from "../Helper";
 import FilterModal from "../UI/FilterModal";
+import MenuItemCard from "../UI/MenuItemCard";
 
-const MenuItemCard = ({ name, description, price, availability, onClick }) => {
-  // TODO: add item image
-  // for now, display all this info in the card, but for final version, will only
-  // want to show name, image and price. description will be added in modal
 
-  return (
-    <Grid item onClick={onClick}>
-      {availability === 1 && (
-        <Card
-          variant="outlined"
-          sx={{ width: "200px", height: "150px", margin: "auto" }}
-          style={{ cursor: "pointer" }}
-          className="highlight-card-on-hover"
-        >
-          <CardHeader title={name} />
-          <CardContent>
-            <Typography>${price}</Typography>
-          </CardContent>
-          {/* add to order should be in the modal */}
-          {/* <CardActions>
-            <Button size="small">Add to Order</Button>
-          </CardActions> */}
-          <style>
-            {`
-              .highlight-card-on-hover:hover {
-                outline: 2px solid blue;
-              }
-            `}
-          </style>
-        </Card>
-      )}
-      {availability === 0 && (
-        <Card>
-          <CardHeader title={name} />
-          <CardContent>
-            <Typography variant="body2" color="text.secondary">
-              {description}
-            </Typography>
-            <Typography>{price}</Typography>
-          </CardContent>
-          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-            Not available
-          </Typography>
-        </Card>
-      )}
-    </Grid>
-  );
+const sortByValues = {
+  1: {
+    by: "name",
+    label: "Alphabetical (ASC)",
+    order: "ASC",
+  },
+  2: {
+    by: "name",
+    label: "Alphabetical (DESC)",
+    order: "DESC",
+  },
+  3: {
+    by: "price",
+    label: "Price (ASC)",
+    order: "ASC",
+  },
+  4: {
+    by: "price",
+    label: "Price (DESC)",
+    order: "DESC",
+  },
+
 };
-
-const sortByValues = [
-  "Alphabetical (ASC)",
-  "Alphabetical (DESC)",
-  "Price (ASC)",
-  "Price (DESC)",
-];
 
 const Menu = () => {
   const [menuItems, setMenuItems] = useState([]);
@@ -74,11 +40,11 @@ const Menu = () => {
 
   const [searchString, setSearchString] = useState("");
   const [categories, setCategories] = useState({});
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [price, setPrice] = useState([0, 100]);
-  const [sort, setSort] = useState(sortByValues[0]);
+  const [sort, setSort] = useState(1);
 
   const toggleFilter = () => {
-    // TODO: send filters to backend here
     setShowFilter(!showFilter);
   };
 
@@ -86,22 +52,33 @@ const Menu = () => {
     setSort(e.target.value);
   };
 
-  // TODO: reduce code repetition
-  const clearFilters = () => {
-    let unselectCategories = {};
-    Object.keys(categories).forEach(c => {
-      unselectCategories[c] = {
-        "name": categories[c].name,
-        "selected": false
-      }
-    });
-    console.log(unselectCategories);
-    // console.log(Object.keys(categories))
-    setCategories(unselectCategories);
+  const handleFilters = async () => {
+    setLoading(true);
+    let itemsData = await applyFilters(
+      searchString,
+      selectedCategory,
+      price[0],
+      price[1],
+      sortByValues[sort].by,
+      sortByValues[sort].order
+    );
+    console.log(itemsData);
+    setMenuItems(itemsData);
+
+    toggleFilter();
+    setLoading(false);
+  };
+
+  const clearFilters = async () => {
+    setSelectedCategory("");
     setSearchString("");
     setPrice([0, 100]);
-    setSort(sortByValues[0]);
-    // send filters to backend here
+    setSort(1);
+    setLoading(true);
+    let itemsData = await getAllMenuItems();
+    setMenuItems(itemsData);
+    toggleFilter();
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -111,11 +88,9 @@ const Menu = () => {
       setMenuItems(itemsData);
       let categoriesData = await getAllCategories();
       let categoriesObject = {};
-      categoriesData.forEach(c => {
-        categoriesObject[c.id] = {
-          "name": c.name,
-          "selected": false
-        };
+      categoriesData.forEach((c) => {
+        // categories have id:name key:value pairs
+        categoriesObject[c.id] = c.name;
       });
       setCategories(categoriesObject);
       setLoading(false);
@@ -151,19 +126,15 @@ const Menu = () => {
               searchString={searchString}
               setSearchString={setSearchString}
               categories={categories}
-              setCategories={setCategories}
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
               price={price}
               setPrice={setPrice}
               sortByValues={sortByValues}
               sort={sort}
               handleSortChange={handleSortChange}
               clearFilters={clearFilters}
-              onSubmit={() => {
-                console.log(
-                  `search: ${searchString}, price: ${price}, categories: ${categories}, sort: ${sort}`
-                );
-                toggleFilter();
-              }}
+              onSubmit={handleFilters}
             />
           </Grid>
         </>
