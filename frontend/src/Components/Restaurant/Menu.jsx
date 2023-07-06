@@ -1,13 +1,8 @@
 import { useState, useEffect } from "react";
-import {
-  Button,
-  CircularProgress,
-  Grid,
-} from "@mui/material";
+import { Button, CircularProgress, Grid } from "@mui/material";
 import { getAllMenuItems, getAllCategories, applyFilters } from "../Helper";
 import FilterModal from "../UI/FilterModal";
 import MenuItemCard from "../UI/MenuItemCard";
-
 
 const sortByValues = {
   1: {
@@ -30,7 +25,6 @@ const sortByValues = {
     label: "Price (DESC)",
     order: "DESC",
   },
-
 };
 
 const Menu = () => {
@@ -106,7 +100,7 @@ const Menu = () => {
           <Button variant="contained" onClick={toggleFilter}>
             Filter
           </Button>
-          <Grid container spacing={2}>
+          <Grid container>
             {menuItems.map((item) => (
               <MenuItemCard
                 key={item.id}
@@ -114,10 +108,6 @@ const Menu = () => {
                 description={item.description}
                 price={item.price}
                 availability={item.availability}
-                // when MenuItemCard is clicked, it should open a modal to users to customise their item and add to order
-                onClick={() => {
-                  console.log(`${item.name} has been clicked!`);
-                }}
               />
             ))}
             <FilterModal
