@@ -39,18 +39,17 @@ CREATE TABLE IF NOT EXISTS menuItemsCategories (
 
 CREATE TABLE IF NOT EXISTS orders (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    tableId INT UNSIGNED,
-    accountId BIGINT UNSIGNED,
+    tableId INT UNSIGNED NOT NULL,
+    accountId BIGINT UNSIGNED NOT NULL,
     orderTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (accountId) REFERENCES account(accountId)
 );
 
 CREATE TABLE IF NOT EXISTS orderItems (
-  itemId INT UNSIGNED,
-  orderId INT UNSIGNED,
+  itemId INT UNSIGNED NOT NULL,
+  orderId INT UNSIGNED NOT NULL,
   quantity INT UNSIGNED NOT NULL,
   note VARCHAR(255),
-  PRIMARY KEY(itemId, orderId),
   FOREIGN KEY (orderId) REFERENCES orders(id),
   FOREIGN KEY (itemId) REFERENCES menuItems(id)
 );
@@ -93,7 +92,8 @@ INSERT INTO menuItems (name, description, price) VALUES
     ('Cheeseburger', 'Juicy beef patty with melted cheese, lettuce, tomato, and onions.', 9.99),
     ('Junior Cheeseburger', 'Smaller-sized cheeseburger perfect for a quick bite.', 6.99),
     ('Fish and Chips', 'Crispy battered fish served with seasoned fries.', 10.99),
-    ('Soup of the Night', '', 9.99);
+    ('Soup of the Night', '', 9.99)
+;
 
 INSERT INTO menuItemsCategories (itemId, categoryId) VALUES
     (1, 1), -- Pancakes - Breakfast
@@ -110,7 +110,16 @@ INSERT INTO menuItemsCategories (itemId, categoryId) VALUES
     (7, 5), -- Junior Cheeseburger - Burgers
     (7, 2),
     (8, 2), -- Fish and Chips - Lunch
-    (9, 3); -- Dish for Dinner - Dinner
+    (9, 3) -- Dish for Dinner - Dinner
+;
 
+INSERT INTO orders (tableId, accountId) VALUES 
+    (1, 1), 
+    (2, 2)
+;
 
-
+INSERT INTO orderItems (itemId, orderId, quantity) VALUES 
+    (1, 1, 3),      -- 1 Pancake for order 1
+    (2, 1, 5),      -- 5 Sausage and Egg for order 1
+    (2, 2, 1)       -- 1 Sausage and Egg for order 2
+;
