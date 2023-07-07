@@ -11,6 +11,7 @@ import sendRequest from "../Utils/Request";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 
+// TODO: Check if formatting requires props.key rather than just key
 const MenuItemCard = ({
   key,
   name,
@@ -20,8 +21,6 @@ const MenuItemCard = ({
   onClick,
 }) => {
   // TODO: add item image
-  // for now, display all this info in the card, but for final version, will only
-  // want to show name, image and price. description will be added in modal
   const [showModal, setShowModal] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
@@ -29,6 +28,7 @@ const MenuItemCard = ({
     setShowModal(true);
   };
 
+  // Does increment/decrement quantity functions replace this?
   const handleQuantityChange = (newQuantity) => {
     setQuantity(newQuantity);
   };
@@ -40,25 +40,26 @@ const MenuItemCard = ({
   async function handleAddToCart(values) {
     // TODO: include values.orderId in the body
     // Need to implement in a way such that an order is created and the orderId is forwarded
-    const body = {
-      itemId: key,
-      quantity: values.quantity,
-    };
-
-    try {
-      const response = await sendRequest("/orderItem/add", "POST", body);
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data.message);
-        alert(data.message);
-      } else {
-        throw new Error("Failed to add item to cart");
-      }
-    } catch (error) {
-      alert(error);
-      console.log(error);
-    }
+    // NOTE: making frontend order panel first
+    // const body = {
+    //   itemId: key,
+    //   orderId: values.orderId,
+    //   quantity: values.quantity,
+    //   note: values.note,
+    // };
+    // try {
+    //   const response = await sendRequest("/orderItem/add", "POST", body);
+    //   if (response.ok) {
+    //     const data = await response.json();
+    //     console.log(data.message);
+    //     alert(data.message);
+    //   } else {
+    //     throw new Error("Failed to add item to cart");
+    //   }
+    // } catch (error) {
+    //   alert(error);
+    //   console.log(error);
+    // }
   }
   const handleIncrementQuantity = () => {
     setQuantity((prevQuantity) => prevQuantity + 1);
@@ -72,10 +73,10 @@ const MenuItemCard = ({
       <Grid item onClick={openModal}>
         {availability === 1 && (
           <Card
-            variant="outlined"
+            variant='outlined'
             sx={{ width: "200px", height: "150px", margin: "auto" }}
             style={{ cursor: "pointer" }}
-            className="highlight-card-on-hover"
+            className='highlight-card-on-hover'
           >
             <CardHeader title={name} />
             <CardContent>
@@ -98,14 +99,14 @@ const MenuItemCard = ({
           <Card>
             <CardHeader title={name} />
             <CardContent>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant='body2' color='text.secondary'>
                 {description}
               </Typography>
               <Typography>{price}</Typography>
             </CardContent>
             <Typography
               sx={{ fontSize: 14 }}
-              color="text.secondary"
+              color='text.secondary'
               gutterBottom
             >
               Not available
@@ -117,8 +118,8 @@ const MenuItemCard = ({
       <Modal
         open={showModal}
         onClose={closeModal}
-        aria-labelledby="modal-title"
-        aria-describedby="modal-description"
+        aria-labelledby='modal-title'
+        aria-describedby='modal-description'
       >
         <Box
           sx={{
@@ -132,29 +133,29 @@ const MenuItemCard = ({
             p: 4,
           }}
         >
-          <Typography id="modal-title" variant="h6" component="h2">
+          <Typography id='modal-title' variant='h6' component='h2'>
             {name}
           </Typography>
 
-          <Typography id="modal-description" variant="body1" mt={2}>
+          <Typography id='modal-description' variant='body1' mt={2}>
             {description}
           </Typography>
 
-          <Typography variant="body1" mt={2}>
+          <Typography variant='body1' mt={2}>
             Price: {price}
           </Typography>
 
-          <Typography variant="body1" component="div" mt={2}>
+          <Typography variant='body1' component='div' mt={2}>
             Quantity:
             <Button onClick={handleDecrementQuantity}>-</Button>
             {quantity}
             <Button onClick={handleIncrementQuantity}>+</Button>
           </Typography>
 
-          <Button variant="contained" onClick={handleAddToCart} mt={3}>
+          <Button variant='contained' onClick={handleAddToCart} mt={3}>
             Add to Cart
           </Button>
-          <Grid container justifyContent="flex-end">
+          <Grid container justifyContent='flex-end'>
             <Button onClick={closeModal}>Close</Button>
           </Grid>
         </Box>
