@@ -55,3 +55,11 @@ in this page and will be tested on Tuesday when the group goes through a practic
 I experienced issues connecting the MySQL database to the backend and so, I couldn't test the POST request.
 Alan was able to test the POST request as his app was working. The POST request worked and my pull request was
 merged into the main branch.
+
+WEEK 6:
+
+
+Managed to connect MySQL Workbench with my code. Created the frontend for ordering
+menu items. Completed user stories MN3900-36, -46 and -47. Discussed with Grace how
+the backend could work with the frontend and took Rodney's suggested method of
+implementation. Added image/thumbnail functionality to the menu cards.

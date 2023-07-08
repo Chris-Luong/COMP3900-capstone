@@ -4,7 +4,6 @@ import { getAllMenuItems, getAllCategories, applyFilters } from "../Helper";
 import FilterModal from "../UI/FilterModal";
 import MenuItemCard from "../UI/MenuItemCard";
 
-// import * as React from 'react';
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
@@ -33,6 +32,7 @@ const OrderDrawer = () => {
   };
 
   // TODO: change the list in the drawer to show order items instead.
+  // GET request of order items. ListItemIcon replaced with image assets.
   const list = (anchor) => (
     <Box
       sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}
@@ -183,6 +183,7 @@ const Menu = () => {
           <Grid container>
             {menuItems.map((item) => (
               <MenuItemCard
+                // TODO: add image with base64 string - need helper fn to convert
                 key={item.id}
                 name={item.name}
                 description={item.description}

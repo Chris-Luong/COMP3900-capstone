@@ -5,6 +5,7 @@ import {
   CardContent,
   Typography,
   Grid,
+  TextField,
 } from "@mui/material";
 import { useState } from "react";
 import sendRequest from "../Utils/Request";
@@ -12,41 +13,46 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 
 // TODO: Check if formatting requires props.key rather than just key
-const MenuItemCard = ({
-  key,
-  name,
-  description,
-  price,
-  availability,
-  onClick,
-}) => {
+const MenuItemCard = ({ key, name, description, price, availability }) => {
   // TODO: add item image
   const [showModal, setShowModal] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  const [orderItems, setOrderItems] = useState([]);
 
   const openModal = () => {
     setShowModal(true);
-  };
-
-  // Does increment/decrement quantity functions replace this?
-  const handleQuantityChange = (newQuantity) => {
-    setQuantity(newQuantity);
   };
 
   const closeModal = () => {
     setShowModal(false);
   };
 
-  async function handleAddToCart(values) {
-    // TODO: include values.orderId in the body
-    // Need to implement in a way such that an order is created and the orderId is forwarded
-    // NOTE: making frontend order panel first
-    // const body = {
-    //   itemId: key,
-    //   orderId: values.orderId,
-    //   quantity: values.quantity,
-    //   note: values.note,
-    // };
+  async function handleAddToCart(event) {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+
+    console.log(quantity);
+    console.log(data.get("note"));
+    const note = data.get("note");
+
+    const body = {
+      // TODO: accountId and tableId here
+      itemId: key,
+      quantity: quantity,
+      note: note,
+    };
+
+    // Add order item to end of array of order items.
+    setOrderItems((prevArray) => {
+      return [
+        ...prevArray,
+        {
+          itemId: key,
+          quantity: quantity,
+          note: note,
+        },
+      ];
+    });
     // try {
     //   const response = await sendRequest("/orderItem/add", "POST", body);
     //   if (response.ok) {
@@ -61,6 +67,15 @@ const MenuItemCard = ({
     //   console.log(error);
     // }
   }
+
+  // Remove order item from cart given index.
+  // TODO: each item (orderItem object thing) in cart should have its own index
+  const handleRemoveOrderItem = (index) => {
+    setOrderItems((prevArray) => {
+      return prevArray.filter((item, i) => i !== index);
+    });
+  };
+
   const handleIncrementQuantity = () => {
     setQuantity((prevQuantity) => prevQuantity + 1);
   };
@@ -68,6 +83,7 @@ const MenuItemCard = ({
   const handleDecrementQuantity = () => {
     setQuantity((prevQuantity) => Math.max(prevQuantity - 1, 1));
   };
+
   return (
     <div>
       <Grid item onClick={openModal}>
@@ -82,10 +98,6 @@ const MenuItemCard = ({
             <CardContent>
               <Typography>${price}</Typography>
             </CardContent>
-            {/* add to order should be in the modal */}
-            {/*<CardActions>
-            <Button size="small">Add to Order</Button>
-      </CardActions> */}
             <style>
               {`
               .highlight-card-on-hover:hover {
@@ -102,7 +114,7 @@ const MenuItemCard = ({
               <Typography variant='body2' color='text.secondary'>
                 {description}
               </Typography>
-              <Typography>{price}</Typography>
+              <Typography>${price}</Typography>
             </CardContent>
             <Typography
               sx={{ fontSize: 14 }}
@@ -122,6 +134,8 @@ const MenuItemCard = ({
         aria-describedby='modal-description'
       >
         <Box
+          component='form'
+          onSubmit={handleAddToCart}
           sx={{
             position: "absolute",
             top: "50%",
@@ -142,17 +156,38 @@ const MenuItemCard = ({
           </Typography>
 
           <Typography variant='body1' mt={2}>
-            Price: {price}
+            Price: ${price}
           </Typography>
 
-          <Typography variant='body1' component='div' mt={2}>
+          <Typography
+            variant='body1'
+            component='div'
+            id='quantity'
+            name='quantity'
+            mt={2}
+          >
             Quantity:
             <Button onClick={handleDecrementQuantity}>-</Button>
             {quantity}
             <Button onClick={handleIncrementQuantity}>+</Button>
           </Typography>
 
-          <Button variant='contained' onClick={handleAddToCart} mt={3}>
+          <TextField
+            margin='normal'
+            fullWidth
+            name='note'
+            label='Notes for chef'
+            type='text'
+            id='note'
+          />
+
+          <Button
+            disabled={availability === 0}
+            label='AddItem'
+            type='submit'
+            variant='contained'
+            mt={3}
+          >
             Add to Cart
           </Button>
           <Grid container justifyContent='flex-end'>
