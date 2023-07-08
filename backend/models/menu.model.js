@@ -195,7 +195,7 @@ class Menu {
    * 
    * @returns {null}
    */
-  static getFilteredMenuItems(search=null, category=null, min_price=0, max_price=100, sort_type="name", sort_order="ASC", cb) {
+  static getFilteredMenuItems(search=null, category=null, min_price=0, max_price=1000, sort_type="name", sort_order="ASC", cb) {
     let final_query = getAllMenuItems;
     let params = [];
     if (category) {
