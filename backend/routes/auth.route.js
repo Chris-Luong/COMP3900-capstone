@@ -4,7 +4,7 @@ const register = require('../controller/register')
 const login = require('../controller/login');
 const {menu, addItem, removeItem, editItem} = require('../controller/menu');
 const categories = require('../controller/categories');
-const { viewOrders, addMenuItems, createOrder } = require('../controller/orderItem');
+const { viewOrders, createOrder } = require('../controller/order');
 
 /**
  * @swagger
@@ -75,11 +75,7 @@ router.get('/categories', categories);
  *       400:
  *         description: Failed to Create
  */
-router.post('/orderItem/createOrder', createOrder)
+router.get('/orders', viewOrders);
+router.post('/orders/create', createOrder);
 
-router.post('/orderItem/add', addMenuItems)
-/**
- * /order?order=orderId
- */
-router.get('/order', viewOrders)
 module.exports = router;

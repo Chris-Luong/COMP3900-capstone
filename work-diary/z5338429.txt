@@ -35,8 +35,11 @@ Week 5:
 
 Week 6:
     Attended Monday meeting, finished a basic design for the menu page and presented it to the team, and began coding for the backend to implement some user stories functionality for the menu system.
-    
+    Coded the backend functionality for 8 menu user stories.
+    MN3900-2, MN3900-12, MN3900-13, MN3900-29, MN3900-33, MN3900-35, MN3900-48, MN3900-51.
 
+    Attended the Saturday meeting and gave stand up on progress, also gave input on the backend and frontend design of order functionality and will help refactor and adjust code.
+    Refactored and adjust the design of the backend for order user stories.
 
 Week 7:
     pass

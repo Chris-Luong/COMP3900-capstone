@@ -1,7 +1,3 @@
-const getAllMenuItems = `
-SELECT menuitems.* FROM menuItems
-`;
-
 const getCategories = `
   SELECT * FROM categories
 `;
@@ -10,6 +6,11 @@ const getCategory = `
 SELECT categories.id FROM categories
 WHERE categories.name = ?
 `
+
+const getAllMenuItems = `
+SELECT menuitems.* FROM menuItems
+`;
+
 
 const filterCategory = `
 JOIN menuitemscategories ON menuitems.id = menuitemscategories.itemId

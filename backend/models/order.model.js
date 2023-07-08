@@ -1,5 +1,5 @@
 const db = require("../db/db");
-const { getMenuItemsByOrder, createOrder } = require("../db/queries/order.queries");
+const { getOrders, createOrder } = require("../db/queries/order.queries");
 
 
 const NOT_FOUND = 401;
@@ -10,55 +10,42 @@ const CANNOT_CREATE = 400
 const CANNOT_CREATE_KIND = 'cannot_create'
 
 class Order {
-  constructor(name, description, price, availability) {
-    this.name = name;
-    this.description = description;
-    this.price = price;
-    this.availability = availability;
-  }
-
-  static getOrderById(orderId, next) {
-    console.log("order id" + orderId);
-    return db.query(getMenuItemsByOrder, [orderId], (err, results) => {
-      console.log("MySQL Error: " + err);
-      console.log("MySQL Result:", results);
-
+  static getOrderByAccountId(accountId, next) {
+    db.query(getOrders, accountId, (err, results) => {
       if (err) {
-        return next(
+        next(
           {
             status: EXISTS,
-            message: "Error retrieving menu items by the given order id",
+            message: "Error retrieving menu items by the given account id",
             kind: EXISTS_KIND,
           },
           null
         );
+        return;
       }
-      
+      console.log(results);
       let result = JSON.parse(JSON.stringify(results));
-      return next(null, result);
+      next(null, result);
     });
   }
 
-  static createOrder(accountId, tableId, next) {
-    return db.query(createOrder, [accountId, tableId], (err, results) => {
-        console.log("MySQL Error: " + err);
-        console.log("MySQL Result:", results);
-  
-        if (err) {
-          return next(
-            {
-              status: CANNOT_CREATE,
-              message: "Error inserting and creating an order",
-              kind: CANNOT_CREATE_KIND,
-            },
-            null
-          );
-        }
-        const res = results.insertId 
-        return next(null, { orderId: res });
-      });
+  static createOrder(accountId, tableId, itemId, quantity, note, next) {
+    let values = [accountId, tableId, itemId, quantity, note];
+    db.query(createOrder, values, (err, results) => {
+      if (err) {
+        next(
+          {
+            status: CANNOT_CREATE,
+            message: "Error inserting and creating an order",
+            kind: CANNOT_CREATE_KIND
+          },
+          null
+        );
+        return;
+      }
+      next(null, {message: "Successfully created order!"});
+    });
   }
-
 }
 
 module.exports = { Order, NOT_FOUND, EXISTS, CANNOT_CREATE };
