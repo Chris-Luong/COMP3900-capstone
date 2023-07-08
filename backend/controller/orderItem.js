@@ -6,7 +6,7 @@ const { OrderItem } = require('../models/orderItem.model');
 *  Result: List of menu items with { itemName, itemId, quantity, price }
 */
 viewOrders = (req, res) => {
-  const { orderId } = req.body;
+  const orderId = req.query.orderId;
   Order.getOrderById(orderId, (err, result) => {
     if (err) {
       return res.status(err.status).json({ message: err.message });

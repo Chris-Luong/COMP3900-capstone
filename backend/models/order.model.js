@@ -18,6 +18,7 @@ class Order {
   }
 
   static getOrderById(orderId, next) {
+    console.log("order id" + orderId);
     return db.query(getMenuItemsByOrder, [orderId], (err, results) => {
       console.log("MySQL Error: " + err);
       console.log("MySQL Result:", results);
