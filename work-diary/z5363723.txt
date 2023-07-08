@@ -31,3 +31,19 @@ on my local dev enviroment. I spent a few hours fixing the backend so that it is
 Thursday: Worked on the Login API and set up swagger for backend testing. 
 Friday: Login API is complete and tested successfully.
 Saturday: We discussed about how to implement the guest profile. I raised a pull request to merge backend-loginn branch to master.
+
+
+Week 5
+Tuesday: We helped Alan to prepare for the demo.
+Wednesday: Had the demo for the first sprint. After the demo, we had the retrospective session where we talked about
+how to improve and what we did good. For backend work, we completed very efficiently. So, might help out with frontend 
+for the next sprint. Also, I will be doing the task breakdown for the next time for better time and task tracking.
+Saturday: we divided up into two teams. I will be doing menu ordering epic backend work. 
+
+
+Week 6:
+Monday: Reviewed Alan's branch for viewing all the menu items, thought I would love to try backend and frontend, that is, do fullstack. 
+This way, it would be much easier to test so that frontend doesn't need to spend time understanding backend to test.
+So, I communicated with the team that I will be picking up a few user stories in the Ordering Epic and implement fullstack.
+Wednesday: Finished implementing and testing the ordering functionalities for backend: view all manu itmes in the order and add menu items into the order.
+Tomorrow's plan is to implement the frontend. 

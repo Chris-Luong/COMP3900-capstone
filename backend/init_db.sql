@@ -1,6 +1,5 @@
 DROP DATABASE IF EXISTS queuequicker;
-CREATE DATABASE queuequicker
--- CREATE DATABASE IF NOT EXISTS queuequicker;
+CREATE DATABASE queuequicker;
 
 USE queuequicker;
 
@@ -17,6 +16,7 @@ CREATE TABLE IF NOT EXISTS menuItems (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
     description TEXT,
+    ingredients VARCHAR(255),
     price DECIMAL(5, 2) NOT NULL,
     availability TINYINT(1) NOT NULL DEFAULT 1,
     thumbnail BLOB,
@@ -26,9 +26,7 @@ CREATE TABLE IF NOT EXISTS menuItems (
 
 CREATE TABLE IF NOT EXISTS categories (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL,
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    name VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS menuItemsCategories (
@@ -39,6 +37,22 @@ CREATE TABLE IF NOT EXISTS menuItemsCategories (
     FOREIGN KEY (categoryId) REFERENCES categories(id)
 );
 
+CREATE TABLE IF NOT EXISTS orders (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    tableId INT UNSIGNED NOT NULL,
+    accountId BIGINT UNSIGNED NOT NULL,
+    orderTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (accountId) REFERENCES account(accountId)
+);
+
+CREATE TABLE IF NOT EXISTS orderItems (
+  itemId INT UNSIGNED NOT NULL,
+  orderId INT UNSIGNED NOT NULL,
+  quantity INT UNSIGNED NOT NULL,
+  note VARCHAR(255),
+  FOREIGN KEY (orderId) REFERENCES orders(id),
+  FOREIGN KEY (itemId) REFERENCES menuItems(id)
+);
 
 -- guest accounts have password 'temp123'
 INSERT IGNORE INTO account(firstname, lastname, email, password, role) VALUES("guest", "account", "guest1", "$2b$10$4oKl80KpkMLh8kl4uA1ToOU/cX6lzjc3W8UXXCC5KUmnfkk8E6dNW", 1);
@@ -65,8 +79,8 @@ INSERT INTO categories (name) VALUES
     ('Breakfast'),
     ('Lunch'),
     ('Dinner'),
-    ('Pizzas'),
-    ('Burgers')
+    ('Pizza'),
+    ('Burger')
 ;
 
 INSERT INTO menuItems (name, description, price) VALUES
@@ -78,7 +92,8 @@ INSERT INTO menuItems (name, description, price) VALUES
     ('Cheeseburger', 'Juicy beef patty with melted cheese, lettuce, tomato, and onions.', 9.99),
     ('Junior Cheeseburger', 'Smaller-sized cheeseburger perfect for a quick bite.', 6.99),
     ('Fish and Chips', 'Crispy battered fish served with seasoned fries.', 10.99),
-    ('Soup of the Night', '', 9.99);
+    ('Soup of the Night', '', 9.99)
+;
 
 INSERT INTO menuItemsCategories (itemId, categoryId) VALUES
     (1, 1), -- Pancakes - Breakfast
@@ -95,6 +110,16 @@ INSERT INTO menuItemsCategories (itemId, categoryId) VALUES
     (7, 5), -- Junior Cheeseburger - Burgers
     (7, 2),
     (8, 2), -- Fish and Chips - Lunch
-    (9, 3); -- Dish for Dinner - Dinner
+    (9, 3) -- Dish for Dinner - Dinner
+;
 
+INSERT INTO orders (tableId, accountId) VALUES 
+    (1, 1), 
+    (2, 2)
+;
 
+INSERT INTO orderItems (itemId, orderId, quantity) VALUES 
+    (1, 1, 3),      -- 1 Pancake for order 1
+    (2, 1, 5),      -- 5 Sausage and Egg for order 1
+    (2, 2, 1)       -- 1 Sausage and Egg for order 2
+;
