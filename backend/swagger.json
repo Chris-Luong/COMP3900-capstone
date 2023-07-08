@@ -260,13 +260,13 @@
               "type": "object",
               "properties": {
                 "itemId": {
-                  "example": "any"
+                  "example": 1
                 },
-                "orderid": {
-                  "example": "any"
+                "orderId": {
+                  "example": 1
                 },
                 "quantity": {
-                  "example": "any"
+                  "example": 1
                 }
               }
             }

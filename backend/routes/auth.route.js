@@ -76,6 +76,10 @@ router.get('/categories', categories);
  *         description: Failed to Create
  */
 router.post('/orderItem/createOrder', createOrder)
+
 router.post('/orderItem/add', addMenuItems)
+/**
+ * /order?order=orderId
+ */
 router.get('/order', viewOrders)
 module.exports = router;
