@@ -94,6 +94,7 @@ const MenuItemCard = ({
             </style>
           </Card>
         )}
+        {/* TODO: remove availability */}
         {availability === 0 && (
           <Card>
             <CardHeader title={name} />
