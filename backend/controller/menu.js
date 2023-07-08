@@ -40,9 +40,20 @@ editItem = (req, res) => {
   })
 }
 
+categoriesFromId = (req, res) => {
+  const id = req.params["itemid"];
+  Menu.getCategoryNames(parseInt(id, 10), (err, result) => {
+    if (err) {
+      return res.status(err.status).json({ message: err.message });
+    }
+    res.status(200).json({ categoryNames: result });
+  });
+}
+
 module.exports = {
   menu,
   addItem,
   removeItem,
-  editItem
+  editItem,
+  categoriesFromId
 };
