@@ -66,7 +66,7 @@ const ManagerMenuItemCard = ({
       itemValues.name,
       itemValues.description,
       itemValues.ingredients,
-      itemValues.checkedCategories,
+      values.categories,
       itemValues.price,
       ""
     );
