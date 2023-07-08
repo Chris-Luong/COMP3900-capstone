@@ -58,10 +58,10 @@ export const editItem = async (id, name, description, ingredients, categories, p
   url += name ? `&name=${name}` : "";
   url += description ? `&description=${description}` : "";
   url += ingredients ? `&ingredients=${ingredients}` : "";
-  url += categories ? `&categories=${categories}` : "";
+  categories.forEach(c => {
+    url += categories ? `&categories=${c}` : "";
+  })
   url += price ? `&price=${price}` : "";
-
-  console.log(url);
 
   try {
     const res = await sendRequest(url, "PUT");
