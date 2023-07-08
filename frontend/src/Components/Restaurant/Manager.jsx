@@ -1,5 +1,9 @@
-import { useState, useEffect } from "react";
-import { getAllMenuItems, getAllCategories } from "../Helper";
+import { useState, useEffect, useRef } from "react";
+import {
+  getAllMenuItems,
+  getAllCategories,
+  getCategoryNamesFromItemId,
+} from "../Helper";
 import {
   TextField,
   Button,
@@ -18,51 +22,56 @@ import {
   FormControlLabel,
   FormHelperText,
 } from "@mui/material";
-import * as Yup from "yup";
 import { Formik } from "formik";
 import sendRequest from "../Utils/Request";
+import { editItem, checkboxStyle, menuItemSchema } from "../Helper";
+import NewItemModal from "../UI/NewItemModal";
 
 // create request for add, edit and delete here
 
 // TODO: change image too
-const ManagerMenuItemCard = ({ id, name, description, ingredients, price, handleItemDelete }) => {
+const ManagerMenuItemCard = ({
+  id,
+  name,
+  description,
+  ingredients,
+  price,
+  categories,
+  handleItemDelete,
+  triggerRerender,
+  setTriggerRerender
+}) => {
   const [showModal, setShowModal] = useState(false);
   const [hasItemValuesChanged, setHasItemValuesChanged] = useState(false);
-  const [itemValues, setItemValues] = useState({
-    name: name,
-    description: description,
-    ingredients: ingredients,
-    price: price,
-  });
-
+  const [checkedCategories, setCheckedCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
   const defaultItemValues = {
     name: name,
     description: description,
     ingredients: ingredients,
+    checkedCategories: checkedCategories,
     price: price,
   };
+  const [itemValues, setItemValues] = useState(defaultItemValues);
+  const defaultItemValuesRef = useRef(defaultItemValues);
 
   const toggleModal = () => {
     setShowModal(!showModal);
   };
 
-  // TODO: ask Rod; doesn't work
-  const handleSubmit = async () => {
-    console.log(itemValues);
-    const body = {
-      ...itemValues,
-      price: parseFloat(itemValues.price).toFixed(2),
-      thumb: "",
-      id: id,
-    };
-    try {
-      const res = await sendRequest("/menu/edit", "PUT", body);
-      alert(res.message);
-      // setTriggerRerender(!triggerRerender);
-    } catch (err) {
-      alert(err);
-      console.log(err);
-    }
+  const handleSubmit = async (values) => {
+    console.log(values);
+    let message = await editItem(
+      id,
+      itemValues.name,
+      itemValues.description,
+      itemValues.ingredients,
+      itemValues.checkedCategories,
+      itemValues.price,
+      ""
+    );
+    alert(message);
+    setTriggerRerender(!triggerRerender);
     toggleModal();
   };
 
@@ -72,55 +81,67 @@ const ManagerMenuItemCard = ({ id, name, description, ingredients, price, handle
       name: name,
       description: description,
       ingredients: ingredients,
+      checkedCategories: checkedCategories,
       price: price,
     });
   };
 
   useEffect(() => {
+    setLoading(true);
+    const getCategoryNames = async () => {
+      let categoryData = await getCategoryNamesFromItemId(id);
+      setCheckedCategories(categoryData);
+      defaultItemValuesRef.current["checkedCategories"] = categoryData;
+      setLoading(false);
+    };
+    getCategoryNames();
+  }, [id, setItemValues]);
+
+  useEffect(() => {
     const inputsChanged = Object.keys(itemValues).some(
       (key) => itemValues[key] !== defaultItemValues[key]
     );
-
     setHasItemValuesChanged(inputsChanged);
-    // if (inputsChanged) {
-    //   setHasItemValuesChanged(true);
-    // } else {
-    //   setHasItemValuesChanged(false);
-    // }
   }, [itemValues, hasItemValuesChanged]);
 
   return (
     <>
-      <Grid item xs={12} sm={3} md={3}>
-        <Card
-          variant="outlined"
-          sx={{ width: "100%", height: "100%" }}
-          style={{ cursor: "pointer" }}
-          className="highlight-card-on-hover"
-        >
-          <CardHeader title={name} />
-          <CardContent>
-            <Typography>${price}</Typography>
-            <Button onClick={toggleModal}>Edit</Button>
-            <Button onClick={() => handleItemDelete(id)}>Delete</Button>
-          </CardContent>
-          <style>
-            {`
+      {loading && <CircularProgress />}
+      {!loading && (
+        <>
+          <Grid item xs={12} sm={3} md={3}>
+            <Card
+              variant="outlined"
+              sx={{ width: "100%", height: "100%" }}
+              style={{ cursor: "pointer" }}
+              className="highlight-card-on-hover"
+            >
+              <CardHeader title={name} />
+              <CardContent>
+                <Typography>${price}</Typography>
+                <Button onClick={toggleModal}>Edit</Button>
+                <Button onClick={() => handleItemDelete(id)}>Delete</Button>
+              </CardContent>
+              <style>
+                {`
               .highlight-card-on-hover:hover {
                 outline: 2px solid blue;
               }
             `}
-          </style>
-        </Card>
-      </Grid>
-      <ManageItemModal
-        inputChanged={hasItemValuesChanged}
-        showModal={showModal}
-        handleSubmit={handleSubmit}
-        handleClear={handleClear}
-        setItemValues={setItemValues}
-        itemValues={itemValues}
-      />
+              </style>
+            </Card>
+          </Grid>
+          <ManageItemModal
+            inputChanged={hasItemValuesChanged}
+            showModal={showModal}
+            handleSubmit={handleSubmit}
+            handleClear={handleClear}
+            setItemValues={setItemValues}
+            itemValues={itemValues}
+            categories={categories}
+          />
+        </>
+      )}
     </>
   );
 };
@@ -132,77 +153,8 @@ const ManageItemModal = ({
   handleClear,
   setItemValues,
   itemValues,
+  categories,
 }) => {
-  return (
-    <Modal open={showModal}>
-      <Box
-        component="form"
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: 400,
-          bgcolor: "background.paper",
-          boxShadow: 24,
-          p: 4,
-        }}
-      >
-        <Stack spacing={3} direction="column" width="100%">
-          {/* TODO: validate input, e.g., empty field */}
-          <Button>Change image here</Button>
-          <TextField
-            label="Name"
-            value={itemValues.name}
-            onChange={(e) =>
-              setItemValues({ ...itemValues, name: e.target.value })
-            }
-          />
-          <TextField
-            label="Description"
-            value={itemValues.description}
-            fullWidth
-            multiline
-            onChange={(e) =>
-              setItemValues({ ...itemValues, description: e.target.value })
-            }
-          />
-          <TextField
-            label="Ingredients"
-            value={itemValues.ingredients}
-            fullWidth
-            multiline
-            onChange={(e) =>
-              setItemValues({ ...itemValues, ingredients: e.target.value })
-            }
-          />
-          <TextField
-            label="Price $"
-            value={itemValues.price}
-            onChange={(e) =>
-              setItemValues({ ...itemValues, price: e.target.value })
-            }
-          />
-        </Stack>
-        {inputChanged && (
-          <Button color="success" onClick={handleSubmit}>
-            Submit
-          </Button>
-        )}
-        <Button color="error" onClick={handleClear}>
-          Close
-        </Button>
-      </Box>
-    </Modal>
-  );
-};
-
-// TODO: validate image
-const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
-  const checkboxStyle = {
-    display: "grid",
-    gridTemplateColumns: "repeat(3, 1fr)",
-  };
   return (
     <Modal open={showModal}>
       <Box
@@ -218,38 +170,48 @@ const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
         }}
       >
         <Formik
-          validationSchema={schema}
+          validationSchema={menuItemSchema}
           onSubmit={(values) => handleSubmit(values)}
           initialValues={{
-            name: "",
-            description: "",
-            ingredients: "",
-            categories: [],
-            price: "",
+            name: itemValues.name,
+            description: itemValues.description,
+            ingredients: itemValues.ingredients,
+            categories: itemValues.checkedCategories,
+            price: itemValues.price,
           }}
         >
           {({ handleSubmit, handleChange, values, errors, touched }) => (
             <form onSubmit={handleSubmit} noValidate>
               <Stack spacing={3} direction="column" width="100%">
-                {/* TODO: validate input, e.g., empty field */}
-                <Button>Add image here</Button>
+                <Button>Change image here</Button>
                 <TextField
                   label="Name"
                   name="name"
                   value={values.name}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    setItemValues({
+                      ...itemValues,
+                      name: e.target.value,
+                    });
+                    handleChange(e);
+                  }}
                   error={touched.name && errors.name}
                   helperText={touched.name && errors.name}
-                  required
                 />
+                {touched.name && errors.name ? <div>{errors.name}</div> : null}
                 <TextField
                   label="Description"
                   name="description"
                   value={values.description}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    setItemValues({
+                      ...itemValues,
+                      description: e.target.value,
+                    });
+                    handleChange(e);
+                  }}
                   error={touched.description && errors.description}
                   helperText={touched.description && errors.description}
-                  required
                   fullWidth
                   multiline
                 />
@@ -257,10 +219,15 @@ const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
                   label="Ingredients"
                   name="ingredients"
                   value={values.ingredients}
-                  onChange={handleChange}
-                  error={touched.ingredients && errors.description}
+                  onChange={(e) => {
+                    setItemValues({
+                      ...itemValues,
+                      ingredients: e.target.value,
+                    });
+                    handleChange(e);
+                  }}
+                  error={touched.ingredients && errors.ingredients}
                   helperText={touched.ingredients && errors.ingredients}
-                  required
                   fullWidth
                   multiline
                 />
@@ -277,7 +244,13 @@ const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
                             name="categories"
                             value={c}
                             checked={values.categories.includes(c)}
-                            onChange={handleChange}
+                            onChange={(e) => {
+                              setItemValues({
+                                ...itemValues,
+                                checkedCategories: e.target.value,
+                              });
+                              handleChange(e);
+                            }}
                           />
                         }
                         label={c}
@@ -285,26 +258,27 @@ const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
                     ))}
                   </FormGroup>
                   {errors.categories && (
-                    <FormHelperText>
-                      {errors.categories}
-                    </FormHelperText>
+                    <FormHelperText>{errors.categories}</FormHelperText>
                   )}
                 </FormControl>
-                {/* TODO: backend deals with price format */}
                 <TextField
                   label="Price $"
                   name="price"
                   value={values.price}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    setItemValues({ ...itemValues, price: e.target.value });
+                    handleChange(e);
+                  }}
                   error={touched.price && errors.price}
                   helperText={touched.price && errors.price}
-                  required
                 />
               </Stack>
-              <Button color="success" onClick={handleSubmit}>
-                Submit
-              </Button>
-              <Button color="error" onClick={toggleModal}>
+              {inputChanged && (
+                <Button color="success" onClick={handleSubmit}>
+                  Submit
+                </Button>
+              )}
+              <Button color="error" onClick={handleClear}>
                 Close
               </Button>
             </form>
@@ -314,18 +288,6 @@ const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
     </Modal>
   );
 };
-
-const schema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
-  description: Yup.string().required("Description is required"),
-  ingredients: Yup.string().required("Ingredients are required"),
-  categories: Yup.array()
-    .required("Categories required.")
-    .min(1, "Categories required."),
-  price: Yup.number()
-    .required("Price is required")
-    .min(0, "Price can't be negative"),
-});
 
 const Manager = () => {
   const [menuItems, setMenuItems] = useState([]);
@@ -342,8 +304,8 @@ const Manager = () => {
     const body = {
       ...values,
       price: parseFloat(values.price).toFixed(2),
-      thumb: ""
-    }
+      thumb: "",
+    };
     try {
       const res = await sendRequest("/menu/add", "POST", body);
       alert(res.message);
@@ -406,6 +368,9 @@ const Manager = () => {
                 ingredients={item.ingredients}
                 price={item.price}
                 handleItemDelete={handleItemDelete}
+                categories={categories}
+                triggerRerender={triggerRerender}
+                setTriggerRerender={setTriggerRerender}
               />
             ))}
           </Grid>
