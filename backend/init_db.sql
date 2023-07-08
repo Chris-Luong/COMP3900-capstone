@@ -110,7 +110,8 @@ INSERT INTO menuItemsCategories (itemId, categoryId) VALUES
     (7, 5), -- Junior Cheeseburger - Burgers
     (7, 2),
     (8, 2), -- Fish and Chips - Lunch
-    (9, 3) -- Dish for Dinner - Dinner
+    (9, 3), -- Dish for Dinner - Dinner
+    (10, 3) -- test item - dinner
 ;
 
 INSERT INTO orders (tableId, accountId) VALUES 
