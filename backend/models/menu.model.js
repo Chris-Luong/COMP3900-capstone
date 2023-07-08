@@ -1,6 +1,7 @@
 const db = require("../db/db");
 const { getAllMenuItems,
         getCategories, 
+        getCategoryNamesFromItemId,
         filterCategory, 
         searchMenuItemsAND, 
         searchMenuItems, 
@@ -248,6 +249,26 @@ class Menu {
 
       let result = JSON.parse(JSON.stringify(results));
       return next(null, result);
+    });
+  }
+
+  static getCategoryNames(itemId, cb) {
+    db.query(getCategoryNamesFromItemId, [itemId], (err, result) => {
+      if (err) {
+        cb(
+          {
+            status: 500,
+            message: "Failed to get categories",
+            kind: "Internal Server Error",
+          },
+          null
+        );
+        return;
+      }
+      const names = [];
+      result.forEach(packet => names.push(packet.name));
+      let res = JSON.parse(JSON.stringify(names));
+      cb(null, res);
     });
   }
 }
