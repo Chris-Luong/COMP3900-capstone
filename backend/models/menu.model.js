@@ -81,7 +81,14 @@ class Menu {
   }
 
   static editMenuItem(id, name, description, ingredients, categories, price, thumb, cb) {
-    const menuItemValues = [name, description, ingredients, price, thumb, id];
+    const menuItemValues = [name.replace(/["']/g, ''), description.replace(/["']/g, ''), 
+                            ingredients.replace(/["']/g, ''), price, thumb, id];
+    let new_categories = [];
+    if (!Array.isArray(categories)) {
+      new_categories.push(categories);
+    } else {
+      new_categories = categories
+    }
     db.query(updateMenuItem, menuItemValues, (err) => {
       if (err) {
         cb({
@@ -102,7 +109,8 @@ class Menu {
         return;
       }
     });
-    categories.forEach((category) => {
+    new_categories.forEach((category) => {
+      category = category.replace(/["']/g, '');
       db.query(getCategory, category, (err, result) => {
         if (err) {
           cb({
