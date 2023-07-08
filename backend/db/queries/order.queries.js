@@ -6,13 +6,17 @@ const getMenuItemsByOrder = `
   where O.id = ?
 `;
 
+const getOrders = `
+  SELECT orders.*, menuitems.* FROM menuitems
+  JOIN orders ON menuitems.id = orders.itemid
+  WHERE orders.accountid = ?
+`
+
 const createOrder = `
-    INSERT INTO orders(accountId, tableId) VALUES(?, ?);
+  INSERT INTO orders(accountId, tableId, itemId, quantity, note)
+  VALUES(?, ?, ?, ?, ?);
 `;
 
-const getLastOrder = `
-    SELECT LAST_INSERT_ID();`
-
 module.exports = {
-    getMenuItemsByOrder, createOrder
+    getOrders, createOrder
 };

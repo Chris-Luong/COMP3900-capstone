@@ -222,9 +222,57 @@
         }
       }
     },
-    "/orderItem/createOrder": {
+    "/orders": {
+      "get": {
+        "summary": "Get all orders",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "accountId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the account"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Order Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/create": {
       "post": {
-        "description": "",
+        "summary": "Create a new order",
         "parameters": [
           {
             "name": "body",
@@ -233,68 +281,60 @@
               "type": "object",
               "properties": {
                 "accountId": {
-                  "example": "any"
+                  "type": "integer",
+                  "example": 1
                 },
                 "tableId": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/orderItem/add": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "itemId": {
+                  "type": "integer",
                   "example": 1
                 },
-                "orderId": {
-                  "example": 1
+                "itemId": {
+                  "type": "integer",
+                  "example": 2
                 },
                 "quantity": {
+                  "type": "integer",
                   "example": 1
+                },
+                "note": {
+                  "type": "string",
+                  "example": "fork please"
+                }
+              },
+              "required": ["accountId", "tableId", "itemId", "quantity", "note"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/order": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer"
+          },
+          "404": {
+            "description": "Cannot Create Order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
           }
         }
       }

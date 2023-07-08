@@ -45,7 +45,7 @@ export const applyFilters = async (
     url += sortOrder ? `&sort_order=${sortOrder}` : "";
 
     const res = await sendRequest(url, "GET");
-    return res.items;
+    return res;
   } catch (err) {
     console.log(err);
     return [];
