@@ -31,8 +31,7 @@ const OrderDrawer = () => {
     setState({ ...state, [anchor]: open });
   };
 
-  // TODO: change the list in the drawer to show order items instead.
-  // GET request of order items. ListItemIcon replaced with image assets.
+  // TODO: pass in [orderItems, setOrderItems] to MenuItemCards using GPT example
   const list = (anchor) => (
     <Box
       sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}

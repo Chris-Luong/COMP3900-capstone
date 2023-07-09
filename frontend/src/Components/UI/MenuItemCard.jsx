@@ -42,6 +42,9 @@ const MenuItemCard = ({ key, name, description, price, availability }) => {
       note: note,
     };
 
+    // TODO: Will need to pass the list of orderitems to orderDrawer in menu
+    // https://stackoverflow.com/questions/70061442/how-to-pass-a-value-for-usestate-hook-from-another-component-in-reactjs
+
     // Add order item to end of array of order items.
     setOrderItems((prevArray) => {
       return [
@@ -70,6 +73,9 @@ const MenuItemCard = ({ key, name, description, price, availability }) => {
 
   // Remove order item from cart given index.
   // TODO: each item (orderItem object thing) in cart should have its own index
+  // Each menu item could also have a unique key so that changing its quantity
+  // through the MenuItemCard just changes the quantity in the cart instead of
+  // adding it to the cart (duplicating items with different quantities = bad UI)
   const handleRemoveOrderItem = (index) => {
     setOrderItems((prevArray) => {
       return prevArray.filter((item, i) => i !== index);
