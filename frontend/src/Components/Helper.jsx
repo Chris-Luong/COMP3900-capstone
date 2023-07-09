@@ -96,5 +96,6 @@ export const menuItemSchema = Yup.object().shape({
     .min(1, "Categories required."),
   price: Yup.number()
     .required("Price is required")
-    .min(0, "Price can't be negative"),
+    .min(0, "Price can't be negative")
+    .max(1000, "Maximum price is 1000"),
 });
