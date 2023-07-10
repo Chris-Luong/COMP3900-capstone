@@ -1,5 +1,5 @@
 const getMenuItemsByOrder = `
-  SELECT MI.name as name, MI.id as itemId, OI.quantity as quantity, MI.price as price FROM 
+  SELECT O.accountId as accountId, MI.name as itemName, MI.id as itemId, OI.quantity as quantity, OI.note as note, MI.price as price, MI.thumbnail as thumbnail FROM 
   orders O 
     join orderItems OI on OI.orderId = O.id 
     join menuItems MI on MI.id = OI.itemId 
@@ -7,17 +7,20 @@ const getMenuItemsByOrder = `
 `;
 
 const addMenuItemsToOrder = `
-    INSERT INTO orderItems(itemId, orderId, quantity, note) VALUES(?, ?, ?, ?)
+    INSERT INTO orderItems(orderId, itemId, quantity, note) VALUES(?, ?, ?, ?)
 `
 
-const getOrders = `
-  SELECT * from orders
-  WHERE accountId = ?
+const getMenuItemsByAccount = `
+  SELECT O.id as orderId, MI.name as itemName, MI.id as itemId, OI.quantity as quantity, OI.note as note, MI.price as price, MI.thumbnail as thumbnail FROM 
+  orders O 
+    join orderItems OI on OI.orderId = O.id 
+    join menuItems MI on MI.id = OI.itemId 
+  where O.accountId = ?
 `
 
 const createOrder = `
-  INSERT INTO orders (tableId)
-  VALUES(?);
+  INSERT INTO orders (accountId, tableId)
+  VALUES(?, ?);
 `;
 
 const createOrderWithAccountId = `
@@ -27,5 +30,5 @@ const createOrderWithAccountId = `
 
 
 module.exports = {
-    getOrders, getMenuItemsByOrder, createOrder, addMenuItemsToOrder
+  getMenuItemsByAccount, getMenuItemsByOrder, createOrder, addMenuItemsToOrder
 };

@@ -229,25 +229,12 @@
           {
             "name": "accountId",
             "in": "query",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/ordersbyid/{orderId}": {
-      "get": {
-        "description": "",
-        "parameters": [
+            "type": "integer"
+          },
           {
             "name": "orderId",
-            "in": "path",
-            "required": true,
-            "type": "string"
+            "in": "query",
+            "type": "integer"
           }
         ],
         "responses": {
@@ -267,41 +254,30 @@
             "schema": {
               "type": "object",
               "properties": {
+                "accountId": {
+                  "example": 1
+                },
                 "tableId": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/orders/addItem": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "itemId": {
-                  "example": "any"
+                  "example": 1
                 },
-                "orderId": {
-                  "example": "any"
-                },
-                "quantity": {
-                  "example": "any"
-                },
-                "note": {
-                  "example": "any"
+                "items": {
+                  "example": [
+                    {
+                      "id": 1,
+                      "quantity": 1,
+                      "note": "Fresh..."
+                    },
+                    {
+                      "id": 2,
+                      "quantity": 2,
+                      "note": "Tasty..."
+                    },
+                    {
+                      "id": 3,
+                      "quantity": 3,
+                      "note": "Hot..."
+                    }
+                  ]
                 }
               }
             }

@@ -4,7 +4,7 @@ const register = require('../controller/register')
 const login = require('../controller/login');
 const {menu, addItem, removeItem, editItem, categoriesFromId} = require('../controller/menu');
 const categories = require('../controller/categories');
-const { viewOrders, viewOrdersByOrderId, createOrder, addMenuItems } = require('../controller/order');
+const { viewOrders, createOrder } = require('../controller/order');
 
 /**
  * @swagger
@@ -47,7 +47,5 @@ router.delete('/menu/remove', removeItem);
 router.get('/categories', categories);
 router.get("/categories/:itemid", categoriesFromId);
 router.get('/orders', viewOrders);
-router.get('/ordersbyid/:orderId', viewOrdersByOrderId);
 router.post('/orders/create', createOrder);
-router.post('/orders/addItem', addMenuItems);
 module.exports = router;
