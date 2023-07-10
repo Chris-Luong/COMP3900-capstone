@@ -29,8 +29,27 @@ class Order {
     });
   }
 
-  static createOrder(accountId, tableId, itemId, quantity, note, next) {
-    let values = [accountId, tableId, itemId, quantity, note];
+  static getOrderByOrderId(orderId, next) {
+    db.query(getMenuItemsByOrder, orderId, (err, results) => {
+      if (err) {
+        next(
+          {
+            status: EXISTS,
+            message: "Error retrieving menu items by the given account id",
+            kind: EXISTS_KIND,
+          },
+          null
+        );
+        return;
+      }
+      console.log(results);
+      let result = JSON.parse(JSON.stringify(results));
+      next(null, result);
+    });
+  }
+
+  static createOrder(tableId, next) {
+    let values = [tableId];
     db.query(createOrder, values, (err, results) => {
       if (err) {
         next(
@@ -43,7 +62,8 @@ class Order {
         );
         return;
       }
-      next(null, {message: "Successfully created order!"});
+      let orderId = results.insertId;
+      next(null, {orderId: orderId});
     });
   }
 }

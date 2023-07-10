@@ -4,7 +4,7 @@ const register = require('../controller/register')
 const login = require('../controller/login');
 const {menu, addItem, removeItem, editItem, categoriesFromId} = require('../controller/menu');
 const categories = require('../controller/categories');
-const { viewOrders, createOrder } = require('../controller/order');
+const { viewOrders, viewOrdersByOrderId, createOrder, addMenuItems } = require('../controller/order');
 
 /**
  * @swagger
@@ -77,6 +77,7 @@ router.get("/categories/:itemid", categoriesFromId);
  *         description: Failed to Create
  */
 router.get('/orders', viewOrders);
+router.get('/ordersbyId', viewOrdersByOrderId);
 router.post('/orders/create', createOrder);
-
+router.post('/orders/addItem', addMenuItems);
 module.exports = router;

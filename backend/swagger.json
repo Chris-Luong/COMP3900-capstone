@@ -5,7 +5,7 @@
     "title": "REST API",
     "description": ""
   },
-  "host": "localhost:8800",
+  "host": "localhost:3000",
   "basePath": "/",
   "schemes": [
     "http"
@@ -56,42 +56,79 @@
           {
             "name": "search",
             "in": "query",
-            "type": "string",
-            "description": "Search term for menu items"
+            "type": "string"
           },
           {
             "name": "category",
             "in": "query",
-            "type": "string",
-            "description": "Category of menu items"
+            "type": "string"
           },
           {
             "name": "min_price",
             "in": "query",
-            "type": "number",
-            "format": "float",
-            "description": "Minimum price of menu items"
+            "type": "string"
           },
           {
             "name": "max_price",
             "in": "query",
-            "type": "number",
-            "format": "float",
-            "description": "Maximum price of menu items"
+            "type": "string"
           },
           {
             "name": "sort_type",
             "in": "query",
-            "type": "string",
-            "enum": ["price", "name"],
-            "description": "Sorting type for menu items"
+            "type": "string"
           },
           {
             "name": "sort_order",
             "in": "query",
-            "type": "string",
-            "enum": ["ASC", "DESC"],
-            "description": "Sorting order for menu items"
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/menu/edit": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "ingredients",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "categories",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "price",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "thumb",
+            "in": "query",
+            "type": "string"
           }
         ],
         "responses": {
@@ -112,83 +149,25 @@
               "type": "object",
               "properties": {
                 "name": {
-                  "example": "Hot Apple Pie"
+                  "example": "any"
                 },
                 "description": {
-                  "example": "Yummy!"
+                  "example": "any"
                 },
                 "ingredients": {
-                  "example": "Apple, Sugar, Flour, Water"
+                  "example": "any"
                 },
                 "categories": {
-                  "example": ["Breakfast", "Lunch", "Dinner"]
+                  "example": "any"
                 },
                 "price": {
-                  "example": 4.99
+                  "example": "any"
                 },
                 "thumb": {
-                  "example": ""
+                  "example": "any"
                 }
               }
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/menu/edit": {
-      "put": {
-        "description": "Edit a menu item",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "type": "integer",
-            "description": "ID of the menu item"
-          },
-          {
-            "name": "name",
-            "in": "query",
-            "type": "string",
-            "description": "Name of the menu item"
-          },
-          {
-            "name": "description",
-            "in": "query",
-            "type": "string",
-            "description": "Description of the menu item"
-          },
-          {
-            "name": "ingredients",
-            "in": "query",
-            "type": "string",
-            "description": "Ingredients of the menu item"
-          },
-          {
-            "name": "categories",
-            "in": "query",
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi",
-            "description": "Categories of the menu item"
-          },
-          {
-            "name": "price",
-            "in": "query",
-            "type": "int",
-            "description": "Price of the menu item"
-          },
-          {
-            "name": "thumbnail",
-            "in": "query",
-            "type": "string",
-            "description": "Path of the image"
           }
         ],
         "responses": {
@@ -209,7 +188,7 @@
               "type": "object",
               "properties": {
                 "id": {
-                  "example": 10
+                  "example": "any"
                 }
               }
             }
@@ -222,57 +201,72 @@
         }
       }
     },
-    "/orders": {
+    "/categories": {
       "get": {
-        "summary": "Get all orders",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/categories/{itemid}": {
+      "get": {
+        "description": "",
         "parameters": [
           {
-            "in": "query",
-            "name": "accountId",
+            "name": "itemid",
+            "in": "path",
             "required": true,
-            "schema": {
-              "type": "integer"
-            },
-            "description": "The ID of the account"
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Order Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/orders": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/ordersbyId": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
     },
     "/orders/create": {
       "post": {
-        "summary": "Create a new order",
+        "description": "",
         "parameters": [
           {
             "name": "body",
@@ -280,61 +274,46 @@
             "schema": {
               "type": "object",
               "properties": {
-                "accountId": {
-                  "type": "integer",
-                  "example": 1
-                },
                 "tableId": {
-                  "type": "integer",
-                  "example": 1
-                },
-                "itemId": {
-                  "type": "integer",
-                  "example": 2
-                },
-                "quantity": {
-                  "type": "integer",
-                  "example": 1
-                },
-                "note": {
-                  "type": "string",
-                  "example": "fork please"
+                  "example": "any"
                 }
-              },
-              "required": ["accountId", "tableId", "itemId", "quantity", "note"]
+              }
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/orders/addItem": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "itemId": {
+                  "example": "any"
+                },
+                "orderid": {
+                  "example": "any"
+                },
+                "quantity": {
+                  "example": "any"
                 }
               }
             }
-          },
-          "404": {
-            "description": "Cannot Create Order",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
