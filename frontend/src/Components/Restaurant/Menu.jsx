@@ -32,7 +32,8 @@ const OrderDrawer = (orderItems) => {
   };
 
   console.log(orderItems);
-  // TODO: pass in [orderItems, setOrderItems] to MenuItemCards using GPT example
+
+  // TODO: Get accountId from email of user? Generate int for tableId -> useState increment
   const list = (anchor) => (
     <Box
       sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}
