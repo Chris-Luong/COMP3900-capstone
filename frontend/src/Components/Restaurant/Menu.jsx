@@ -15,7 +15,7 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 
-const OrderDrawer = () => {
+const OrderDrawer = (orderItems) => {
   const [state, setState] = useState({
     right: false,
   });
@@ -31,6 +31,7 @@ const OrderDrawer = () => {
     setState({ ...state, [anchor]: open });
   };
 
+  console.log(orderItems);
   // TODO: pass in [orderItems, setOrderItems] to MenuItemCards using GPT example
   const list = (anchor) => (
     <Box
@@ -63,6 +64,19 @@ const OrderDrawer = () => {
             </ListItemButton>
           </ListItem>
         ))}
+      </List>
+      <Divider />
+      <List>
+        {orderItems.length
+          ? orderItems.map((item, index) => (
+              <ListItem key={item} disablePadding>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
+                <ListItemText primary={item.note} />
+              </ListItem>
+            ))
+          : null}
       </List>
     </Box>
   );
@@ -116,6 +130,7 @@ const Menu = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [price, setPrice] = useState([0, 100]);
   const [sort, setSort] = useState(1);
+  const [orderItems, setOrderItems] = useState([]);
 
   const toggleFilter = () => {
     setShowFilter(!showFilter);
@@ -171,6 +186,21 @@ const Menu = () => {
     getMenuData();
   }, []);
 
+  const handleUpdateOrderItems = (updatedOrderItems) => {
+    setOrderItems(updatedOrderItems);
+  };
+
+  // Remove order item from cart given index.
+  // TODO: each item (orderItem object thing) in cart should have its own index
+  // Each menu item could also have a unique key so that changing its quantity
+  // through the MenuItemCard just changes the quantity in the cart instead of
+  // adding it to the cart (duplicating items with different quantities = bad UI)
+  const handleRemoveOrderItem = (index) => {
+    setOrderItems((prevArray) => {
+      return prevArray.filter((item, i) => i !== index);
+    });
+  };
+
   return (
     <>
       {loading && <CircularProgress />}
@@ -183,11 +213,13 @@ const Menu = () => {
             {menuItems.map((item) => (
               <MenuItemCard
                 // TODO: add image with base64 string - need helper fn to convert
-                key={item.id}
+                itemId={item.id}
                 name={item.name}
                 description={item.description}
                 price={item.price}
                 availability={item.availability}
+                orderItems={orderItems}
+                onUpdateOrderItems={handleUpdateOrderItems}
               />
             ))}
             <FilterModal
@@ -207,7 +239,7 @@ const Menu = () => {
               onSubmit={handleFilters}
             />
           </Grid>
-          <OrderDrawer />
+          <OrderDrawer orderItems={orderItems} />
         </>
       )}
     </>

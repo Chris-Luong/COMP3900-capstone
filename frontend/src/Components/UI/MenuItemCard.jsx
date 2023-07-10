@@ -13,11 +13,19 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 
 // TODO: Check if formatting requires props.key rather than just key
-const MenuItemCard = ({ key, name, description, price, availability }) => {
+const MenuItemCard = ({
+  itemId,
+  name,
+  description,
+  price,
+  availability,
+  orderItems,
+  onUpdateOrderItems,
+}) => {
+  // console.log(itemId, name, description, price, availability);
   // TODO: add item image
   const [showModal, setShowModal] = useState(false);
   const [quantity, setQuantity] = useState(1);
-  const [orderItems, setOrderItems] = useState([]);
 
   const openModal = () => {
     setShowModal(true);
@@ -27,17 +35,18 @@ const MenuItemCard = ({ key, name, description, price, availability }) => {
     setShowModal(false);
   };
 
-  async function handleAddToCart(event) {
+  async function handleAddToCart(event, index) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
     console.log(quantity);
     console.log(data.get("note"));
+
     const note = data.get("note");
 
-    const body = {
+    const newOrder = {
       // TODO: accountId and tableId here
-      itemId: key,
+      itemId: itemId,
       quantity: quantity,
       note: note,
     };
@@ -45,17 +54,11 @@ const MenuItemCard = ({ key, name, description, price, availability }) => {
     // TODO: Will need to pass the list of orderitems to orderDrawer in menu
     // https://stackoverflow.com/questions/70061442/how-to-pass-a-value-for-usestate-hook-from-another-component-in-reactjs
 
-    // Add order item to end of array of order items.
-    setOrderItems((prevArray) => {
-      return [
-        ...prevArray,
-        {
-          itemId: key,
-          quantity: quantity,
-          note: note,
-        },
-      ];
-    });
+    // Add item to end of order items.
+    const updatedOrderItems = (orderitems) => {
+      return [...orderitems, newOrder];
+    };
+    onUpdateOrderItems(updatedOrderItems);
     // try {
     //   const response = await sendRequest("/orderItem/add", "POST", body);
     //   if (response.ok) {
@@ -70,17 +73,6 @@ const MenuItemCard = ({ key, name, description, price, availability }) => {
     //   console.log(error);
     // }
   }
-
-  // Remove order item from cart given index.
-  // TODO: each item (orderItem object thing) in cart should have its own index
-  // Each menu item could also have a unique key so that changing its quantity
-  // through the MenuItemCard just changes the quantity in the cart instead of
-  // adding it to the cart (duplicating items with different quantities = bad UI)
-  const handleRemoveOrderItem = (index) => {
-    setOrderItems((prevArray) => {
-      return prevArray.filter((item, i) => i !== index);
-    });
-  };
 
   const handleIncrementQuantity = () => {
     setQuantity((prevQuantity) => prevQuantity + 1);
