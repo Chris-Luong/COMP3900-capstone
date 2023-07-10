@@ -5,7 +5,7 @@
     "title": "REST API",
     "description": ""
   },
-  "host": "localhost:3000",
+  "host": "localhost:8800",
   "basePath": "/",
   "schemes": [
     "http"
@@ -247,13 +247,14 @@
         }
       }
     },
-    "/ordersbyId": {
+    "/ordersbyid/{orderId}": {
       "get": {
         "description": "",
         "parameters": [
           {
             "name": "orderId",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "type": "string"
           }
         ],
@@ -301,10 +302,13 @@
                 "itemId": {
                   "example": "any"
                 },
-                "orderid": {
+                "orderId": {
                   "example": "any"
                 },
                 "quantity": {
+                  "example": "any"
+                },
+                "note": {
                   "example": "any"
                 }
               }

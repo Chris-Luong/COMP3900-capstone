@@ -1,5 +1,5 @@
 const db = require("../db/db");
-const { getOrders, createOrder } = require("../db/queries/order.queries");
+const { getOrders, getMenuItemsByOrder, createOrder } = require("../db/queries/order.queries");
 
 
 const NOT_FOUND = 401;
@@ -61,6 +61,13 @@ class Order {
           null
         );
         return;
+      }
+      if (results.affectedRows == 0) {
+        next({
+          status: CANNOT_CREATE,
+          message: "Error inserting and creating an order",
+          kind: CANNOT_CREATE_KIND
+        }, null)
       }
       let orderId = results.insertId;
       next(null, {orderId: orderId});

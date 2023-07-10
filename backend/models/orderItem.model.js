@@ -14,8 +14,7 @@ class OrderItem {
     this.note = note
   }
 
- static addMenuitemToTheOrder(newOrderItem, next) {
-    let { itemId, orderId, quantity, note } = newOrderItem
+ static addMenuitemToTheOrder(itemId, orderId, quantity, note, next) {
     if (!note) {
         note = '';
     }

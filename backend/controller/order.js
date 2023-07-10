@@ -52,8 +52,7 @@ viewOrders = (req, res) => {
  * @returns {list of ordered menu itens including }
  */
 viewOrdersByOrderId = (req, res) => {
-  const orderId = req.query.orderId;
-  console.log("OrderId" + orderId);
+  const orderId = req.params['orderId'] 
   Order.getOrderByOrderId(orderId, (err, result) => {
     if (err) {
       return res.status(err.status).json({ message: err.message });
@@ -91,7 +90,13 @@ createOrder = (req, res) => {
     })
 
 }
- 
+
+/**
+ * The callback to return the error or result of this function
+ * @callback callback
+ * @param {object}        error            The error if encountered, null otherwise
+ * @param {object}        result           The result if successful, null otherwise
+*/
 /**
  * This addMenuItems function is for adding menu items to the order
  * This should typically be called when the customer finalise and submit their order
@@ -104,7 +109,8 @@ createOrder = (req, res) => {
  */
 
 addMenuItems = (req, res) => {
-  OrderItem.addMenuitemToTheOrder(req.body, (err, result) => {
+  const { itemId, orderId, quantity, note } = req.body
+  OrderItem.addMenuitemToTheOrder(itemId, orderId, quantity, note, (err, result) => {
     if (err) {
       return res.status(err.status).json({ message: err.message });
     }
