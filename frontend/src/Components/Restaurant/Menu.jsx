@@ -1,8 +1,102 @@
-import { useState, useEffect } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { Button, CircularProgress, Grid } from "@mui/material";
 import { getAllMenuItems, getAllCategories, applyFilters } from "../Helper";
 import FilterModal from "../UI/FilterModal";
 import MenuItemCard from "../UI/MenuItemCard";
+
+import Box from "@mui/material/Box";
+import Drawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
+import Divider from "@mui/material/Divider";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import InboxIcon from "@mui/icons-material/MoveToInbox";
+import MailIcon from "@mui/icons-material/Mail";
+
+const OrderDrawer = (orderItems) => {
+  const [state, setState] = useState({
+    right: false,
+  });
+
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+
+    setState({ ...state, [anchor]: open });
+  };
+
+  console.log(orderItems);
+
+  // TODO: Get accountId from email of user? Generate int for tableId -> useState increment
+  const list = (anchor) => (
+    <Box
+      sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}
+      role='presentation'
+      onClick={toggleDrawer(anchor, false)}
+      onKeyDown={toggleDrawer(anchor, false)}
+    >
+      <List>
+        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
+          <ListItem key={text} disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+      <List>
+        {["All mail", "Trash", "Spam"].map((text, index) => (
+          <ListItem key={text} disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+      <List>
+        {orderItems.length
+          ? orderItems.map((item, index) => (
+              <ListItem key={item} disablePadding>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
+                <ListItemText primary={item.note} />
+              </ListItem>
+            ))
+          : null}
+      </List>
+    </Box>
+  );
+
+  return (
+    <div>
+      <Fragment key={"right"}>
+        <Button onClick={toggleDrawer("right", true)}>View order</Button>
+        <Drawer
+          anchor={"right"}
+          open={state["right"]}
+          onClose={toggleDrawer("right", false)}
+        >
+          {list("right")}
+        </Drawer>
+      </Fragment>
+    </div>
+  );
+};
 
 const sortByValues = {
   1: {
@@ -37,6 +131,7 @@ const Menu = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [price, setPrice] = useState([0, 100]);
   const [sort, setSort] = useState(1);
+  const [orderItems, setOrderItems] = useState([]);
 
   const toggleFilter = () => {
     setShowFilter(!showFilter);
@@ -92,22 +187,40 @@ const Menu = () => {
     getMenuData();
   }, []);
 
+  const handleUpdateOrderItems = (updatedOrderItems) => {
+    setOrderItems(updatedOrderItems);
+  };
+
+  // Remove order item from cart given index.
+  // TODO: each item (orderItem object thing) in cart should have its own index
+  // Each menu item could also have a unique key so that changing its quantity
+  // through the MenuItemCard just changes the quantity in the cart instead of
+  // adding it to the cart (duplicating items with different quantities = bad UI)
+  const handleRemoveOrderItem = (index) => {
+    setOrderItems((prevArray) => {
+      return prevArray.filter((item, i) => i !== index);
+    });
+  };
+
   return (
     <>
       {loading && <CircularProgress />}
       {!loading && (
         <>
-          <Button variant="contained" onClick={toggleFilter}>
+          <Button variant='contained' onClick={toggleFilter}>
             Filter
           </Button>
           <Grid container>
             {menuItems.map((item) => (
               <MenuItemCard
-                key={item.id}
+                // TODO: add image with base64 string - need helper fn to convert
+                itemId={item.id}
                 name={item.name}
                 description={item.description}
                 price={item.price}
                 availability={item.availability}
+                orderItems={orderItems}
+                onUpdateOrderItems={handleUpdateOrderItems}
               />
             ))}
             <FilterModal
@@ -127,6 +240,7 @@ const Menu = () => {
               onSubmit={handleFilters}
             />
           </Grid>
+          <OrderDrawer orderItems={orderItems} />
         </>
       )}
     </>

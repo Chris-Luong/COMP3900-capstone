@@ -5,23 +5,25 @@ import {
   CardContent,
   Typography,
   Grid,
+  TextField,
 } from "@mui/material";
 import { useState } from "react";
 import sendRequest from "../Utils/Request";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 
+// TODO: Check if formatting requires props.key rather than just key
 const MenuItemCard = ({
-  key,
+  itemId,
   name,
   description,
   price,
   availability,
-  onClick,
+  orderItems,
+  onUpdateOrderItems,
 }) => {
+  // console.log(itemId, name, description, price, availability);
   // TODO: add item image
-  // for now, display all this info in the card, but for final version, will only
-  // want to show name, image and price. description will be added in modal
   const [showModal, setShowModal] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
@@ -29,37 +31,49 @@ const MenuItemCard = ({
     setShowModal(true);
   };
 
-  const handleQuantityChange = (newQuantity) => {
-    setQuantity(newQuantity);
-  };
-
   const closeModal = () => {
     setShowModal(false);
   };
 
-  async function handleAddToCart(values) {
-    // TODO: include values.orderId in the body
-    // Need to implement in a way such that an order is created and the orderId is forwarded
-    const body = {
-      itemId: key,
-      quantity: values.quantity,
+  async function handleAddToCart(event, index) {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+
+    console.log(quantity);
+    console.log(data.get("note"));
+
+    const note = data.get("note");
+
+    const newOrder = {
+      // TODO: accountId and tableId here
+      itemId: itemId,
+      quantity: quantity,
+      note: note,
     };
 
-    try {
-      const response = await sendRequest("/orderItem/add", "POST", body);
+    // TODO: Will need to pass the list of orderitems to orderDrawer in menu
+    // https://stackoverflow.com/questions/70061442/how-to-pass-a-value-for-usestate-hook-from-another-component-in-reactjs
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data.message);
-        alert(data.message);
-      } else {
-        throw new Error("Failed to add item to cart");
-      }
-    } catch (error) {
-      alert(error);
-      console.log(error);
-    }
+    // Add item to end of order items.
+    const updatedOrderItems = (orderitems) => {
+      return [...orderitems, newOrder];
+    };
+    onUpdateOrderItems(updatedOrderItems);
+    // try {
+    //   const response = await sendRequest("/orderItem/add", "POST", body);
+    //   if (response.ok) {
+    //     const data = await response.json();
+    //     console.log(data.message);
+    //     alert(data.message);
+    //   } else {
+    //     throw new Error("Failed to add item to cart");
+    //   }
+    // } catch (error) {
+    //   alert(error);
+    //   console.log(error);
+    // }
   }
+
   const handleIncrementQuantity = () => {
     setQuantity((prevQuantity) => prevQuantity + 1);
   };
@@ -67,24 +81,21 @@ const MenuItemCard = ({
   const handleDecrementQuantity = () => {
     setQuantity((prevQuantity) => Math.max(prevQuantity - 1, 1));
   };
+
   return (
     <div>
       <Grid item onClick={openModal}>
         {availability === 1 && (
           <Card
-            variant="outlined"
+            variant='outlined'
             sx={{ width: "200px", height: "150px", margin: "auto" }}
             style={{ cursor: "pointer" }}
-            className="highlight-card-on-hover"
+            className='highlight-card-on-hover'
           >
             <CardHeader title={name} />
             <CardContent>
               <Typography>${price}</Typography>
             </CardContent>
-            {/* add to order should be in the modal */}
-            {/*<CardActions>
-            <Button size="small">Add to Order</Button>
-      </CardActions> */}
             <style>
               {`
               .highlight-card-on-hover:hover {
@@ -99,14 +110,14 @@ const MenuItemCard = ({
           <Card>
             <CardHeader title={name} />
             <CardContent>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant='body2' color='text.secondary'>
                 {description}
               </Typography>
-              <Typography>{price}</Typography>
+              <Typography>${price}</Typography>
             </CardContent>
             <Typography
               sx={{ fontSize: 14 }}
-              color="text.secondary"
+              color='text.secondary'
               gutterBottom
             >
               Not available
@@ -118,10 +129,12 @@ const MenuItemCard = ({
       <Modal
         open={showModal}
         onClose={closeModal}
-        aria-labelledby="modal-title"
-        aria-describedby="modal-description"
+        aria-labelledby='modal-title'
+        aria-describedby='modal-description'
       >
         <Box
+          component='form'
+          onSubmit={handleAddToCart}
           sx={{
             position: "absolute",
             top: "50%",
@@ -133,29 +146,50 @@ const MenuItemCard = ({
             p: 4,
           }}
         >
-          <Typography id="modal-title" variant="h6" component="h2">
+          <Typography id='modal-title' variant='h6' component='h2'>
             {name}
           </Typography>
 
-          <Typography id="modal-description" variant="body1" mt={2}>
+          <Typography id='modal-description' variant='body1' mt={2}>
             {description}
           </Typography>
 
-          <Typography variant="body1" mt={2}>
-            Price: {price}
+          <Typography variant='body1' mt={2}>
+            Price: ${price}
           </Typography>
 
-          <Typography variant="body1" component="div" mt={2}>
+          <Typography
+            variant='body1'
+            component='div'
+            id='quantity'
+            name='quantity'
+            mt={2}
+          >
             Quantity:
             <Button onClick={handleDecrementQuantity}>-</Button>
             {quantity}
             <Button onClick={handleIncrementQuantity}>+</Button>
           </Typography>
 
-          <Button variant="contained" onClick={handleAddToCart} mt={3}>
+          <TextField
+            margin='normal'
+            fullWidth
+            name='note'
+            label='Notes for chef'
+            type='text'
+            id='note'
+          />
+
+          <Button
+            disabled={availability === 0}
+            label='AddItem'
+            type='submit'
+            variant='contained'
+            mt={3}
+          >
             Add to Cart
           </Button>
-          <Grid container justifyContent="flex-end">
+          <Grid container justifyContent='flex-end'>
             <Button onClick={closeModal}>Close</Button>
           </Grid>
         </Box>
