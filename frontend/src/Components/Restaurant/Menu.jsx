@@ -149,7 +149,7 @@ const Menu = () => {
           </Grid>
           <OrderDrawer
             orderItems={orderItems}
-            setOrderItems={setOrderItems}
+            onDelete={handleRemoveOrderItem}
             // deleteItem={handleRemoveOrderItem()}
           />
         </>

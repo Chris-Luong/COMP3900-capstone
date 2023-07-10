@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState } from "react";
 import { Button } from "@mui/material";
 
 import Box from "@mui/material/Box";
@@ -13,7 +13,7 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
-const OrderDrawer = (orderItems, setOrderItems) => {
+const OrderDrawer = (orderItems, onDelete) => {
   const [state, setState] = useState({
     right: false,
   });
@@ -40,11 +40,6 @@ const OrderDrawer = (orderItems, setOrderItems) => {
   // const handleDelete = (index) => {
   //   deleteItem(index);
   // };
-  const handleRemoveOrderItem = (index) => {
-    setOrderItems((prevArray) => {
-      return prevArray.filter((item, i) => i !== index);
-    });
-  };
 
   // TODO: Get accountId from email of user? Generate int for tableId -> useState increment
   const list = (anchor) => (
@@ -88,10 +83,10 @@ const OrderDrawer = (orderItems, setOrderItems) => {
                   <ListItemIcon>
                     {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                   </ListItemIcon>
-                  <ListItemText primary={item.note} />
+                  <ListItemText primary={item.name} />
                   <DeleteOutlineIcon
                     color='warning'
-                    onClick={() => handleRemoveOrderItem(index)}
+                    onClick={() => onDelete(index)}
                   />
                 </ListItem>
                 {/* Could remove if clutters UI */}
