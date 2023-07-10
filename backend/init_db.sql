@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS menuItems (
     name VARCHAR(50) NOT NULL,
     description TEXT,
     ingredients VARCHAR(255),
-    price DECIMAL(5, 2) NOT NULL,
+    price DECIMAL(6, 2) NOT NULL,
     availability TINYINT(1) NOT NULL DEFAULT 1,
     thumbnail BLOB,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -78,17 +78,17 @@ INSERT INTO categories (name) VALUES
     ('Burger')
 ;
 
-INSERT INTO menuItems (name, description, price) VALUES
-    ('Pancakes', 'Delicious fluffy pancakes served with syrup and butter.', 7.99),
-    ('Sausage and Egg', 'Scrambled eggs with savory sausage links.', 6.99),
-    ('Waffles', 'Golden-brown waffles topped with fresh fruits and whipped cream.', 8.99),
-    ('Pepperoni Pizza', 'Classic pizza topped with pepperoni slices.', 12.99),
-    ('Supreme Pizza', 'Loaded with a variety of toppings including pepperoni, sausage, onions, bell peppers, and mushrooms.', 14.99),
-    ('Cheeseburger', 'Juicy beef patty with melted cheese, lettuce, tomato, and onions.', 9.99),
-    ('Junior Cheeseburger', 'Smaller-sized cheeseburger perfect for a quick bite.', 6.99),
-    ('Fish and Chips', 'Crispy battered fish served with seasoned fries.', 10.99),
-    ('Soup of the Night', '', 9.99)
-;
+INSERT INTO menuItems (name, description, ingredients, price) VALUES
+    ('Pancakes', 'Delicious fluffy pancakes served with syrup and butter.', 'Eggs, Flour, Milk', 7.99),
+    ('Sausage and Egg', 'Scrambled eggs with savory sausage links.', 'Eggs, Butter, Pork Sausages', 6.99),
+    ('Waffles', 'Golden-brown waffles topped with fresh fruits and whipped cream.', 'Eggs, Flour, Milk', 8.99),
+    ('Pepperoni Pizza', 'Classic pizza topped with pepperoni slices.', 'Flour, Pepperoni, Cheese', 12.99),
+    ('Supreme Pizza', 'Loaded with a variety of toppings including pepperoni, sausage, onions, bell peppers, and mushrooms.', 'Flour, Cheese, and much more', 14.99),
+    ('Cheeseburger', 'Juicy beef patty with melted cheese, lettuce, tomato, and onions.', 'Toasted Bun, Cheese, Beef Patty, Tomato Sauce', 9.99),
+    ('Junior Cheeseburger', 'Smaller-sized cheeseburger perfect for a quick bite.', 'Toasted Bun, Cheese, Beef Patty, Tomato Sauce', 6.99),
+    ('Fish and Chips', 'Crispy battered fish served with seasoned fries.', 'Fish, Chips', 10.99),
+    ('Soup of the Night', 'Warm, hearty soup!', 'Ask the waiter!', 9.99),
+    ('Test item', 'Test description', 'Test ingredients', 5.99);
 
 INSERT INTO menuItemsCategories (itemId, categoryId) VALUES
     (1, 1), -- Pancakes - Breakfast
@@ -105,7 +105,8 @@ INSERT INTO menuItemsCategories (itemId, categoryId) VALUES
     (7, 5), -- Junior Cheeseburger - Burgers
     (7, 2),
     (8, 2), -- Fish and Chips - Lunch
-    (9, 3) -- Dish for Dinner - Dinner
+    (9, 3), -- Dish for Dinner - Dinner
+    (10, 3) -- test item - dinner
 ;
 
 INSERT INTO orders (accountId, tableId, itemId, quantity, note) VALUES 

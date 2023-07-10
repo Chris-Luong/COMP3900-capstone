@@ -2,6 +2,13 @@ const getCategories = `
   SELECT * FROM categories
 `;
 
+const getCategoryNamesFromItemId = `
+  SELECT name FROM categories JOIN menuitemscategories
+  ON categories.id = menuitemscategories.categoryId
+  WHERE menuitemscategories.itemId = ?;
+`;
+
+
 const getCategory = `
 SELECT categories.id FROM categories
 WHERE categories.name = ?
@@ -66,6 +73,7 @@ WHERE menuItems.id = ?
 module.exports = {
   getAllMenuItems,
   getCategories,
+  getCategoryNamesFromItemId,
   getCategory,
   filterCategory,
   sortMenuItems,

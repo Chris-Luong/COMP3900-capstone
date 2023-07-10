@@ -32,7 +32,7 @@ removeItem = (req, res) => {
 
 editItem = (req, res) => {
   const {id, name, description, ingredients, categories, price, thumb} = req.query;
-  Menu.editMenuItem(parseInt(id, 10), name, description, ingredients, categories, parseInt(price, 10), thumb, (err, result) => {
+  Menu.editMenuItem(parseInt(id, 10), name, description, ingredients, categories, price, thumb, (err, result) => {
     if (err) {
       return res.status(err.status).json({ message: err.message });
     }
@@ -40,9 +40,20 @@ editItem = (req, res) => {
   })
 }
 
+categoriesFromId = (req, res) => {
+  const id = req.params["itemid"];
+  Menu.getCategoryNames(parseInt(id, 10), (err, result) => {
+    if (err) {
+      return res.status(err.status).json({ message: err.message });
+    }
+    res.status(200).json({ categoryNames: result });
+  });
+}
+
 module.exports = {
   menu,
   addItem,
   removeItem,
-  editItem
+  editItem,
+  categoriesFromId
 };
