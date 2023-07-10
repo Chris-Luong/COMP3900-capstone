@@ -1,5 +1,5 @@
 {
-  "swagger": "2.0",
+"swagger": "2.0",
   "info": {
     "version": "1.0.0",
     "title": "REST API",
@@ -56,79 +56,42 @@
           {
             "name": "search",
             "in": "query",
-            "type": "string"
+            "type": "string",
+            "description": "Search term for menu items"
           },
           {
             "name": "category",
             "in": "query",
-            "type": "string"
+            "type": "string",
+            "description": "Category of menu items"
           },
           {
             "name": "min_price",
             "in": "query",
-            "type": "string"
+            "type": "number",
+            "format": "float",
+            "description": "Minimum price of menu items"
           },
           {
             "name": "max_price",
             "in": "query",
-            "type": "string"
+            "type": "number",
+            "format": "float",
+            "description": "Maximum price of menu items"
           },
           {
             "name": "sort_type",
             "in": "query",
-            "type": "string"
+            "type": "string",
+            "enum": ["price", "name"],
+            "description": "Sorting type for menu items"
           },
           {
             "name": "sort_order",
             "in": "query",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/menu/edit": {
-      "put": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "name",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "description",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "ingredients",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "categories",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "price",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "thumb",
-            "in": "query",
-            "type": "string"
+            "type": "string",
+            "enum": ["ASC", "DESC"],
+            "description": "Sorting order for menu items"
           }
         ],
         "responses": {
@@ -149,25 +112,83 @@
               "type": "object",
               "properties": {
                 "name": {
-                  "example": "any"
+                  "example": "Hot Apple Pie"
                 },
                 "description": {
-                  "example": "any"
+                  "example": "Yummy!"
                 },
                 "ingredients": {
-                  "example": "any"
+                  "example": "Apple, Sugar, Flour, Water"
                 },
                 "categories": {
-                  "example": "any"
+                  "example": ["Breakfast", "Lunch", "Dinner"]
                 },
                 "price": {
-                  "example": "any"
+                  "example": 4.99
                 },
                 "thumb": {
-                  "example": "any"
+                  "example": ""
                 }
               }
             }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/menu/edit": {
+      "put": {
+        "description": "Edit a menu item",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "type": "integer",
+            "description": "ID of the menu item"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "type": "string",
+            "description": "Name of the menu item"
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "type": "string",
+            "description": "Description of the menu item"
+          },
+          {
+            "name": "ingredients",
+            "in": "query",
+            "type": "string",
+            "description": "Ingredients of the menu item"
+          },
+          {
+            "name": "categories",
+            "in": "query",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi",
+            "description": "Categories of the menu item"
+          },
+          {
+            "name": "price",
+            "in": "query",
+            "type": "int",
+            "description": "Price of the menu item"
+          },
+          {
+            "name": "thumbnail",
+            "in": "query",
+            "type": "string",
+            "description": "Path of the image"
           }
         ],
         "responses": {
@@ -188,39 +209,10 @@
               "type": "object",
               "properties": {
                 "id": {
-                  "example": "any"
+                  "example": 10
                 }
               }
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/categories": {
-      "get": {
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/categories/{itemid}": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "itemid",
-            "in": "path",
-            "required": true,
-            "type": "string"
           }
         ],
         "responses": {
