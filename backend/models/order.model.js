@@ -1,5 +1,5 @@
 const db = require("../db/db");
-const { getOrders, createOrder } = require("../db/queries/order.queries");
+const { getOrders, getMenuItemsByOrder, createOrder } = require("../db/queries/order.queries");
 
 
 const NOT_FOUND = 401;
@@ -29,8 +29,27 @@ class Order {
     });
   }
 
-  static createOrder(accountId, tableId, itemId, quantity, note, next) {
-    let values = [accountId, tableId, itemId, quantity, note];
+  static getOrderByOrderId(orderId, next) {
+    db.query(getMenuItemsByOrder, orderId, (err, results) => {
+      if (err) {
+        next(
+          {
+            status: EXISTS,
+            message: "Error retrieving menu items by the given account id",
+            kind: EXISTS_KIND,
+          },
+          null
+        );
+        return;
+      }
+      console.log(results);
+      let result = JSON.parse(JSON.stringify(results));
+      next(null, result);
+    });
+  }
+
+  static createOrder(tableId, next) {
+    let values = [tableId];
     db.query(createOrder, values, (err, results) => {
       if (err) {
         next(
@@ -43,7 +62,15 @@ class Order {
         );
         return;
       }
-      next(null, {message: "Successfully created order!"});
+      if (results.affectedRows == 0) {
+        next({
+          status: CANNOT_CREATE,
+          message: "Error inserting and creating an order",
+          kind: CANNOT_CREATE_KIND
+        }, null)
+      }
+      let orderId = results.insertId;
+      next(null, {orderId: orderId});
     });
   }
 }

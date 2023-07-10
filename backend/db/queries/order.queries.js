@@ -6,17 +6,26 @@ const getMenuItemsByOrder = `
   where O.id = ?
 `;
 
+const addMenuItemsToOrder = `
+    INSERT INTO orderItems(itemId, orderId, quantity, note) VALUES(?, ?, ?, ?)
+`
+
 const getOrders = `
-  SELECT orders.*, menuitems.* FROM menuitems
-  JOIN orders ON menuitems.id = orders.itemid
-  WHERE orders.accountid = ?
+  SELECT * from orders
+  WHERE accountId = ?
 `
 
 const createOrder = `
-  INSERT INTO orders(accountId, tableId, itemId, quantity, note)
-  VALUES(?, ?, ?, ?, ?);
+  INSERT INTO orders (tableId)
+  VALUES(?);
 `;
 
+const createOrderWithAccountId = `
+  INSERT INTO orders (tableId, accountId) 
+  VALUES (?, ?)
+`;
+
+
 module.exports = {
-    getOrders, createOrder
+    getOrders, getMenuItemsByOrder, createOrder, addMenuItemsToOrder
 };
