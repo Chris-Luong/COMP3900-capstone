@@ -1,5 +1,5 @@
 const db = require("../db/db");
-const { getOrders, getMenuItemsByOrder, createOrder } = require("../db/queries/order.queries");
+const { getMenuItemsByAccount, getMenuItemsByOrder, createOrder, addMenuItemsToOrder } = require("../db/queries/order.queries");
 
 
 const NOT_FOUND = 401;
@@ -11,8 +11,10 @@ const CANNOT_CREATE_KIND = 'cannot_create'
 
 class Order {
   static getOrderByAccountId(accountId, next) {
-    db.query(getOrders, accountId, (err, results) => {
+    db.query(getMenuItemsByAccount, accountId, (err, results) => {
       if (err) {
+        console.log("MySQL Error: " + err);
+        console.log("MySQL Result:", results);
         next(
           {
             status: EXISTS,
@@ -32,6 +34,8 @@ class Order {
   static getOrderByOrderId(orderId, next) {
     db.query(getMenuItemsByOrder, orderId, (err, results) => {
       if (err) {
+        console.log("MySQL Error: " + err);
+        console.log("MySQL Result:", results);
         next(
           {
             status: EXISTS,
@@ -48,8 +52,8 @@ class Order {
     });
   }
 
-  static createOrder(tableId, next) {
-    let values = [tableId];
+  static createOrder(accountId, tableId, items, next) {
+    let values = [accountId, tableId];
     db.query(createOrder, values, (err, results) => {
       if (err) {
         next(
@@ -70,6 +74,33 @@ class Order {
         }, null)
       }
       let orderId = results.insertId;
+      items.forEach(item => {
+        values = [orderId, item.id, item.quantity, item.note];
+        db.query(addMenuItemsToOrder, values, (err) => {
+          if (err) {
+            next(
+              {
+                status: CANNOT_CREATE,
+                message: "Error inserting and creating an order",
+                kind: CANNOT_CREATE_KIND
+              },
+              null
+            );
+            return;
+          }
+          if (!results.affectedRows) {
+            next(
+              {
+                status: CANNOT_CREATE,
+                message: "Error inserting and creating order items",
+                kind: CANNOT_CREATE_KIND,
+              },
+              null
+            );
+            return;
+          }
+        });
+      });
       next(null, {orderId: orderId});
     });
   }

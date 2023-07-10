@@ -39,15 +39,15 @@ CREATE TABLE IF NOT EXISTS menuItemsCategories (
 
 CREATE TABLE IF NOT EXISTS orders (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    tableId INT UNSIGNED,
     accountId BIGINT UNSIGNED,
+    tableId INT UNSIGNED,
     orderTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (accountId) REFERENCES account(accountId)
 );
 
 CREATE TABLE IF NOT EXISTS orderItems (
-  itemId INT UNSIGNED,
   orderId INT UNSIGNED,
+  itemId INT UNSIGNED,
   quantity INT UNSIGNED NOT NULL,
   note VARCHAR(255),
   PRIMARY KEY(itemId, orderId),
@@ -115,12 +115,16 @@ INSERT INTO menuItemsCategories (itemId, categoryId) VALUES
     (10, 3) -- test item - dinner
 ;
 
-INSERT INTO orders (tableId, accountId) VALUES 
+INSERT INTO orders (accountId, tableId) VALUES 
     (1, 1),
     (2, 2)
 ;
 
-INSERT INTO orderItems (itemId, orderId, quantity) VALUES 
-    (1, 1, 3),
-    (2, 1, 2)
+INSERT INTO orderItems (orderId, itemId, quantity, note) VALUES 
+    (1, 1, 1, "test1"),
+    (1, 2, 1, "test2"),
+    (1, 3, 1, "test3"),
+    (2, 1, 2, "test4"),
+    (2, 2, 2, "test5"),
+    (2, 3, 2, "test6")
 ;
