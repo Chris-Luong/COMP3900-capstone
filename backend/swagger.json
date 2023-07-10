@@ -1,5 +1,5 @@
 {
-  "swagger": "2.0",
+"swagger": "2.0",
   "info": {
     "version": "1.0.0",
     "title": "REST API",
@@ -224,55 +224,42 @@
     },
     "/orders": {
       "get": {
-        "summary": "Get all orders",
+        "description": "",
         "parameters": [
           {
-            "in": "query",
             "name": "accountId",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            },
-            "description": "The ID of the account"
+            "in": "query",
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Order Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/ordersbyid/{orderId}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
     },
     "/orders/create": {
       "post": {
-        "summary": "Create a new order",
+        "description": "",
         "parameters": [
           {
             "name": "body",
@@ -280,61 +267,49 @@
             "schema": {
               "type": "object",
               "properties": {
-                "accountId": {
-                  "type": "integer",
-                  "example": 1
-                },
                 "tableId": {
-                  "type": "integer",
-                  "example": 1
-                },
-                "itemId": {
-                  "type": "integer",
-                  "example": 2
-                },
-                "quantity": {
-                  "type": "integer",
-                  "example": 1
-                },
-                "note": {
-                  "type": "string",
-                  "example": "fork please"
+                  "example": "any"
                 }
-              },
-              "required": ["accountId", "tableId", "itemId", "quantity", "note"]
+              }
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/orders/addItem": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "itemId": {
+                  "example": "any"
+                },
+                "orderId": {
+                  "example": "any"
+                },
+                "quantity": {
+                  "example": "any"
+                },
+                "note": {
+                  "example": "any"
                 }
               }
             }
-          },
-          "404": {
-            "description": "Cannot Create Order",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }

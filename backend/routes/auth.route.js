@@ -4,7 +4,7 @@ const register = require('../controller/register')
 const login = require('../controller/login');
 const {menu, addItem, removeItem, editItem, categoriesFromId} = require('../controller/menu');
 const categories = require('../controller/categories');
-const { viewOrders, createOrder } = require('../controller/order');
+const { viewOrders, viewOrdersByOrderId, createOrder, addMenuItems } = require('../controller/order');
 
 /**
  * @swagger
@@ -46,37 +46,8 @@ router.post('/menu/add', addItem);
 router.delete('/menu/remove', removeItem);
 router.get('/categories', categories);
 router.get("/categories/:itemid", categoriesFromId);
- /**
- * @swagger
- * /orderItems/createOrder:
- *   post:
- *     summary: Create A New Order
- *     tags: [Order]
- *     parameters:
- *       name: body
- *       in: body
- *       schema:
- *          type: object
- *          properties:
- *            accountId:
- *              example: "any"
- *            tableId:
- *              example: "any"
- *     responses:
- *       200:
- *         description: Successful Creation
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 orderId:
- *                   type: string
- *                   description: The created order id
- *       400:
- *         description: Failed to Create
- */
 router.get('/orders', viewOrders);
+router.get('/ordersbyid/:orderId', viewOrdersByOrderId);
 router.post('/orders/create', createOrder);
-
+router.post('/orders/addItem', addMenuItems);
 module.exports = router;

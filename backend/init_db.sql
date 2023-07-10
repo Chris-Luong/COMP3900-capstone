@@ -38,15 +38,21 @@ CREATE TABLE IF NOT EXISTS menuItemsCategories (
 );
 
 CREATE TABLE IF NOT EXISTS orders (
-    accountId BIGINT UNSIGNED NOT NULL,
-    tableId INT UNSIGNED NOT NULL,
-    itemId INT UNSIGNED NOT NULL,
-    quantity INT UNSIGNED NOT NULL,
-    note VARCHAR(255),
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    tableId INT UNSIGNED,
+    accountId BIGINT UNSIGNED,
     orderTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (accountId, itemId, orderTime),
-    FOREIGN KEY (accountId) REFERENCES account(accountId),
-    FOREIGN KEY (itemId) REFERENCES menuItems(id)
+    FOREIGN KEY (accountId) REFERENCES account(accountId)
+);
+
+CREATE TABLE IF NOT EXISTS orderItems (
+  itemId INT UNSIGNED,
+  orderId INT UNSIGNED,
+  quantity INT UNSIGNED NOT NULL,
+  note VARCHAR(255),
+  PRIMARY KEY(itemId, orderId),
+  FOREIGN KEY (orderId) REFERENCES orders(id),
+  FOREIGN KEY (itemId) REFERENCES menuItems(id)
 );
 
 -- guest accounts have password 'temp123'
@@ -109,7 +115,12 @@ INSERT INTO menuItemsCategories (itemId, categoryId) VALUES
     (10, 3) -- test item - dinner
 ;
 
-INSERT INTO orders (accountId, tableId, itemId, quantity, note) VALUES 
-    (1, 1, 1, 1, "burnt please"), 
-    (2, 2, 2, 2, "cut up the sausage")
+INSERT INTO orders (tableId, accountId) VALUES 
+    (1, 1),
+    (2, 2)
+;
+
+INSERT INTO orderItems (itemId, orderId, quantity) VALUES 
+    (1, 1, 3),
+    (2, 1, 2)
 ;
