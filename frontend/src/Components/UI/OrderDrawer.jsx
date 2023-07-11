@@ -1,5 +1,6 @@
 import { Fragment, useState } from "react";
-import { Button } from "@mui/material";
+import { Avatar, Button, ListItemAvatar, Typography } from "@mui/material";
+import sendRequest from "../Utils/Request";
 
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -29,6 +30,7 @@ const OrderDrawer = (orderItems, onDelete) => {
 
     setState({ ...state, [anchor]: open });
   };
+  const accountId = 1; // Need to get actual account id
   const tableId = 1; // Need function to genererate the table id
 
   const orderArray = orderItems.orderItems;
@@ -47,7 +49,7 @@ const OrderDrawer = (orderItems, onDelete) => {
     onDelete(index);
   };
 
-  const sendOrder = () => {
+  const sendOrder = async () => {
     const items = orderArray.map((item) => {
       return {
         id: item.itemId,
@@ -55,21 +57,28 @@ const OrderDrawer = (orderItems, onDelete) => {
         note: item.note,
       };
     });
-    console.log(items);
-    // try {
-    //   const response = await sendRequest("/orderItem/add", "POST", body);
-    //   if (response.ok) {
-    //     const data = await response.json();
-    //     console.log(data.message);
-    //     alert(data.message);
-    //   } else {
-    //     throw new Error("Failed to add item to cart");
-    //   }
-    // } catch (error) {
-    //   alert(error);
-    //   console.log(error);
-    // }
+    console.log("items are ", items);
+    const body = {
+      accountId: accountId,
+      tableId: tableId,
+      items: items,
+    };
+    console.log("body is ", body);
+    try {
+      const response = await sendRequest("/orders/create", "POST", body);
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data.message);
+        alert(data.message);
+      } else {
+        throw new Error("Failed to add item to cart");
+      }
+    } catch (error) {
+      alert(error);
+      console.log(error);
+    }
   };
+
   // TODO: Get accountId from email of user? Generate int for tableId -> useState increment
   const list = (anchor) => (
     <Box
@@ -78,52 +87,43 @@ const OrderDrawer = (orderItems, onDelete) => {
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider sx={{ borderBottomWidth: 5 }} />
+      <Typography
+        variant='h4'
+        gutterBottom
+        align='center'
+        sx={{ margin: "10px" }}
+      >
+        My Order
+      </Typography>
       <List>
         {orderArray && orderArray.length > 0
           ? orderArray.map((item, index) => (
               <>
+                {index !== 0 ? <Divider /> : null}
                 <ListItem key={item}>
-                  <ListItemIcon>
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={item.name} />
+                  <ListItemAvatar>
+                    {index % 2 === 0 ? (
+                      <Avatar>R</Avatar>
+                    ) : (
+                      <Avatar variant='square'>S</Avatar>
+                    )}
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={item.name}
+                    secondary={"$" + item.price}
+                  />
                   <DeleteOutlineIcon
                     color='warning'
                     onClick={() => handleRemoveFromCart(index)}
                   />
                 </ListItem>
                 {/* Could remove if clutters UI */}
-                <Divider />
+                {/* <Divider /> */}
               </>
             ))
           : null}
       </List>
+      <Divider sx={{ borderBottomWidth: 5 }} />
       {/* TODO: get sum of bill with sum(quantity * price of all items) */}
       <Button onClick={sendOrder}>Submit order</Button>
     </Box>
