@@ -1,6 +1,7 @@
 import {
   TextField,
   Button,
+  Typography,
   Modal,
   Box,
   Stack,
@@ -9,12 +10,19 @@ import {
   Checkbox,
   FormControlLabel,
   FormHelperText,
-  Typography,
 } from "@mui/material";
-import { menuItemSchema, checkboxStyle } from "../Helper";
 import { Formik } from "formik";
+import { checkboxStyle, menuItemSchema } from "../Helper";
 
-const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
+const ManageItemModal = ({
+  inputChanged,
+  showModal,
+  handleSubmit,
+  handleClear,
+  setItemValues,
+  itemValues,
+  categories,
+}) => {
   return (
     <Modal open={showModal}>
       <Box
@@ -33,12 +41,12 @@ const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
           validationSchema={menuItemSchema}
           onSubmit={(values) => handleSubmit(values)}
           initialValues={{
-            name: "",
-            description: "",
-            ingredients: "",
-            categories: [],
-            price: "",
-            thumbnail: null,
+            name: itemValues.name,
+            description: itemValues.description,
+            ingredients: itemValues.ingredients,
+            categories: itemValues.checkedCategories,
+            price: itemValues.price,
+            thumbnail: itemValues.thumbnail,
           }}
         >
           {({
@@ -52,12 +60,16 @@ const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
             <form onSubmit={handleSubmit} noValidate>
               <Stack spacing={3} direction="column" width="100%">
                 <Button variant="contained" component="label">
-                  Upload Image
+                  Change Image
                   <input
                     type="file"
                     accept="image/*"
                     name="thumbnail"
                     onChange={(e) => {
+                      setItemValues({
+                        ...itemValues,
+                        thumbnail: e.target.files[0],
+                      });
                       setFieldValue("thumbnail", e.currentTarget.files[0]);
                     }}
                     hidden
@@ -77,19 +89,29 @@ const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
                   label="Name"
                   name="name"
                   value={values.name}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    setItemValues({
+                      ...itemValues,
+                      name: e.target.value,
+                    });
+                    handleChange(e);
+                  }}
                   error={touched.name && errors.name}
                   helperText={touched.name && errors.name}
-                  required
                 />
                 <TextField
                   label="Description"
                   name="description"
                   value={values.description}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    setItemValues({
+                      ...itemValues,
+                      description: e.target.value,
+                    });
+                    handleChange(e);
+                  }}
                   error={touched.description && errors.description}
                   helperText={touched.description && errors.description}
-                  required
                   fullWidth
                   multiline
                 />
@@ -97,10 +119,15 @@ const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
                   label="Ingredients"
                   name="ingredients"
                   value={values.ingredients}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    setItemValues({
+                      ...itemValues,
+                      ingredients: e.target.value,
+                    });
+                    handleChange(e);
+                  }}
                   error={touched.ingredients && errors.ingredients}
                   helperText={touched.ingredients && errors.ingredients}
-                  required
                   fullWidth
                   multiline
                 />
@@ -117,7 +144,13 @@ const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
                             name="categories"
                             value={c}
                             checked={values.categories.includes(c)}
-                            onChange={handleChange}
+                            onChange={(e) => {
+                              setItemValues({
+                                ...itemValues,
+                                checkedCategories: e.target.value,
+                              });
+                              handleChange(e);
+                            }}
                           />
                         }
                         label={c}
@@ -132,16 +165,20 @@ const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
                   label="Price $"
                   name="price"
                   value={values.price}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    setItemValues({ ...itemValues, price: e.target.value });
+                    handleChange(e);
+                  }}
                   error={touched.price && errors.price}
                   helperText={touched.price && errors.price}
-                  required
                 />
               </Stack>
-              <Button color="success" onClick={handleSubmit}>
-                Submit
-              </Button>
-              <Button color="error" onClick={toggleModal}>
+              {inputChanged && (
+                <Button color="success" onClick={handleSubmit}>
+                  Submit
+                </Button>
+              )}
+              <Button color="error" onClick={handleClear}>
                 Close
               </Button>
             </form>
@@ -152,4 +189,4 @@ const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
   );
 };
 
-export default NewItemModal;
+export default ManageItemModal;

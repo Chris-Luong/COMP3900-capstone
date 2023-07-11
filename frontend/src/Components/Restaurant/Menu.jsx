@@ -114,18 +114,18 @@ const Menu = () => {
       {loading && <CircularProgress />}
       {!loading && (
         <>
-          <Button variant='contained' onClick={toggleFilter}>
+          <Button variant="contained" onClick={toggleFilter}>
             Filter
           </Button>
           <Grid container>
             {menuItems.map((item) => (
               <MenuItemCard
-                // TODO: add image with base64 string - need helper fn to convert
+                key={item.id}
                 itemId={item.id}
                 name={item.name}
                 description={item.description}
                 price={item.price}
-                availability={item.availability}
+                thumbnail={item.thumbnail}
                 orderItems={orderItems}
                 onUpdateOrderItems={handleUpdateOrderItems}
               />

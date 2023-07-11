@@ -3,12 +3,12 @@ import {
   Card,
   CardHeader,
   CardContent,
+  CardMedia,
   Typography,
   Grid,
   TextField,
 } from "@mui/material";
 import { useState } from "react";
-import sendRequest from "../Utils/Request";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 
@@ -18,12 +18,10 @@ const MenuItemCard = ({
   name,
   description,
   price,
-  availability,
+  thumbnail,
   orderItems,
   onUpdateOrderItems,
 }) => {
-  // console.log(itemId, name, description, price, availability);
-  // TODO: add item image
   const [showModal, setShowModal] = useState(false);
   // NOTE: might have to llft this state up so orderDrawer can update quantity
   const [quantity, setQuantity] = useState(1);
@@ -88,55 +86,40 @@ const MenuItemCard = ({
   return (
     <div>
       <Grid item onClick={openModal}>
-        {availability === 1 && (
-          <Card
-            variant='outlined'
-            sx={{ width: "200px", height: "150px", margin: "auto" }}
-            style={{ cursor: "pointer" }}
-            className='highlight-card-on-hover'
-          >
-            <CardHeader title={name} />
-            <CardContent>
-              <Typography>${price}</Typography>
-            </CardContent>
-            <style>
-              {`
+        <Card
+          variant="outlined"
+          sx={{ width: "250px", height: "300px", margin: "10px" }}
+          style={{ cursor: "pointer" }}
+          className="highlight-card-on-hover"
+        >
+          <CardHeader title={name} />
+          <CardMedia
+            component="img"
+            sx={{ width: "250px", height: "150px" }}
+            image={thumbnail}
+            alt={`${name}-image`}
+          />
+          <CardContent>
+            <Typography>${price}</Typography>
+          </CardContent>
+          <style>
+            {`
               .highlight-card-on-hover:hover {
                 outline: 2px solid blue;
               }
             `}
-            </style>
-          </Card>
-        )}
-        {/* TODO: remove availability */}
-        {availability === 0 && (
-          <Card>
-            <CardHeader title={name} />
-            <CardContent>
-              <Typography variant='body2' color='text.secondary'>
-                {description}
-              </Typography>
-              <Typography>${price}</Typography>
-            </CardContent>
-            <Typography
-              sx={{ fontSize: 14 }}
-              color='text.secondary'
-              gutterBottom
-            >
-              Not available
-            </Typography>
-          </Card>
-        )}
+          </style>
+        </Card>
       </Grid>
 
       <Modal
         open={showModal}
         onClose={closeModal}
-        aria-labelledby='modal-title'
-        aria-describedby='modal-description'
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
       >
         <Box
-          component='form'
+          component="form"
           onSubmit={handleAddToCart}
           sx={{
             position: "absolute",
@@ -149,23 +132,23 @@ const MenuItemCard = ({
             p: 4,
           }}
         >
-          <Typography id='modal-title' variant='h6' component='h2'>
+          <Typography id="modal-title" variant="h6" component="h2">
             {name}
           </Typography>
 
-          <Typography id='modal-description' variant='body1' mt={2}>
+          <Typography id="modal-description" variant="body1" mt={2}>
             {description}
           </Typography>
 
-          <Typography variant='body1' mt={2}>
+          <Typography variant="body1" mt={2}>
             Price: ${price}
           </Typography>
 
           <Typography
-            variant='body1'
-            component='div'
-            id='quantity'
-            name='quantity'
+            variant="body1"
+            component="div"
+            id="quantity"
+            name="quantity"
             mt={2}
           >
             Quantity:
@@ -175,24 +158,18 @@ const MenuItemCard = ({
           </Typography>
 
           <TextField
-            margin='normal'
+            margin="normal"
             fullWidth
-            name='note'
-            label='Notes for chef'
-            type='text'
-            id='note'
+            name="note"
+            label="Notes for chef"
+            type="text"
+            id="note"
           />
 
-          <Button
-            disabled={availability === 0}
-            label='AddItem'
-            type='submit'
-            variant='contained'
-            mt={3}
-          >
+          <Button label="AddItem" type="submit" variant="contained" mt={3}>
             Add to Cart
           </Button>
-          <Grid container justifyContent='flex-end'>
+          <Grid container justifyContent="flex-end">
             <Button onClick={closeModal}>Close</Button>
           </Grid>
         </Box>

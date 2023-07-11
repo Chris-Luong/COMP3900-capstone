@@ -52,37 +52,53 @@ export const applyFilters = async (
   }
 };
 
-/**
- * Given a js file object representing a jpg or png image, such as one taken
- * from a html file input element, return a promise which resolves to the file
- * data as a data url.
- * More info:
- *   https://developer.mozilla.org/en-US/docs/Web/API/File
- *   https://developer.mozilla.org/en-US/docs/Web/API/FileReader
- *   https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
- *
- * Example Usage:
- *   const file = document.querySelector('input[type="file"]').files[0];
- *   console.log(fileToDataUrl(file));
- * @param {File} file The file to be read.
- * @return {Promise<string>} Promise which resolves to the file as a data url.
- */
 export function fileToDataUrl(file) {
-  const validFileTypes = ["image/jpeg", "image/png", "image/jpg"];
-  const valid = validFileTypes.find((type) => type === file.type);
-  // Bad data, let's walk away.
-  if (!valid) {
-    throw Error("provided file is not a png, jpg or jpeg image.");
+  if (!file) {
+    return null;
   }
-
   const reader = new FileReader();
   const dataUrlPromise = new Promise((resolve, reject) => {
     reader.onerror = reject;
     reader.onload = () => resolve(reader.result);
   });
+  console.log(file);
   reader.readAsDataURL(file);
   return dataUrlPromise;
 }
+
+export const addItem = async ({
+  name,
+  description,
+  ingredients,
+  categories,
+  price,
+  thumbnail,
+}) => {
+  const formData = new FormData();
+  formData.append("thumbnail", thumbnail);
+  formData.append("name", name);
+  formData.append("description", description);
+  formData.append("ingredients", ingredients);
+  categories.forEach(c => formData.append("categories", c));
+  formData.append("price", price);
+
+  return new Promise((resolve, reject) => {
+    fetch(`http://localhost:8800/menu/add`, {
+      method: "POST",
+      body: formData,
+    }).then((res) => {
+      if (!res.ok) {
+        res.json().then((data) => {
+          reject(data.message);
+        });
+      } else {
+        res.json().then((data) => {
+          resolve(data.message);
+        });
+      }
+    });
+  });
+};
 
 export const editItem = async (
   id,
@@ -103,13 +119,25 @@ export const editItem = async (
   });
   url += price ? `&price=${price}` : "";
 
-  try {
-    const res = await sendRequest(url, "PUT");
-    return res.message;
-  } catch (err) {
-    console.log(err);
-    return null;
-  }
+  const formData = new FormData();
+  formData.append("thumbnail", thumbnail);
+
+  return new Promise((resolve, reject) => {
+    fetch(`http://localhost:8800${url}`, {
+      method: "PUT",
+      body: formData,
+    }).then((res) => {
+      if (!res.ok) {
+        res.json().then((data) => {
+          reject(data.message);
+        });
+      } else {
+        res.json().then((data) => {
+          resolve(data.message);
+        });
+      }
+    });
+  });
 };
 
 export const getCategoryNamesFromItemId = async (id) => {
@@ -138,4 +166,5 @@ export const menuItemSchema = Yup.object().shape({
     .required("Price is required")
     .min(0, "Price can't be negative")
     .max(1000, "Maximum price is 1000"),
+  thumbnail: Yup.mixed().required("Thumbnail is required"),
 });

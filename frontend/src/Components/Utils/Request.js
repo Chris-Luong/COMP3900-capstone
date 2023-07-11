@@ -14,7 +14,6 @@ const sendRequest = (route, method, body, token = null) => {
 
   return new Promise((resolve, reject) => {
     fetch("http://localhost:8800" + route, options).then((res) => {
-      console.log(res);
       if (!res.ok) {
         res.json().then((data) => {
           reject(data.message);
