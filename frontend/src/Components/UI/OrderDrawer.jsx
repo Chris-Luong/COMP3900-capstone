@@ -30,7 +30,15 @@ const OrderDrawer = (orderItems, onDelete) => {
   };
 
   const orderArray = orderItems.orderItems;
-
+  // Format for backend to take
+  const items = orderArray.map((item) => {
+    return {
+      id: item.itemId,
+      quantity: item.quantity,
+      note: item.note,
+    };
+  });
+  console.log(items);
   // TODO: useEffect or something to update the orderItems with new orderItems
   // returned from this function
   // useEffect(() => {
@@ -41,6 +49,25 @@ const OrderDrawer = (orderItems, onDelete) => {
   //   deleteItem(index);
   // };
 
+  const handleRemoveFromCart = async (index) => {
+    onDelete(index);
+  };
+
+  const sendOrder = () => {
+    // try {
+    //   const response = await sendRequest("/orderItem/add", "POST", body);
+    //   if (response.ok) {
+    //     const data = await response.json();
+    //     console.log(data.message);
+    //     alert(data.message);
+    //   } else {
+    //     throw new Error("Failed to add item to cart");
+    //   }
+    // } catch (error) {
+    //   alert(error);
+    //   console.log(error);
+    // }
+  };
   // TODO: Get accountId from email of user? Generate int for tableId -> useState increment
   const list = (anchor) => (
     <Box
@@ -76,7 +103,7 @@ const OrderDrawer = (orderItems, onDelete) => {
       </List>
       <Divider sx={{ borderBottomWidth: 5 }} />
       <List>
-        {orderArray.length
+        {orderArray && orderArray.length > 0
           ? orderArray.map((item, index) => (
               <>
                 <ListItem key={item}>
@@ -86,7 +113,7 @@ const OrderDrawer = (orderItems, onDelete) => {
                   <ListItemText primary={item.name} />
                   <DeleteOutlineIcon
                     color='warning'
-                    onClick={() => onDelete(index)}
+                    onClick={() => handleRemoveFromCart(index)}
                   />
                 </ListItem>
                 {/* Could remove if clutters UI */}
@@ -95,6 +122,7 @@ const OrderDrawer = (orderItems, onDelete) => {
             ))
           : null}
       </List>
+      <Button onClick={sendOrder}>Submit order</Button>
     </Box>
   );
 

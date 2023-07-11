@@ -60,19 +60,6 @@ const MenuItemCard = ({
       return [...orderItems, newOrder];
     };
     onUpdateOrderItems(updatedOrderItems);
-    // try {
-    //   const response = await sendRequest("/orderItem/add", "POST", body);
-    //   if (response.ok) {
-    //     const data = await response.json();
-    //     console.log(data.message);
-    //     alert(data.message);
-    //   } else {
-    //     throw new Error("Failed to add item to cart");
-    //   }
-    // } catch (error) {
-    //   alert(error);
-    //   console.log(error);
-    // }
   }
 
   const handleIncrementQuantity = () => {
@@ -87,14 +74,14 @@ const MenuItemCard = ({
     <div>
       <Grid item onClick={openModal}>
         <Card
-          variant="outlined"
+          variant='outlined'
           sx={{ width: "250px", height: "300px", margin: "10px" }}
           style={{ cursor: "pointer" }}
-          className="highlight-card-on-hover"
+          className='highlight-card-on-hover'
         >
           <CardHeader title={name} />
           <CardMedia
-            component="img"
+            component='img'
             sx={{ width: "250px", height: "150px" }}
             image={thumbnail}
             alt={`${name}-image`}
@@ -115,11 +102,11 @@ const MenuItemCard = ({
       <Modal
         open={showModal}
         onClose={closeModal}
-        aria-labelledby="modal-title"
-        aria-describedby="modal-description"
+        aria-labelledby='modal-title'
+        aria-describedby='modal-description'
       >
         <Box
-          component="form"
+          component='form'
           onSubmit={handleAddToCart}
           sx={{
             position: "absolute",
@@ -132,23 +119,23 @@ const MenuItemCard = ({
             p: 4,
           }}
         >
-          <Typography id="modal-title" variant="h6" component="h2">
+          <Typography id='modal-title' variant='h6' component='h2'>
             {name}
           </Typography>
 
-          <Typography id="modal-description" variant="body1" mt={2}>
+          <Typography id='modal-description' variant='body1' mt={2}>
             {description}
           </Typography>
 
-          <Typography variant="body1" mt={2}>
+          <Typography variant='body1' mt={2}>
             Price: ${price}
           </Typography>
 
           <Typography
-            variant="body1"
-            component="div"
-            id="quantity"
-            name="quantity"
+            variant='body1'
+            component='div'
+            id='quantity'
+            name='quantity'
             mt={2}
           >
             Quantity:
@@ -158,18 +145,18 @@ const MenuItemCard = ({
           </Typography>
 
           <TextField
-            margin="normal"
+            margin='normal'
             fullWidth
-            name="note"
-            label="Notes for chef"
-            type="text"
-            id="note"
+            name='note'
+            label='Notes for chef'
+            type='text'
+            id='note'
           />
 
-          <Button label="AddItem" type="submit" variant="contained" mt={3}>
+          <Button label='AddItem' type='submit' variant='contained' mt={3}>
             Add to Cart
           </Button>
-          <Grid container justifyContent="flex-end">
+          <Grid container justifyContent='flex-end'>
             <Button onClick={closeModal}>Close</Button>
           </Grid>
         </Box>
