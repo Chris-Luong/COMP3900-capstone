@@ -13,6 +13,7 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
+// NOTE: find the differnce betwwen passing in arges like this and ({ orderItems, onDelete })
 const OrderDrawer = (orderItems, onDelete) => {
   const [state, setState] = useState({
     right: false,
@@ -28,17 +29,10 @@ const OrderDrawer = (orderItems, onDelete) => {
 
     setState({ ...state, [anchor]: open });
   };
+  const tableId = 1; // Need function to genererate the table id
 
   const orderArray = orderItems.orderItems;
-  // Format for backend to take
-  const items = orderArray.map((item) => {
-    return {
-      id: item.itemId,
-      quantity: item.quantity,
-      note: item.note,
-    };
-  });
-  console.log(items);
+  console.log(orderArray);
   // TODO: useEffect or something to update the orderItems with new orderItems
   // returned from this function
   // useEffect(() => {
@@ -54,6 +48,14 @@ const OrderDrawer = (orderItems, onDelete) => {
   };
 
   const sendOrder = () => {
+    const items = orderArray.map((item) => {
+      return {
+        id: item.itemId,
+        quantity: item.quantity,
+        note: item.note,
+      };
+    });
+    console.log(items);
     // try {
     //   const response = await sendRequest("/orderItem/add", "POST", body);
     //   if (response.ok) {
@@ -122,6 +124,7 @@ const OrderDrawer = (orderItems, onDelete) => {
             ))
           : null}
       </List>
+      {/* TODO: get sum of bill with sum(quantity * price of all items) */}
       <Button onClick={sendOrder}>Submit order</Button>
     </Box>
   );

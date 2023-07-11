@@ -19,7 +19,6 @@ const MenuItemCard = ({
   description,
   price,
   thumbnail,
-  orderItems,
   onUpdateOrderItems,
 }) => {
   const [showModal, setShowModal] = useState(false);
@@ -37,19 +36,15 @@ const MenuItemCard = ({
   async function handleAddToCart(event, index) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-
-    console.log(quantity);
-    console.log(data.get("note"));
-
     const note = data.get("note");
 
     const newOrder = {
-      // TODO: accountId and tableId here
       itemId: itemId,
       name: name,
       price: price,
       quantity: quantity,
       note: note,
+      thumbnail: thumbnail,
     };
 
     // TODO: Will need to pass the list of orderitems to orderDrawer in menu
