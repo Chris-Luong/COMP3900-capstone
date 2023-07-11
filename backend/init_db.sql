@@ -18,8 +18,7 @@ CREATE TABLE IF NOT EXISTS menuItems (
     description TEXT,
     ingredients VARCHAR(255),
     price DECIMAL(6, 2) NOT NULL,
-    availability TINYINT(1) NOT NULL DEFAULT 1,
-    thumbnail BLOB,
+    thumbnail LONGTEXT,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

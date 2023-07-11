@@ -1,10 +1,18 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const register = require('../controller/register')
-const login = require('../controller/login');
-const {menu, addItem, removeItem, editItem, categoriesFromId} = require('../controller/menu');
-const categories = require('../controller/categories');
-const { viewOrders, createOrder } = require('../controller/order');
+const register = require("../controller/register");
+const login = require("../controller/login");
+const {
+  menu,
+  addItem,
+  removeItem,
+  editItem,
+  categoriesFromId,
+} = require("../controller/menu");
+const categories = require("../controller/categories");
+const { viewOrders, createOrder } = require("../controller/order");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
 /**
  * @swagger
@@ -37,14 +45,13 @@ const { viewOrders, createOrder } = require('../controller/order');
  *         description: Invalid credentials
  */
 
-
-router.post('/register', register);
-router.post('/login', login);
-router.get('/menu', menu);
-router.put('/menu/edit', editItem);
-router.post('/menu/add', addItem);
-router.delete('/menu/remove', removeItem);
-router.get('/categories', categories);
+router.post("/register", register);
+router.post("/login", login);
+router.get("/menu", menu);
+router.put("/menu/edit", upload.single("thumbnail"), editItem);
+router.post("/menu/add", upload.single("thumbnail"), addItem);
+router.delete("/menu/remove", removeItem);
+router.get("/categories", categories);
 router.get("/categories/:itemid", categoriesFromId);
 router.get('/orders', viewOrders);
 router.post('/orders/create', createOrder);

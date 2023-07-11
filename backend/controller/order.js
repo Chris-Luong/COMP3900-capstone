@@ -17,7 +17,6 @@ const { Order, NOT_FOUND, CANNOT_CREATE} = require('../models/order.model');
                             description: 'Delicious fluffy pancakes served with syrup and butter.',
                             ingredients: null,
                             price: 7.99,
-                            availability: 1,
                             thumbnail: null,
                             createdAt: 2023-07-08T12:46:15.000Z,
                             updatedAt: 2023-07-08T12:46:15.000Z
