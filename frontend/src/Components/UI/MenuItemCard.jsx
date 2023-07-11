@@ -25,6 +25,7 @@ const MenuItemCard = ({
   // console.log(itemId, name, description, price, availability);
   // TODO: add item image
   const [showModal, setShowModal] = useState(false);
+  // NOTE: might have to llft this state up so orderDrawer can update quantity
   const [quantity, setQuantity] = useState(1);
 
   const openModal = () => {
@@ -47,6 +48,8 @@ const MenuItemCard = ({
     const newOrder = {
       // TODO: accountId and tableId here
       itemId: itemId,
+      name: name,
+      price: price,
       quantity: quantity,
       note: note,
     };
@@ -55,8 +58,8 @@ const MenuItemCard = ({
     // https://stackoverflow.com/questions/70061442/how-to-pass-a-value-for-usestate-hook-from-another-component-in-reactjs
 
     // Add item to end of order items.
-    const updatedOrderItems = (orderitems) => {
-      return [...orderitems, newOrder];
+    const updatedOrderItems = (orderItems) => {
+      return [...orderItems, newOrder];
     };
     onUpdateOrderItems(updatedOrderItems);
     // try {
