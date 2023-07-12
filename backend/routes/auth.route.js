@@ -7,10 +7,12 @@ const {
   addItem,
   removeItem,
   editItem,
+  addCategory,
+  removeCategory,
   categoriesFromId,
+  getCategories,
 } = require("../controller/menu");
-const categories = require("../controller/categories");
-const { viewOrders, createOrder, setNewTable, getOrdersForTableId } = require("../controller/order");
+const { viewOrders, createOrder, deleteOrder, setNewTable, getOrdersForTableId } = require("../controller/order");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 
@@ -51,10 +53,13 @@ router.get("/menu", menu);
 router.put("/menu/edit", upload.single("thumbnail"), editItem);
 router.post("/menu/add", upload.single("thumbnail"), addItem);
 router.delete("/menu/remove", removeItem);
-router.get("/categories", categories);
+router.get("/categories", getCategories);
 router.get("/categories/:itemid", categoriesFromId);
+router.post("/categories/add", addCategory);
+router.delete("/categories/remove", removeCategory);
 router.get('/orders', viewOrders);
 router.post('/orders/create', createOrder);
+router.delete('/orders/delete', deleteOrder);
 router.post('/tables/create', setNewTable);
 router.get("/orders/tables/:tableid", getOrdersForTableId);
 module.exports = router;

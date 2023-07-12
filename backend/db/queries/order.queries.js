@@ -28,6 +28,14 @@ const createOrderWithAccountId = `
   VALUES (?, ?)
 `;
 
+const deleteOrderById = `
+  DELETE FROM orders where id = ?
+`
+
+const deleteOrderItemsById = `
+  DELETE FROM orderitems where orderId = ?
+`
+
 const setNewTableId = `
   INSERT INTO tables VALUES (id);
 `;
@@ -41,7 +49,7 @@ module.exports = {
   getMenuItemsByAccount,
   getMenuItemsByOrder,
   createOrder,
-  addMenuItemsToOrder,
+  addMenuItemsToOrder, deleteOrderById, deleteOrderItemsById,
   setNewTableId,
   getOrdersForTableId,
 };
