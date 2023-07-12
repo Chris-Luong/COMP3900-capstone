@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Avatar, Button, ListItemAvatar, Typography } from "@mui/material";
 import { sendOrder } from "../Helper";
 
@@ -28,19 +28,12 @@ const OrderDrawer = ({ orderItems, onDelete }) => {
 
     setState({ ...state, [anchor]: open });
   };
+
+  const [orderSum, setOrderSum] = useState(0);
   const accountId = 1; // Need to get actual account id
   const tableId = 1; // Need function to genererate the table id
 
   console.log(orderItems);
-  // TODO: useEffect or something to update the orderItems with new orderItems
-  // returned from this function
-  // useEffect(() => {
-  //   const newOrderItems = applyFilters(orderItems);
-  //   setState({ ...state, orderItems: newOrderItems });
-  // }, [orderItems]);
-  // const handleDelete = (index) => {
-  //   deleteItem(index);
-  // };
 
   const handleRemoveFromCart = (index) => {
     onDelete(index);
@@ -63,6 +56,17 @@ const OrderDrawer = ({ orderItems, onDelete }) => {
     console.log("body is ", body);
     await sendOrder(body);
   };
+
+  useEffect(() => {
+    let total = 0;
+    if (orderItems && orderItems.length > 0) {
+      orderItems.forEach((item) => {
+        console.log("item is ", item);
+        total += item.quantity * item.price;
+      });
+    }
+    setOrderSum(total);
+  }, [orderItems]);
 
   // TODO: Get accountId from email of user? Generate int for tableId -> useState increment
   const list = (anchor) => (
@@ -113,9 +117,9 @@ const OrderDrawer = ({ orderItems, onDelete }) => {
           : null}
       </List>
       <Divider sx={{ borderBottomWidth: 5 }} />
-      {/* TODO: get sum of bill with sum(quantity * price of all items) */}
       {/* TODO: useState fn to check hasSentOrder - if has sent then
       disable this button and enable the req bill button */}
+      <Typography align='center'>Total: ${orderSum}</Typography>
       <Button onClick={() => handleSendOrder()}>Submit order</Button>
       <Button disabled>Request Bill</Button>
     </Box>
