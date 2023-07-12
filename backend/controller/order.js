@@ -80,6 +80,24 @@ createOrder = (req, res) => {
 };
 
 /**
+ * This deleteOrder function is for deleting a new order by order id
+ * This should typically be called when the customer requests their bill
+ * @param {int}           orderId          The id of the order
+ * 
+ * @returns {null}
+ */
+
+deleteOrder = (req, res) => {
+  const { orderId } = req.body;
+  Order.deleteOrder(orderId, (err, result) => {
+      if (err) {
+          return res.status(err.status).json({ message: err.message });
+      }
+      return res.status(200).json();
+  })
+}
+
+/**
  * The callback to return the error or result of this function
  * @callback callback
  * @param {object}        error            The error if encountered, null otherwise
@@ -128,24 +146,10 @@ getOrdersForTableId = (req, res) => {
   });
 };
 
-module.exports = { viewOrders, createOrder, setNewTable, getOrdersForTableId };
-
-/**
- * This deleteOrder function is for deleting a new order by order id
- * This should typically be called when the customer requests their bill
- * @param {int}           orderId          The id of the order
- * 
- * @returns {null}
- */
-
-deleteOrder = (req, res) => {
-  const { orderId } = req.body;
-  Order.deleteOrder(orderId, (err, result) => {
-      if (err) {
-          return res.status(err.status).json({ message: err.message });
-      }
-      return res.status(200).json();
-  })
-
-}
-module.exports = { viewOrders, createOrder, deleteOrder };
+module.exports = {
+  viewOrders,
+  createOrder,
+  setNewTable,
+  getOrdersForTableId,
+  deleteOrder,
+};
