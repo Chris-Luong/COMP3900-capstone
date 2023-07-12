@@ -85,7 +85,10 @@ const OrderDrawer = ({ orderItems, onDelete }) => {
           ? orderItems.map((item, index) => (
               <>
                 {index !== 0 ? <Divider /> : null}
-                <ListItem key={item}>
+                <ListItem
+                  key={item}
+                  sx={{ display: "flex", justifyContent: "flex-end" }}
+                >
                   <ListItemAvatar>
                     {index % 2 === 0 ? (
                       <Avatar>R</Avatar>
@@ -97,6 +100,7 @@ const OrderDrawer = ({ orderItems, onDelete }) => {
                     primary={item.name}
                     secondary={"$" + item.price}
                   />
+                  <ListItemText primary={item.note} secondary={item.quantity} />
                   <DeleteOutlineIcon
                     color='warning'
                     onClick={() => handleRemoveFromCart(index)}
@@ -110,7 +114,10 @@ const OrderDrawer = ({ orderItems, onDelete }) => {
       </List>
       <Divider sx={{ borderBottomWidth: 5 }} />
       {/* TODO: get sum of bill with sum(quantity * price of all items) */}
+      {/* TODO: useState fn to check hasSentOrder - if has sent then
+      disable this button and enable the req bill button */}
       <Button onClick={() => handleSendOrder()}>Submit order</Button>
+      <Button disabled>Request Bill</Button>
     </Box>
   );
 
