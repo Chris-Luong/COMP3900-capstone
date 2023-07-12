@@ -1,6 +1,6 @@
 import { Fragment, useState } from "react";
 import { Avatar, Button, ListItemAvatar, Typography } from "@mui/material";
-import sendRequest from "../Utils/Request";
+import { sendOrder } from "../Helper";
 
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -10,8 +10,6 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 // NOTE: find the differnce betwwen passing in arges like this and ({ orderItems, onDelete })
@@ -49,7 +47,7 @@ const OrderDrawer = (orderItems, onDelete) => {
     onDelete(index);
   };
 
-  const sendOrder = async () => {
+  const handleSendOrder = async () => {
     const items = orderArray.map((item) => {
       return {
         id: item.itemId,
@@ -64,19 +62,7 @@ const OrderDrawer = (orderItems, onDelete) => {
       items: items,
     };
     console.log("body is ", body);
-    try {
-      const response = await sendRequest("/orders/create", "POST", body);
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data.message);
-        alert(data.message);
-      } else {
-        throw new Error("Failed to add item to cart");
-      }
-    } catch (error) {
-      alert(error);
-      console.log(error);
-    }
+    await sendOrder(body);
   };
 
   // TODO: Get accountId from email of user? Generate int for tableId -> useState increment
@@ -125,7 +111,7 @@ const OrderDrawer = (orderItems, onDelete) => {
       </List>
       <Divider sx={{ borderBottomWidth: 5 }} />
       {/* TODO: get sum of bill with sum(quantity * price of all items) */}
-      <Button onClick={sendOrder}>Submit order</Button>
+      <Button onClick={() => handleSendOrder()}>Submit order</Button>
     </Box>
   );
 
