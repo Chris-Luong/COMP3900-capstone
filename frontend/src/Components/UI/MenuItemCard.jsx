@@ -25,12 +25,9 @@ const MenuItemCard = ({
   // NOTE: might have to llft this state up so orderDrawer can update quantity
   const [quantity, setQuantity] = useState(1);
 
-  const openModal = () => {
-    setShowModal(true);
-  };
-
-  const closeModal = () => {
-    setShowModal(false);
+  // opens and closes
+  const toggleModal = () => {
+    setShowModal(!showModal);
   };
 
   function handleAddToCart(event, index) {
@@ -55,6 +52,7 @@ const MenuItemCard = ({
       return [...orderItems, newOrder];
     };
     onUpdateOrderItems(updatedOrderItems);
+    toggleModal();
   }
 
   const handleIncrementQuantity = () => {
@@ -67,7 +65,7 @@ const MenuItemCard = ({
 
   return (
     <div>
-      <Grid item onClick={openModal}>
+      <Grid item onClick={toggleModal}>
         <Card
           variant='outlined'
           sx={{ width: "250px", height: "300px", margin: "10px" }}
@@ -96,7 +94,7 @@ const MenuItemCard = ({
 
       <Modal
         open={showModal}
-        onClose={closeModal}
+        onClose={toggleModal}
         aria-labelledby='modal-title'
         aria-describedby='modal-description'
       >
@@ -152,7 +150,7 @@ const MenuItemCard = ({
             Add to Cart
           </Button>
           <Grid container justifyContent='flex-end'>
-            <Button onClick={closeModal}>Close</Button>
+            <Button onClick={toggleModal}>Close</Button>
           </Grid>
         </Box>
       </Modal>

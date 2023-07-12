@@ -1,6 +1,6 @@
 import { Fragment, useState, useEffect } from "react";
 import { Button, CircularProgress, Grid } from "@mui/material";
-import { getAllMenuItems, getAllCategories, applyFilters } from "../Helper";
+import { getAllMenuItems, getAllCategories, applyFilters, sendOrder } from "../Helper";
 import FilterModal from "../UI/FilterModal";
 import MenuItemCard from "../UI/MenuItemCard";
 import OrderDrawer from "../UI/OrderDrawer";
@@ -40,6 +40,9 @@ const Menu = () => {
   const [sort, setSort] = useState(1);
   const [orderItems, setOrderItems] = useState([]);
 
+  const accountId = 1; // Need to get actual account id
+  const tableId = localStorage.getItem("tableId");
+
   const toggleFilter = () => {
     setShowFilter(!showFilter);
   };
@@ -75,6 +78,29 @@ const Menu = () => {
     setMenuItems(itemsData);
     toggleFilter();
     setLoading(false);
+  };
+
+  const handleSendOrder = async () => {
+    const items = orderItems.map((item) => {
+      return {
+        id: item.itemId,
+        quantity: item.quantity,
+        note: item.note,
+      };
+    });
+    if (items.length === 0) {
+      alert("Order shouldn't be empty!");
+      return;
+    }
+    console.log("items are ", items);
+    const body = {
+      accountId: accountId,
+      tableId: tableId,
+      items: items,
+    };
+    console.log("body is ", body);
+    await sendOrder(body);
+    setOrderItems([]);
   };
 
   useEffect(() => {
@@ -114,7 +140,7 @@ const Menu = () => {
       {loading && <CircularProgress />}
       {!loading && (
         <>
-          <Button variant='contained' onClick={toggleFilter}>
+          <Button variant="contained" onClick={toggleFilter}>
             Filter
           </Button>
           <Grid container>
@@ -149,6 +175,7 @@ const Menu = () => {
           <OrderDrawer
             orderItems={orderItems}
             onDelete={handleRemoveOrderItem}
+            handleSendOrder={handleSendOrder}
             // deleteItem={handleRemoveOrderItem()}
           />
         </>

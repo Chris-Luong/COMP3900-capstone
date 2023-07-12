@@ -1,22 +1,22 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState, useContext } from "react";
+import RestaurantContext from "../Context/restaurant-context";
+import { useNavigate } from "react-router-dom";
 import {
-  Avatar,
   Button,
   Container,
-  ListItemAvatar,
   Typography,
+  Box,
+  Drawer,
+  List,
+  Divider,
+  ListItem,
+  ListItemText,
 } from "@mui/material";
-import { sendOrder } from "../Helper";
-
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
-const OrderDrawer = ({ orderItems, onDelete }) => {
+const OrderDrawer = ({ orderItems, onDelete, handleSendOrder }) => {
+  const checkIn = useContext(RestaurantContext);
+  const navigate = useNavigate();
   const [state, setState] = useState({
     right: false,
   });
@@ -33,8 +33,6 @@ const OrderDrawer = ({ orderItems, onDelete }) => {
   };
 
   const [orderSum, setOrderSum] = useState(0);
-  const accountId = 1; // Need to get actual account id
-  const tableId = 1; // Need function to genererate the table id
 
   console.log(orderItems);
 
@@ -42,22 +40,13 @@ const OrderDrawer = ({ orderItems, onDelete }) => {
     onDelete(index);
   };
 
-  const handleSendOrder = async () => {
-    const items = orderItems.map((item) => {
-      return {
-        id: item.itemId,
-        quantity: item.quantity,
-        note: item.note,
-      };
-    });
-    console.log("items are ", items);
-    const body = {
-      accountId: accountId,
-      tableId: tableId,
-      items: items,
-    };
-    console.log("body is ", body);
-    await sendOrder(body);
+  const handleRequestBill = async () => {
+    // add request bill request here
+    alert("Looks like you're done with your order. Logging you out");
+    checkIn.setIsCheckedIn(false);
+    localStorage.removeItem("token");
+    localStorage.removeItem("checkedIn");
+    navigate("/restaurant");
   };
 
   // Updated order total everytime the order is updated
@@ -71,18 +60,18 @@ const OrderDrawer = ({ orderItems, onDelete }) => {
     setOrderSum(total);
   }, [orderItems]);
 
-  // TODO: Get accountId from email of user? Generate int for tableId -> useState increment
+  // TODO: Get accountId from email of user?
   const list = (anchor) => (
     <Box
       sx={{ width: 300 }}
-      role='presentation'
+      role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <Typography
-        variant='h4'
+        variant="h4"
         gutterBottom
-        align='center'
+        align="center"
         sx={{ margin: "10px" }}
       >
         My Order
@@ -91,44 +80,58 @@ const OrderDrawer = ({ orderItems, onDelete }) => {
         {orderItems && orderItems.length > 0
           ? orderItems.map((item, index) => (
               <>
-                {index !== 0 ? <Divider /> : null}
+                {index !== 0 ? <Divider key={item} /> : null}
                 <ListItem
                   key={item}
                   sx={{ display: "flex", justifyContent: "flex-end" }}
                 >
-                  {/* TODO: Replace with thumbnail */}
-                  <ListItemAvatar>
-                    <Avatar variant='square'>Pic</Avatar>
-                  </ListItemAvatar>
                   <Container>
                     <ListItemText
                       primary={item.name}
                       secondary={"$" + item.price}
                     />
                     <ListItemText
-                      primary={"Notes: " + item.note}
-                      secondary={"Qty: " + item.quantity}
+                      primary={`Qty: ${item.quantity}`}
+                      secondary={item.note ? `Notes: ${item.note}` : null}
                     />
                   </Container>
-
                   <DeleteOutlineIcon
-                    color='warning'
+                    color="warning"
                     onClick={() => handleRemoveFromCart(index)}
                   />
                 </ListItem>
-                {/* Could remove if clutters UI */}
-                {/* <Divider /> */}
               </>
             ))
           : null}
       </List>
-      <Divider sx={{ borderBottomWidth: 5 }} />
+      <Divider sx={{ borderBottomWidth: 3 }} />
       {/* TODO: useState fn to check hasSentOrder - if has sent then
       disable this button and enable the req bill button */}
       <Container sx={{ mt: "1rem" }}>
-        <Typography align='center'>Total: ${orderSum}</Typography>
-        <Button onClick={() => handleSendOrder()}>Submit order</Button>
-        <Button disabled>Request Bill</Button>
+        <Typography align="center">Order Total: ${orderSum}</Typography>
+        <Button
+          fullWidth
+          disabled={orderItems.length === 0}
+          onClick={handleSendOrder}
+        >
+          Submit order
+        </Button>
+        {/* TODO: add list of all orders associated with this table */}
+        {/* TODO: have another total for multiple submitted orders */}
+      </Container>
+      <Divider sx={{ borderBottomWidth: 3 }} />
+      <List>
+        <ListItem>ID: 1 | status: completed</ListItem>
+        <ListItem>ID: 2 | status: preparing</ListItem>
+        <ListItem>ID: 3 | status: sent to kitchen</ListItem>
+      </List>
+      <Container sx={{ mt: "0.5rem" }}>
+        <Typography align="center">Table Total: $100.00</Typography>
+        <Button fullWidth onClick={handleRequestBill}>
+          Request Bill
+        </Button>
+        {/* TODO: add list of all orders associated with this table */}
+        {/* TODO: have another total for multiple submitted orders */}
       </Container>
     </Box>
   );

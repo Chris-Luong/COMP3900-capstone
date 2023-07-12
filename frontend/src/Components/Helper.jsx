@@ -63,6 +63,16 @@ export const sendOrder = async (body) => {
   }
 };
 
+export const retrieveOrdersWithTableId = async (tableId) => {
+  try {
+    const res = await sendRequest(`/orders/tables/${tableId}`, "GET");
+    return res;
+  } catch (err) {
+    alert(err);
+    console.log(err);
+  }
+}
+
 export function fileToDataUrl(file) {
   if (!file) {
     return null;
