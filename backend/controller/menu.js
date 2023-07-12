@@ -59,6 +59,36 @@ editItem = (req, res) => {
   );
 }
 
+getCategories = (res) => {
+  Menu.getCategories((err, result) => {
+    if (err) {
+      return res.status(err.status).json({ message: err.message });
+    }
+    if (!result) {
+      return res.status(NOT_FOUND).json({ message: "Category Not Found" });
+    }
+    res.status(200).json({ categories: result });
+  });
+};
+
+addCategory = (req, res) => {
+  Menu.addCategory(req.body["name"], (err, result) => {
+    if (err) {
+      return res.status(err.status).json({ message: err.message });
+    }
+    res.status(200).json(result);
+  });
+}
+
+removeCategory = (req, res) => {
+  Menu.removeCategory(req.body["id"], (err, result) => {
+    if (err) {
+      return res.status(err.status).json({message: err.message});
+    }
+    res.status(200).json(result);
+  })
+}
+
 categoriesFromId = (req, res) => {
   const id = req.params["itemid"];
   Menu.getCategoryNames(parseInt(id, 10), (err, result) => {
@@ -74,5 +104,8 @@ module.exports = {
   addItem,
   removeItem,
   editItem,
+  getCategories,
+  addCategory,
+  removeCategory,
   categoriesFromId
 };
