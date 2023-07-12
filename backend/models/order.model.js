@@ -3,7 +3,9 @@ const {
   getMenuItemsByAccount,
   getMenuItemsByOrder,
   createOrder,
-  addMenuItemsToOrder, deleteOrderById, deleteOrderItemsById,
+  addMenuItemsToOrder,
+  deleteOrderById,
+  deleteOrderItemsById,
   setNewTableId,
   getOrdersForTableId,
 } = require("../db/queries/order.queries");
@@ -14,8 +16,8 @@ const EXISTS = 409;
 const EXISTS_KIND = "exists";
 const CANNOT_CREATE = 400;
 const CANNOT_CREATE_KIND = "cannot_create";
-const CANNOT_DELETE = 400
-const CANNOT_DELETE_KIND = 'cannot_delete'
+const CANNOT_DELETE = 400;
+const CANNOT_DELETE_KIND = "cannot_delete";
 
 class Order {
   static getOrderByAccountId(accountId, next) {
@@ -32,7 +34,7 @@ class Order {
           null
         );
         return;
-      } 
+      }
       let result = JSON.parse(JSON.stringify(results));
       next(null, result);
     });
@@ -160,13 +162,13 @@ class Order {
           {
             status: CANNOT_DELETE,
             message: "Error deleting orderItems",
-            kind: CANNOT_DELETE_KIND
+            kind: CANNOT_DELETE_KIND,
           },
           null
         );
         return;
       }
-      
+
       if (results.affectedRows == 0) {
         next(
           {
@@ -180,33 +182,33 @@ class Order {
       }
 
       db.query(deleteOrderById, [orderId], (err, results) => {
-
         if (err) {
           next(
             {
               status: CANNOT_DELETE,
               message: "Error deleting the order",
-              kind: CANNOT_DELETE_KIND
+              kind: CANNOT_DELETE_KIND,
             },
             null
           );
           return;
         }
-    
+
         if (results.affectedRows == 0) {
-          next({
-            status: CANNOT_DELETE,
-            message: "Error deleting the order",
-            kind: CANNOT_DELETE_KIND
-          }, null);
+          next(
+            {
+              status: CANNOT_DELETE,
+              message: "Error deleting the order",
+              kind: CANNOT_DELETE_KIND,
+            },
+            null
+          );
           return;
         }
       });
 
       next(null, { deleted: results.affectedRows });
     });
-
-    
   }
 }
 
