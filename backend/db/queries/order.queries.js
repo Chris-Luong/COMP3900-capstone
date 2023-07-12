@@ -28,7 +28,15 @@ const createOrderWithAccountId = `
   VALUES (?, ?)
 `;
 
+const deleteOrderById = `
+  DELETE FROM orders where id = ?
+`
+
+const deleteOrderItemsById = `
+  DELETE FROM orderitems where orderId = ?
+`
+
 
 module.exports = {
-  getMenuItemsByAccount, getMenuItemsByOrder, createOrder, addMenuItemsToOrder
+  getMenuItemsByAccount, getMenuItemsByOrder, createOrder, addMenuItemsToOrder, deleteOrderById, deleteOrderItemsById
 };
