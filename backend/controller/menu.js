@@ -59,7 +59,7 @@ editItem = (req, res) => {
   );
 }
 
-getCategories = (res) => {
+getCategories = (req, res) => {
   Menu.getCategories((err, result) => {
     if (err) {
       return res.status(err.status).json({ message: err.message });
