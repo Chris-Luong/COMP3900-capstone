@@ -133,9 +133,11 @@ const OrderDrawer = ({ orderItems, onDelete }) => {
       <Divider sx={{ borderBottomWidth: 5 }} />
       {/* TODO: useState fn to check hasSentOrder - if has sent then
       disable this button and enable the req bill button */}
-      <Typography align='center'>Total: ${orderSum}</Typography>
-      <Button onClick={() => handleSendOrder()}>Submit order</Button>
-      <Button disabled>Request Bill</Button>
+      <Container>
+        <Typography align='center'>Total: ${orderSum}</Typography>
+        <Button onClick={() => handleSendOrder()}>Submit order</Button>
+        <Button disabled>Request Bill</Button>
+      </Container>
     </Box>
   );
 
