@@ -33,7 +33,7 @@ const MenuItemCard = ({
     setShowModal(false);
   };
 
-  async function handleAddToCart(event, index) {
+  function handleAddToCart(event, index) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const note = data.get("note");

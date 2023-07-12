@@ -13,7 +13,7 @@ import ListItemText from "@mui/material/ListItemText";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 // NOTE: find the differnce betwwen passing in arges like this and ({ orderItems, onDelete })
-const OrderDrawer = (orderItems, onDelete) => {
+const OrderDrawer = ({ orderItems, onDelete }) => {
   const [state, setState] = useState({
     right: false,
   });
@@ -31,24 +31,23 @@ const OrderDrawer = (orderItems, onDelete) => {
   const accountId = 1; // Need to get actual account id
   const tableId = 1; // Need function to genererate the table id
 
-  const orderArray = orderItems.orderItems;
-  console.log(orderArray);
+  console.log(orderItems);
   // TODO: useEffect or something to update the orderItems with new orderItems
   // returned from this function
   // useEffect(() => {
-  //   const newOrderItems = applyFilters(orderArray);
+  //   const newOrderItems = applyFilters(orderItems);
   //   setState({ ...state, orderItems: newOrderItems });
-  // }, [orderArray]);
+  // }, [orderItems]);
   // const handleDelete = (index) => {
   //   deleteItem(index);
   // };
 
-  const handleRemoveFromCart = async (index) => {
+  const handleRemoveFromCart = (index) => {
     onDelete(index);
   };
 
   const handleSendOrder = async () => {
-    const items = orderArray.map((item) => {
+    const items = orderItems.map((item) => {
       return {
         id: item.itemId,
         quantity: item.quantity,
@@ -82,11 +81,14 @@ const OrderDrawer = (orderItems, onDelete) => {
         My Order
       </Typography>
       <List>
-        {orderArray && orderArray.length > 0
-          ? orderArray.map((item, index) => (
+        {orderItems && orderItems.length > 0
+          ? orderItems.map((item, index) => (
               <>
                 {index !== 0 ? <Divider /> : null}
-                <ListItem key={item}>
+                <ListItem
+                  key={item}
+                  sx={{ display: "flex", justifyContent: "flex-end" }}
+                >
                   <ListItemAvatar>
                     {index % 2 === 0 ? (
                       <Avatar>R</Avatar>
@@ -98,6 +100,7 @@ const OrderDrawer = (orderItems, onDelete) => {
                     primary={item.name}
                     secondary={"$" + item.price}
                   />
+                  <ListItemText primary={item.note} secondary={item.quantity} />
                   <DeleteOutlineIcon
                     color='warning'
                     onClick={() => handleRemoveFromCart(index)}
@@ -111,7 +114,10 @@ const OrderDrawer = (orderItems, onDelete) => {
       </List>
       <Divider sx={{ borderBottomWidth: 5 }} />
       {/* TODO: get sum of bill with sum(quantity * price of all items) */}
+      {/* TODO: useState fn to check hasSentOrder - if has sent then
+      disable this button and enable the req bill button */}
       <Button onClick={() => handleSendOrder()}>Submit order</Button>
+      <Button disabled>Request Bill</Button>
     </Box>
   );
 
