@@ -62,4 +62,9 @@ WEEK 6:
 Managed to connect MySQL Workbench with my code. Created the frontend for ordering
 menu items. Completed user stories MN3900-36, -46 and -47. Discussed with Grace how
 the backend could work with the frontend and took Rodney's suggested method of
-implementation. Added image/thumbnail functionality to the menu cards.
+implementation.
+
+WEEK 7:
+
+
+Helped add image/thumbnail functionality to the menu cards. Improved UI of orderDrawer component.
