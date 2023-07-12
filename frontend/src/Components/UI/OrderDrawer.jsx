@@ -1,19 +1,22 @@
-import { Fragment, useState } from "react";
-import { Avatar, Button, ListItemAvatar, Typography } from "@mui/material";
-import { sendOrder } from "../Helper";
-
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
+import { Fragment, useEffect, useState, useContext } from "react";
+import RestaurantContext from "../Context/restaurant-context";
+import { useNavigate } from "react-router-dom";
+import {
+  Button,
+  Container,
+  Typography,
+  Box,
+  Drawer,
+  List,
+  Divider,
+  ListItem,
+  ListItemText,
+} from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
-// NOTE: find the differnce betwwen passing in arges like this and ({ orderItems, onDelete })
-const OrderDrawer = ({ orderItems, onDelete }) => {
+const OrderDrawer = ({ orderItems, onDelete, handleSendOrder, tableOrders }) => {
+  const checkIn = useContext(RestaurantContext);
+  const navigate = useNavigate();
   const [state, setState] = useState({
     right: false,
   });
@@ -28,54 +31,47 @@ const OrderDrawer = ({ orderItems, onDelete }) => {
 
     setState({ ...state, [anchor]: open });
   };
-  const accountId = 1; // Need to get actual account id
-  const tableId = 1; // Need function to genererate the table id
+
+  const [orderSum, setOrderSum] = useState(0);
 
   console.log(orderItems);
-  // TODO: useEffect or something to update the orderItems with new orderItems
-  // returned from this function
-  // useEffect(() => {
-  //   const newOrderItems = applyFilters(orderItems);
-  //   setState({ ...state, orderItems: newOrderItems });
-  // }, [orderItems]);
-  // const handleDelete = (index) => {
-  //   deleteItem(index);
-  // };
 
   const handleRemoveFromCart = (index) => {
     onDelete(index);
   };
 
-  const handleSendOrder = async () => {
-    const items = orderItems.map((item) => {
-      return {
-        id: item.itemId,
-        quantity: item.quantity,
-        note: item.note,
-      };
-    });
-    console.log("items are ", items);
-    const body = {
-      accountId: accountId,
-      tableId: tableId,
-      items: items,
-    };
-    console.log("body is ", body);
-    await sendOrder(body);
+  const handleRequestBill = async () => {
+    // add request bill request here
+    alert("Looks like you're done with your order. Logging you out");
+    checkIn.setIsCheckedIn(false);
+    localStorage.removeItem("token");
+    localStorage.removeItem("checkedIn");
+    navigate("/restaurant");
   };
 
-  // TODO: Get accountId from email of user? Generate int for tableId -> useState increment
+  // Updated order total everytime the order is updated
+  useEffect(() => {
+    let total = 0;
+    if (orderItems && orderItems.length > 0) {
+      orderItems.forEach((item) => {
+        total += item.quantity * item.price;
+      });
+    }
+    setOrderSum(total);
+  }, [orderItems]);
+
+  // TODO: Get accountId from email of user?
   const list = (anchor) => (
     <Box
-      sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}
-      role='presentation'
+      sx={{ width: 300 }}
+      role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <Typography
-        variant='h4'
+        variant="h4"
         gutterBottom
-        align='center'
+        align="center"
         sx={{ margin: "10px" }}
       >
         My Order
@@ -84,40 +80,71 @@ const OrderDrawer = ({ orderItems, onDelete }) => {
         {orderItems && orderItems.length > 0
           ? orderItems.map((item, index) => (
               <>
-                {index !== 0 ? <Divider /> : null}
+                {index !== 0 ? <Divider key={item} /> : null}
                 <ListItem
                   key={item}
                   sx={{ display: "flex", justifyContent: "flex-end" }}
                 >
-                  <ListItemAvatar>
-                    {index % 2 === 0 ? (
-                      <Avatar>R</Avatar>
-                    ) : (
-                      <Avatar variant='square'>S</Avatar>
-                    )}
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={item.name}
-                    secondary={"$" + item.price}
-                  />
-                  <ListItemText primary={item.note} secondary={item.quantity} />
+                  <Container>
+                    <ListItemText
+                      primary={item.name}
+                      secondary={"$" + item.price}
+                    />
+                    <ListItemText
+                      primary={`Qty: ${item.quantity}`}
+                      secondary={item.note ? `Notes: ${item.note}` : null}
+                    />
+                  </Container>
                   <DeleteOutlineIcon
-                    color='warning'
+                    color="warning"
                     onClick={() => handleRemoveFromCart(index)}
                   />
                 </ListItem>
-                {/* Could remove if clutters UI */}
-                {/* <Divider /> */}
               </>
             ))
           : null}
       </List>
-      <Divider sx={{ borderBottomWidth: 5 }} />
-      {/* TODO: get sum of bill with sum(quantity * price of all items) */}
+      {/* <Divider sx={{ borderBottomWidth: 3 }} /> */}
       {/* TODO: useState fn to check hasSentOrder - if has sent then
       disable this button and enable the req bill button */}
-      <Button onClick={() => handleSendOrder()}>Submit order</Button>
-      <Button disabled>Request Bill</Button>
+      <Container sx={{ mt: "0.5rem" }}>
+        <Typography align="center">Order Total: ${orderSum}</Typography>
+        <Button
+          disabled={orderItems.length === 0}
+          onClick={handleSendOrder}
+          fullWidth
+        >
+          Submit order
+        </Button>
+        {/* TODO: add list of all orders associated with this table */}
+        {/* TODO: have another total for multiple submitted orders */}
+      </Container>
+      <Divider sx={{ borderBottomWidth: 3 }} />
+      {tableOrders.length !== 0 ? (
+        <List>
+          {tableOrders.map((order) => (
+            <ListItem key={order.id}>
+              <ListItemText
+                primary={`Order ID: ${order.id}`}
+                secondary={"Completed"}
+              />
+              <ListItemText primary={`$39`} />
+            </ListItem>
+          ))}
+        </List>
+      ) : null}
+      <Container sx={{ mt: "0.5rem" }}>
+        <Typography align="center">Table Total: $100.00</Typography>
+        <Button
+          disabled={tableOrders.length === 0}
+          onClick={handleRequestBill}
+          fullWidth
+        >
+          Request Bill
+        </Button>
+        {/* TODO: add list of all orders associated with this table */}
+        {/* TODO: have another total for multiple submitted orders */}
+      </Container>
     </Box>
   );
 

@@ -19,11 +19,13 @@ const RestaurantCheckIn = () => {
       password: "temp123",
     };
     try {
+      const tableRes = await sendRequest("/tables/create", "POST");
+      localStorage.setItem("tableId", tableRes.tableId);
       // TODO: replace with more appropriate endpoint, e.g. /guest-checkin
       const res = await sendRequest("/login", "POST", body);
-      checkIn.setIsCheckedIn(true);
       localStorage.setItem("token", res.token);
       localStorage.setItem("checkedIn", true);
+      checkIn.setIsCheckedIn(true);
       navigate('/restaurant');
     } catch (err) {
       alert(err);

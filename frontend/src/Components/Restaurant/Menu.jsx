@@ -1,6 +1,6 @@
 import { Fragment, useState, useEffect } from "react";
 import { Button, CircularProgress, Grid } from "@mui/material";
-import { getAllMenuItems, getAllCategories, applyFilters } from "../Helper";
+import { getAllMenuItems, getAllCategories, applyFilters, sendOrder, retrieveOrdersWithTableId } from "../Helper";
 import FilterModal from "../UI/FilterModal";
 import MenuItemCard from "../UI/MenuItemCard";
 import OrderDrawer from "../UI/OrderDrawer";
@@ -30,6 +30,7 @@ const sortByValues = {
 
 const Menu = () => {
   const [menuItems, setMenuItems] = useState([]);
+  const [tableOrders, setTableOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
 
@@ -39,6 +40,9 @@ const Menu = () => {
   const [price, setPrice] = useState([0, 100]);
   const [sort, setSort] = useState(1);
   const [orderItems, setOrderItems] = useState([]);
+
+  const accountId = 1; // Need to get actual account id
+  const tableId = localStorage.getItem("tableId");
 
   const toggleFilter = () => {
     setShowFilter(!showFilter);
@@ -77,6 +81,29 @@ const Menu = () => {
     setLoading(false);
   };
 
+  const handleSendOrder = async () => {
+    const items = orderItems.map((item) => {
+      return {
+        id: item.itemId,
+        quantity: item.quantity,
+        note: item.note,
+      };
+    });
+    if (items.length === 0) {
+      alert("Order shouldn't be empty!");
+      return;
+    }
+    console.log("items are ", items);
+    const body = {
+      accountId: accountId,
+      tableId: tableId,
+      items: items,
+    };
+    console.log("body is ", body);
+    await sendOrder(body);
+    setOrderItems([]);
+  };
+
   useEffect(() => {
     setLoading(true);
     const getMenuData = async () => {
@@ -91,8 +118,13 @@ const Menu = () => {
       setCategories(categoriesObject);
       setLoading(false);
     };
+    const getTableOrdersData = async () => {
+      let ordersData = await retrieveOrdersWithTableId(tableId);
+      setTableOrders(ordersData);
+    };
     getMenuData();
-  }, []);
+    getTableOrdersData();
+  }, [tableId]);
 
   const handleUpdateOrderItems = (updatedOrderItems) => {
     setOrderItems(updatedOrderItems);
@@ -114,7 +146,7 @@ const Menu = () => {
       {loading && <CircularProgress />}
       {!loading && (
         <>
-          <Button variant='contained' onClick={toggleFilter}>
+          <Button variant="contained" onClick={toggleFilter}>
             Filter
           </Button>
           <Grid container>
@@ -149,6 +181,8 @@ const Menu = () => {
           <OrderDrawer
             orderItems={orderItems}
             onDelete={handleRemoveOrderItem}
+            handleSendOrder={handleSendOrder}
+            tableOrders={tableOrders}
             // deleteItem={handleRemoveOrderItem()}
           />
         </>

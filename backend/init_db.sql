@@ -54,6 +54,15 @@ CREATE TABLE IF NOT EXISTS orderItems (
   FOREIGN KEY (itemId) REFERENCES menuItems(id)
 );
 
+CREATE TABLE IF NOT EXISTS tables (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT
+    -- these may be used for loyalty/reservations later
+    -- tableName VARCHAR(255) NOT NULL,
+    -- capacity INT UNSIGNED,
+    -- status ENUM('available', 'occupied', 'reserved') DEFAULT 'available'
+);
+
+
 -- guest accounts have password 'temp123'
 INSERT IGNORE INTO account(firstname, lastname, email, password, role) VALUES("guest", "account", "guest1", "$2b$10$4oKl80KpkMLh8kl4uA1ToOU/cX6lzjc3W8UXXCC5KUmnfkk8E6dNW", 1);
 
@@ -114,16 +123,16 @@ INSERT INTO menuItemsCategories (itemId, categoryId) VALUES
     (10, 3) -- test item - dinner
 ;
 
-INSERT INTO orders (accountId, tableId) VALUES 
-    (1, 1),
-    (2, 2)
-;
+-- INSERT INTO orders (accountId, tableId) VALUES 
+--     (1, 1),
+--     (2, 2)
+-- ;
 
-INSERT INTO orderItems (orderId, itemId, quantity, note) VALUES 
-    (1, 1, 1, "test1"),
-    (1, 2, 1, "test2"),
-    (1, 3, 1, "test3"),
-    (2, 1, 2, "test4"),
-    (2, 2, 2, "test5"),
-    (2, 3, 2, "test6")
-;
+-- INSERT INTO orderItems (orderId, itemId, quantity, note) VALUES 
+--     (1, 1, 1, "test1"),
+--     (1, 2, 1, "test2"),
+--     (1, 3, 1, "test3"),
+--     (2, 1, 2, "test4"),
+--     (2, 2, 2, "test5"),
+--     (2, 3, 2, "test6")
+-- ;
