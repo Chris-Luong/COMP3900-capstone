@@ -6,6 +6,14 @@ const getMenuItemsByOrder = `
   where O.id = ?
 `;
 
+const getMenuDetailsByOrder = `
+  SELECT MI.name as itemName, MI.id as itemId, OI.quantity as quantity, OI.note as note FROM 
+  orders O 
+    join orderItems OI on OI.orderId = O.id 
+    join menuItems MI on MI.id = OI.itemId 
+  where O.id = ?
+`;
+
 const addMenuItemsToOrder = `
     INSERT INTO orderItems(orderId, itemId, quantity, note) VALUES(?, ?, ?, ?)
 `
@@ -28,7 +36,10 @@ const createOrderWithAccountId = `
   VALUES (?, ?)
 `;
 
+const getPendingOrders = `
+  SELECT id, tableId from orders where status = 'pending'
+`
 
 module.exports = {
-  getMenuItemsByAccount, getMenuItemsByOrder, createOrder, addMenuItemsToOrder
+  getMenuItemsByAccount, getMenuItemsByOrder, createOrder, addMenuItemsToOrder, getMenuDetailsByOrder, getPendingOrders
 };

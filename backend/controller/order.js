@@ -77,7 +77,17 @@ createOrder = (req, res) => {
         }
         return res.status(200).json(result);
     })
-
 }
 
+viewPendingOrders = (req, res) => { 
+  Order.getPendingOrders((err, result) => {
+    if (err) {
+      return res.status(err.status).json({ message: err.message });
+    }
+    if (!result) {
+      return res.status(NOT_FOUND).json({ message: "Order Not Found" });
+    }
+    return res.status(200).json(result); 
+  });
+};
 module.exports = { viewOrders, createOrder };

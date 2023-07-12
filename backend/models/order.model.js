@@ -1,5 +1,5 @@
 const db = require("../db/db");
-const { getMenuItemsByAccount, getMenuItemsByOrder, createOrder, addMenuItemsToOrder } = require("../db/queries/order.queries");
+const { getMenuItemsByAccount, getMenuItemsByOrder, createOrder, addMenuItemsToOrder, getPendingOrders } = require("../db/queries/order.queries");
 
 
 const NOT_FOUND = 401;
@@ -102,6 +102,27 @@ class Order {
         });
       });
       next(null, {orderId: orderId});
+    });
+  }
+
+  static getPendingOrders(orderId, next) {
+    db.query(getPendingOrders, orderId, (err, results) => {
+      if (err) {
+        console.log("MySQL Error: " + err);
+        console.log("MySQL Result:", results);
+        next(
+          {
+            status: EXISTS,
+            message: "Error retrieving menu items by the given account id",
+            kind: EXISTS_KIND,
+          },
+          null
+        );
+        return;
+      }
+      console.log(results);
+      let result = JSON.parse(JSON.stringify(results));
+      next(null, result);
     });
   }
 }

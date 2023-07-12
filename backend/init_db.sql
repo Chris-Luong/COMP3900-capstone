@@ -54,6 +54,7 @@ CREATE TABLE IF NOT EXISTS orderItems (
   FOREIGN KEY (itemId) REFERENCES menuItems(id)
 );
 
+
 -- guest accounts have password 'temp123'
 INSERT IGNORE INTO account(firstname, lastname, email, password, role) VALUES("guest", "account", "guest1", "$2b$10$4oKl80KpkMLh8kl4uA1ToOU/cX6lzjc3W8UXXCC5KUmnfkk8E6dNW", 1);
 
