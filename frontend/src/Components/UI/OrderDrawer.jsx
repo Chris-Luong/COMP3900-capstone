@@ -57,11 +57,11 @@ const OrderDrawer = ({ orderItems, onDelete }) => {
     await sendOrder(body);
   };
 
+  // Updated order total everytime the order is updated
   useEffect(() => {
     let total = 0;
     if (orderItems && orderItems.length > 0) {
       orderItems.forEach((item) => {
-        console.log("item is ", item);
         total += item.quantity * item.price;
       });
     }
@@ -93,6 +93,7 @@ const OrderDrawer = ({ orderItems, onDelete }) => {
                   key={item}
                   sx={{ display: "flex", justifyContent: "flex-end" }}
                 >
+                  {/* TODO: Replace with thumbnail */}
                   <ListItemAvatar>
                     {index % 2 === 0 ? (
                       <Avatar>R</Avatar>
@@ -100,6 +101,7 @@ const OrderDrawer = ({ orderItems, onDelete }) => {
                       <Avatar variant='square'>S</Avatar>
                     )}
                   </ListItemAvatar>
+                  {/* TODO: put text in vertically justified container */}
                   <ListItemText
                     primary={item.name}
                     secondary={"$" + item.price}
