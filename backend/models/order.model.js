@@ -1,5 +1,5 @@
 const db = require("../db/db");
-const { getMenuItemsByAccount, getMenuItemsByOrder, createOrder, addMenuItemsToOrder } = require("../db/queries/order.queries");
+const { getMenuItemsByAccount, getMenuItemsByOrder, createOrder, addMenuItemsToOrder, deleteOrderById, deleteOrderItemsById } = require("../db/queries/order.queries");
 
 
 const NOT_FOUND = 401;
@@ -8,6 +8,8 @@ const EXISTS = 409;
 const EXISTS_KIND = "exists";
 const CANNOT_CREATE = 400
 const CANNOT_CREATE_KIND = 'cannot_create'
+const CANNOT_DELETE = 400
+const CANNOT_DELETE_KIND = 'cannot_delete'
 
 class Order {
   static getOrderByAccountId(accountId, next) {
@@ -24,8 +26,7 @@ class Order {
           null
         );
         return;
-      }
-      console.log(results);
+      } 
       let result = JSON.parse(JSON.stringify(results));
       next(null, result);
     });
@@ -73,6 +74,7 @@ class Order {
           kind: CANNOT_CREATE_KIND
         }, null)
       }
+
       let orderId = results.insertId;
       items.forEach(item => {
         values = [orderId, item.id, item.quantity, item.note];
@@ -103,6 +105,62 @@ class Order {
       });
       next(null, {orderId: orderId});
     });
+  }
+
+  static deleteOrder(orderId, next) {
+    db.query(deleteOrderItemsById, [orderId], (err, results) => {
+      if (err) {
+        next(
+          {
+            status: CANNOT_DELETE,
+            message: "Error deleting orderItems",
+            kind: CANNOT_DELETE_KIND
+          },
+          null
+        );
+        return;
+      }
+      
+      if (results.affectedRows == 0) {
+        next(
+          {
+            status: CANNOT_DELETE,
+            message: "Error deleting order items",
+            kind: CANNOT_DELETE_KIND,
+          },
+          null
+        );
+        return;
+      }
+
+      db.query(deleteOrderById, [orderId], (err, results) => {
+
+        if (err) {
+          next(
+            {
+              status: CANNOT_DELETE,
+              message: "Error deleting the order",
+              kind: CANNOT_DELETE_KIND
+            },
+            null
+          );
+          return;
+        }
+    
+        if (results.affectedRows == 0) {
+          next({
+            status: CANNOT_DELETE,
+            message: "Error deleting the order",
+            kind: CANNOT_DELETE_KIND
+          }, null);
+          return;
+        }
+      });
+
+      next(null, { deleted: results.affectedRows });
+    });
+
+    
   }
 }
 
