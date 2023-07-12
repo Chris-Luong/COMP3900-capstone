@@ -12,7 +12,6 @@ const {
   categoriesFromId,
   getCategories,
 } = require("../controller/menu");
-const categories = require("../controller/categories");
 const { viewOrders, createOrder, deleteOrder } = require("../controller/order");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
