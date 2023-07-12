@@ -1,5 +1,11 @@
 import { Fragment, useEffect, useState } from "react";
-import { Avatar, Button, ListItemAvatar, Typography } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Container,
+  ListItemAvatar,
+  Typography,
+} from "@mui/material";
 import { sendOrder } from "../Helper";
 
 import Box from "@mui/material/Box";
@@ -71,7 +77,7 @@ const OrderDrawer = ({ orderItems, onDelete }) => {
   // TODO: Get accountId from email of user? Generate int for tableId -> useState increment
   const list = (anchor) => (
     <Box
-      sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}
+      sx={{ width: 300 }}
       role='presentation'
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
@@ -102,11 +108,17 @@ const OrderDrawer = ({ orderItems, onDelete }) => {
                     )}
                   </ListItemAvatar>
                   {/* TODO: put text in vertically justified container */}
-                  <ListItemText
-                    primary={item.name}
-                    secondary={"$" + item.price}
-                  />
-                  <ListItemText primary={item.note} secondary={item.quantity} />
+                  <Container>
+                    <ListItemText
+                      primary={item.name}
+                      secondary={"$" + item.price}
+                    />
+                    <ListItemText
+                      primary={"Notes: " + item.note}
+                      secondary={"Qty: " + item.quantity}
+                    />
+                  </Container>
+
                   <DeleteOutlineIcon
                     color='warning'
                     onClick={() => handleRemoveFromCart(index)}
