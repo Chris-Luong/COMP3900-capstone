@@ -19,11 +19,12 @@ db.connect((err) => {
 
 // Create and initialise the database
 for (let query of INIT_DB) {
-  db.query(query.trim().replace(";", ""), (err, results) => {
+  db.query(query.trim().replace(");\n", ")\n"), (err, results) => {
     if (err) {
       console.error("Error initialising database:", err);
       return;
     }
+    console.log(query);
   });
 }
 console.log("Database initialised.");
