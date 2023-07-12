@@ -42,8 +42,15 @@ Saturday: we divided up into two teams. I will be doing menu ordering epic backe
 
 
 Week 6:
-Monday: Reviewed Alan's branch for viewing all the menu items, thought I would love to try backend and frontend, that is, do fullstack. 
+Monday: Reviewed Alan's branch for viewing all the menu items, thought I will try backend and frontend, that is, do fullstack. 
 This way, it would be much easier to test so that frontend doesn't need to spend time understanding backend to test.
 So, I communicated with the team that I will be picking up a few user stories in the Ordering Epic and implement fullstack.
 Wednesday: Finished implementing and testing the ordering functionalities for backend: view all manu itmes in the order and add menu items into the order.
-Tomorrow's plan is to implement the frontend. 
+Tomorrow's plan is to implement the frontend.
+Thursday: Implemented the modal pop up for individual menu items and enabling users to select the quantity and adding to the cart. 
+Saturday: Refactored the backend such that the order table splits to two tables - orders which tracks orderId and orderItems which
+tracks mappings of orderId - itemId. We have decided to let the frontend to do updating and removing order. So, when the user submits the order, 
+backend inserts orderItems and created an orderId.
+
+Week 7:
+Wednesday: Finished the backend implementations for removing the orders by orderId.
