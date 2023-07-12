@@ -13,7 +13,7 @@ import ListItemText from "@mui/material/ListItemText";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 // NOTE: find the differnce betwwen passing in arges like this and ({ orderItems, onDelete })
-const OrderDrawer = (orderItems, onDelete) => {
+const OrderDrawer = ({ orderItems, onDelete }) => {
   const [state, setState] = useState({
     right: false,
   });
@@ -31,24 +31,23 @@ const OrderDrawer = (orderItems, onDelete) => {
   const accountId = 1; // Need to get actual account id
   const tableId = 1; // Need function to genererate the table id
 
-  const orderArray = orderItems.orderItems;
-  console.log(orderArray);
+  console.log(orderItems);
   // TODO: useEffect or something to update the orderItems with new orderItems
   // returned from this function
   // useEffect(() => {
-  //   const newOrderItems = applyFilters(orderArray);
+  //   const newOrderItems = applyFilters(orderItems);
   //   setState({ ...state, orderItems: newOrderItems });
-  // }, [orderArray]);
+  // }, [orderItems]);
   // const handleDelete = (index) => {
   //   deleteItem(index);
   // };
 
-  const handleRemoveFromCart = async (index) => {
+  const handleRemoveFromCart = (index) => {
     onDelete(index);
   };
 
   const handleSendOrder = async () => {
-    const items = orderArray.map((item) => {
+    const items = orderItems.map((item) => {
       return {
         id: item.itemId,
         quantity: item.quantity,
@@ -82,8 +81,8 @@ const OrderDrawer = (orderItems, onDelete) => {
         My Order
       </Typography>
       <List>
-        {orderArray && orderArray.length > 0
-          ? orderArray.map((item, index) => (
+        {orderItems && orderItems.length > 0
+          ? orderItems.map((item, index) => (
               <>
                 {index !== 0 ? <Divider /> : null}
                 <ListItem key={item}>

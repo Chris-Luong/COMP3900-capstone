@@ -56,7 +56,7 @@ export const sendOrder = async (body) => {
   try {
     const res = await sendRequest("/orders/create", "POST", body);
     console.log(res);
-    alert("order id is " + res.orderId);
+    alert("SUCCESS: order id is " + res.orderId);
   } catch (error) {
     alert(error);
     console.log(error);
