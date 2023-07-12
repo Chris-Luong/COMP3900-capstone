@@ -1,13 +1,19 @@
 const db = require("../db/db");
-const { getMenuItemsByAccount, getMenuItemsByOrder, createOrder, addMenuItemsToOrder } = require("../db/queries/order.queries");
-
+const {
+  getMenuItemsByAccount,
+  getMenuItemsByOrder,
+  createOrder,
+  addMenuItemsToOrder,
+  setNewTableId,
+  getOrdersForTableId,
+} = require("../db/queries/order.queries");
 
 const NOT_FOUND = 401;
 const NOT_FOUND_KIND = "not_found";
 const EXISTS = 409;
 const EXISTS_KIND = "exists";
-const CANNOT_CREATE = 400
-const CANNOT_CREATE_KIND = 'cannot_create'
+const CANNOT_CREATE = 400;
+const CANNOT_CREATE_KIND = "cannot_create";
 
 class Order {
   static getOrderByAccountId(accountId, next) {
@@ -60,21 +66,24 @@ class Order {
           {
             status: CANNOT_CREATE,
             message: "Error inserting and creating an order",
-            kind: CANNOT_CREATE_KIND
+            kind: CANNOT_CREATE_KIND,
           },
           null
         );
         return;
       }
       if (results.affectedRows == 0) {
-        next({
-          status: CANNOT_CREATE,
-          message: "Error inserting and creating an order",
-          kind: CANNOT_CREATE_KIND
-        }, null)
+        next(
+          {
+            status: CANNOT_CREATE,
+            message: "Error inserting and creating an order",
+            kind: CANNOT_CREATE_KIND,
+          },
+          null
+        );
       }
       let orderId = results.insertId;
-      items.forEach(item => {
+      items.forEach((item) => {
         values = [orderId, item.id, item.quantity, item.note];
         db.query(addMenuItemsToOrder, values, (err) => {
           if (err) {
@@ -82,7 +91,7 @@ class Order {
               {
                 status: CANNOT_CREATE,
                 message: "Error inserting and creating an order",
-                kind: CANNOT_CREATE_KIND
+                kind: CANNOT_CREATE_KIND,
               },
               null
             );
@@ -101,7 +110,44 @@ class Order {
           }
         });
       });
-      next(null, {orderId: orderId});
+      next(null, { orderId: orderId });
+    });
+  }
+
+  static setNewTableId(next) {
+    db.query(setNewTableId, (err, results) => {
+      if (err) {
+        next(
+          {
+            status: 500,
+            message: "Error creating a new table id",
+            kind: CANNOT_CREATE_KIND,
+          },
+          null
+        );
+        return;
+      }
+      let result = JSON.parse(JSON.stringify({ tableId: results.insertId }));
+      next(null, result);
+    });
+  }
+
+  static getOrdersForTableId(tableId, next) {
+    console.log(tableId);
+    db.query(getOrdersForTableId, tableId, (err, results) => {
+      if (err) {
+        next(
+          {
+            status: 500,
+            message: "Error retrieving orders",
+            kind: CANNOT_CREATE_KIND,
+          },
+          null
+        );
+        return;
+      }
+      let result = JSON.parse(JSON.stringify(results));
+      next(null, result);
     });
   }
 }

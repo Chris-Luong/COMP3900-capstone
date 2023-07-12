@@ -1,4 +1,4 @@
-const { Order, NOT_FOUND, CANNOT_CREATE} = require('../models/order.model');
+const { Order, NOT_FOUND, CANNOT_CREATE } = require("../models/order.model");
 
 /**
  * The callback to return the error or result of this function
@@ -26,7 +26,7 @@ const { Order, NOT_FOUND, CANNOT_CREATE} = require('../models/order.model');
  * Getting all the menu items from a given account id.
  * @param {int}           accountId        The id of the account
  * @param {callback}      cb               Callback function
- * 
+ *
  * @returns {null}
  */
 viewOrders = (req, res) => {
@@ -38,7 +38,7 @@ viewOrders = (req, res) => {
       if (!result) {
         return res.status(NOT_FOUND).json({ message: "Order Not Found" });
       }
-      return res.status(200).json(result); 
+      return res.status(200).json(result);
     });
   } else {
     Order.getOrderByOrderId(req.query.orderId, (err, result) => {
@@ -48,7 +48,7 @@ viewOrders = (req, res) => {
       if (!result) {
         return res.status(NOT_FOUND).json({ message: "Order Not Found" });
       }
-      return res.status(200).json(result); 
+      return res.status(200).json(result);
     });
   }
 };
@@ -58,26 +58,74 @@ viewOrders = (req, res) => {
  * @callback callback
  * @param {object}        error            The error if encountered, null otherwise
  * @param {object}        result           The result if successful, null otherwise
-*/
+ */
 /**
  * This createOrder function is for creating a new order.
  * This should typically be called when the customer starts to order.
  * @param {int}           tableId          The id of the table
- * 
+ *
  * @returns {orderId: orderId}
  */
 createOrder = (req, res) => {
-    const { accountId, tableId, items } = req.body;
-    Order.createOrder(accountId, tableId, items, (err, result) => {
-        if (err) {
-            return res.status(err.status).json({ message: err.message });
-        }
-        if (!result) {
-            return res.status(NOT_FOUND).json({ message: "Cannot Create Order" });
-        }
-        return res.status(200).json(result);
-    })
+  const { accountId, tableId, items } = req.body;
+  Order.createOrder(accountId, tableId, items, (err, result) => {
+    if (err) {
+      return res.status(err.status).json({ message: err.message });
+    }
+    if (!result) {
+      return res.status(NOT_FOUND).json({ message: "Cannot Create Order" });
+    }
+    return res.status(200).json(result);
+  });
+};
 
-}
+/**
+ * The callback to return the error or result of this function
+ * @callback callback
+ * @param {object}        error            The error if encountered, null otherwise
+ * @param {object}        result           The result if successful, null otherwise
+ */
+/**
+ * This setNewTable function is for creating a new table.
+ * This should typically be called when the customer checks in.
+ *
+ * @returns {tableId: tableId}
+ */
+setNewTable = (req, res) => {
+  Order.setNewTableId((err, result) => {
+    if (err) {
+      return res.status(err.status).json({ message: err.message });
+    }
+    if (!result) {
+      return res.status(NOT_FOUND).json({ message: "Cannot Create Table" });
+    }
+    return res.status(200).json(result);
+  });
+};
 
-module.exports = { viewOrders, createOrder };
+/**
+ * The callback to return the error or result of this function
+ * @callback callback
+ * @param {object}        error            The error if encountered, null otherwise
+ * @param {object}        result           The result if successful, null otherwise
+ */
+/**
+ * Returns all orders associated with a table ID
+ *  * @param {int}           tableId          The id of the table
+ *
+ * @returns {tableId: tableId}
+ */
+getOrdersForTableId = (req, res) => {
+  const tableId = req.params["tableid"];
+  Order.getOrdersForTableId(tableId, (err, result) => {
+    if (err) {
+      return res.status(err.status).json({ message: "oop" });
+    }
+    if (!result) {
+      return res.status(NOT_FOUND).json({ message: "Cannot Retrieve Orders" });
+    }
+    return res.status(200).json(result);
+  });
+};
+
+module.exports = { viewOrders, createOrder, setNewTable, getOrdersForTableId };

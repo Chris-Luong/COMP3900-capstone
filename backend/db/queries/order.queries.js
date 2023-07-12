@@ -28,7 +28,20 @@ const createOrderWithAccountId = `
   VALUES (?, ?)
 `;
 
+const setNewTableId = `
+  INSERT INTO tables VALUES (id);
+`;
+
+const getOrdersForTableId = `
+  SELECT * FROM orders WHERE tableId = ?
+`;
+
 
 module.exports = {
-  getMenuItemsByAccount, getMenuItemsByOrder, createOrder, addMenuItemsToOrder
+  getMenuItemsByAccount,
+  getMenuItemsByOrder,
+  createOrder,
+  addMenuItemsToOrder,
+  setNewTableId,
+  getOrdersForTableId,
 };

@@ -10,7 +10,7 @@ const {
   categoriesFromId,
 } = require("../controller/menu");
 const categories = require("../controller/categories");
-const { viewOrders, createOrder } = require("../controller/order");
+const { viewOrders, createOrder, setNewTable, getOrdersForTableId } = require("../controller/order");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 
@@ -55,4 +55,6 @@ router.get("/categories", categories);
 router.get("/categories/:itemid", categoriesFromId);
 router.get('/orders', viewOrders);
 router.post('/orders/create', createOrder);
+router.post('/tables/create', setNewTable);
+router.get("/orders/tables/:tableid", getOrdersForTableId);
 module.exports = router;
