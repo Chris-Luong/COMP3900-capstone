@@ -1,5 +1,6 @@
 import { Fragment, useState } from "react";
-import { Button } from "@mui/material";
+import { Avatar, Button, ListItemAvatar, Typography } from "@mui/material";
+import { sendOrder } from "../Helper";
 
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -9,10 +10,9 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
+// NOTE: find the differnce betwwen passing in arges like this and ({ orderItems, onDelete })
 const OrderDrawer = (orderItems, onDelete) => {
   const [state, setState] = useState({
     right: false,
@@ -28,9 +28,11 @@ const OrderDrawer = (orderItems, onDelete) => {
 
     setState({ ...state, [anchor]: open });
   };
+  const accountId = 1; // Need to get actual account id
+  const tableId = 1; // Need function to genererate the table id
 
   const orderArray = orderItems.orderItems;
-
+  console.log(orderArray);
   // TODO: useEffect or something to update the orderItems with new orderItems
   // returned from this function
   // useEffect(() => {
@@ -41,6 +43,28 @@ const OrderDrawer = (orderItems, onDelete) => {
   //   deleteItem(index);
   // };
 
+  const handleRemoveFromCart = async (index) => {
+    onDelete(index);
+  };
+
+  const handleSendOrder = async () => {
+    const items = orderArray.map((item) => {
+      return {
+        id: item.itemId,
+        quantity: item.quantity,
+        note: item.note,
+      };
+    });
+    console.log("items are ", items);
+    const body = {
+      accountId: accountId,
+      tableId: tableId,
+      items: items,
+    };
+    console.log("body is ", body);
+    await sendOrder(body);
+  };
+
   // TODO: Get accountId from email of user? Generate int for tableId -> useState increment
   const list = (anchor) => (
     <Box
@@ -49,52 +73,45 @@ const OrderDrawer = (orderItems, onDelete) => {
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
+      <Typography
+        variant='h4'
+        gutterBottom
+        align='center'
+        sx={{ margin: "10px" }}
+      >
+        My Order
+      </Typography>
       <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider sx={{ borderBottomWidth: 5 }} />
-      <List>
-        {orderArray.length
+        {orderArray && orderArray.length > 0
           ? orderArray.map((item, index) => (
               <>
+                {index !== 0 ? <Divider /> : null}
                 <ListItem key={item}>
-                  <ListItemIcon>
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={item.name} />
+                  <ListItemAvatar>
+                    {index % 2 === 0 ? (
+                      <Avatar>R</Avatar>
+                    ) : (
+                      <Avatar variant='square'>S</Avatar>
+                    )}
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={item.name}
+                    secondary={"$" + item.price}
+                  />
                   <DeleteOutlineIcon
                     color='warning'
-                    onClick={() => onDelete(index)}
+                    onClick={() => handleRemoveFromCart(index)}
                   />
                 </ListItem>
                 {/* Could remove if clutters UI */}
-                <Divider />
+                {/* <Divider /> */}
               </>
             ))
           : null}
       </List>
+      <Divider sx={{ borderBottomWidth: 5 }} />
+      {/* TODO: get sum of bill with sum(quantity * price of all items) */}
+      <Button onClick={() => handleSendOrder()}>Submit order</Button>
     </Box>
   );
 

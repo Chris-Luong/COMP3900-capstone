@@ -52,6 +52,17 @@ export const applyFilters = async (
   }
 };
 
+export const sendOrder = async (body) => {
+  try {
+    const res = await sendRequest("/orders/create", "POST", body);
+    console.log(res);
+    alert("order id is " + res.orderId);
+  } catch (error) {
+    alert(error);
+    console.log(error);
+  }
+};
+
 export function fileToDataUrl(file) {
   if (!file) {
     return null;
@@ -79,7 +90,7 @@ export const addItem = async ({
   formData.append("name", name);
   formData.append("description", description);
   formData.append("ingredients", ingredients);
-  categories.forEach(c => formData.append("categories", c));
+  categories.forEach((c) => formData.append("categories", c));
   formData.append("price", price);
 
   return new Promise((resolve, reject) => {

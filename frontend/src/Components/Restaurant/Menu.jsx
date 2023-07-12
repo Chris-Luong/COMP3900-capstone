@@ -114,7 +114,7 @@ const Menu = () => {
       {loading && <CircularProgress />}
       {!loading && (
         <>
-          <Button variant="contained" onClick={toggleFilter}>
+          <Button variant='contained' onClick={toggleFilter}>
             Filter
           </Button>
           <Grid container>
@@ -126,7 +126,6 @@ const Menu = () => {
                 description={item.description}
                 price={item.price}
                 thumbnail={item.thumbnail}
-                orderItems={orderItems}
                 onUpdateOrderItems={handleUpdateOrderItems}
               />
             ))}
