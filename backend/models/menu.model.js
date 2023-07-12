@@ -1,6 +1,9 @@
 const db = require("../db/db");
 const { getAllMenuItems,
-        getCategories, 
+        getCategories,
+        insertCategory,
+        deleteCategory,
+        deleteCategoryMenuItems,
         getCategoryNamesFromItemId,
         filterCategory, 
         searchMenuItemsAND, 
@@ -249,6 +252,52 @@ class Menu {
 
       let result = JSON.parse(JSON.stringify(results));
       return next(null, result);
+    });
+  }
+
+  static addCategory(name, cb) {
+    db.query(insertCategory, name, (err, result) => {
+      if (err) {
+        cb(
+          {
+            status: 500,
+            message: "Failed to add categories",
+            kind: "Internal Server Error",
+          },
+          null
+        );
+      }
+
+      cb(null, result.insertId);
+    });
+  }
+
+  static removeCategory(id, cb) {
+    db.query(deleteCategoryMenuItems, id, (err) => {
+      if (err) {
+        cb(
+          {
+            status: 500,
+            message: "Failed to delete categories",
+            kind: "Internal Server Error",
+          },
+          null
+        );
+      }
+    });
+    db.query(deleteCategory, id, (err) => {
+      if (err) {
+        cb(
+          {
+            status: 500,
+            message: "Failed to delete categories",
+            kind: "Internal Server Error",
+          },
+          null
+        );
+      }
+
+      cb(null, {message: "Successfully deleted item from menu"});
     });
   }
 
