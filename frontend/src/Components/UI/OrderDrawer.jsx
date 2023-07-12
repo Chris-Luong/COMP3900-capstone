@@ -13,12 +13,9 @@ import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
-// NOTE: find the differnce betwwen passing in arges like this and ({ orderItems, onDelete })
 const OrderDrawer = ({ orderItems, onDelete }) => {
   const [state, setState] = useState({
     right: false,
@@ -101,13 +98,8 @@ const OrderDrawer = ({ orderItems, onDelete }) => {
                 >
                   {/* TODO: Replace with thumbnail */}
                   <ListItemAvatar>
-                    {index % 2 === 0 ? (
-                      <Avatar>R</Avatar>
-                    ) : (
-                      <Avatar variant='square'>S</Avatar>
-                    )}
+                    <Avatar variant='square'>Pic</Avatar>
                   </ListItemAvatar>
-                  {/* TODO: put text in vertically justified container */}
                   <Container>
                     <ListItemText
                       primary={item.name}
