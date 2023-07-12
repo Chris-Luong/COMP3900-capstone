@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
-const OrderDrawer = ({ orderItems, onDelete, handleSendOrder }) => {
+const OrderDrawer = ({ orderItems, onDelete, handleSendOrder, tableOrders }) => {
   const checkIn = useContext(RestaurantContext);
   const navigate = useNavigate();
   const [state, setState] = useState({
@@ -104,15 +104,15 @@ const OrderDrawer = ({ orderItems, onDelete, handleSendOrder }) => {
             ))
           : null}
       </List>
-      <Divider sx={{ borderBottomWidth: 3 }} />
+      {/* <Divider sx={{ borderBottomWidth: 3 }} /> */}
       {/* TODO: useState fn to check hasSentOrder - if has sent then
       disable this button and enable the req bill button */}
-      <Container sx={{ mt: "1rem" }}>
+      <Container sx={{ mt: "0.5rem" }}>
         <Typography align="center">Order Total: ${orderSum}</Typography>
         <Button
-          fullWidth
           disabled={orderItems.length === 0}
           onClick={handleSendOrder}
+          fullWidth
         >
           Submit order
         </Button>
@@ -120,14 +120,26 @@ const OrderDrawer = ({ orderItems, onDelete, handleSendOrder }) => {
         {/* TODO: have another total for multiple submitted orders */}
       </Container>
       <Divider sx={{ borderBottomWidth: 3 }} />
-      <List>
-        <ListItem>ID: 1 | status: completed</ListItem>
-        <ListItem>ID: 2 | status: preparing</ListItem>
-        <ListItem>ID: 3 | status: sent to kitchen</ListItem>
-      </List>
+      {tableOrders.length !== 0 ? (
+        <List>
+          {tableOrders.map((order) => (
+            <ListItem key={order.id}>
+              <ListItemText
+                primary={`Order ID: ${order.id}`}
+                secondary={"Completed"}
+              />
+              <ListItemText primary={`$39`} />
+            </ListItem>
+          ))}
+        </List>
+      ) : null}
       <Container sx={{ mt: "0.5rem" }}>
         <Typography align="center">Table Total: $100.00</Typography>
-        <Button fullWidth onClick={handleRequestBill}>
+        <Button
+          disabled={tableOrders.length === 0}
+          onClick={handleRequestBill}
+          fullWidth
+        >
           Request Bill
         </Button>
         {/* TODO: add list of all orders associated with this table */}

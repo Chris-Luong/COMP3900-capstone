@@ -1,6 +1,6 @@
 import { Fragment, useState, useEffect } from "react";
 import { Button, CircularProgress, Grid } from "@mui/material";
-import { getAllMenuItems, getAllCategories, applyFilters, sendOrder } from "../Helper";
+import { getAllMenuItems, getAllCategories, applyFilters, sendOrder, retrieveOrdersWithTableId } from "../Helper";
 import FilterModal from "../UI/FilterModal";
 import MenuItemCard from "../UI/MenuItemCard";
 import OrderDrawer from "../UI/OrderDrawer";
@@ -30,6 +30,7 @@ const sortByValues = {
 
 const Menu = () => {
   const [menuItems, setMenuItems] = useState([]);
+  const [tableOrders, setTableOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
 
@@ -117,8 +118,13 @@ const Menu = () => {
       setCategories(categoriesObject);
       setLoading(false);
     };
+    const getTableOrdersData = async () => {
+      let ordersData = await retrieveOrdersWithTableId(tableId);
+      setTableOrders(ordersData);
+    };
     getMenuData();
-  }, []);
+    getTableOrdersData();
+  }, [tableId]);
 
   const handleUpdateOrderItems = (updatedOrderItems) => {
     setOrderItems(updatedOrderItems);
@@ -176,6 +182,7 @@ const Menu = () => {
             orderItems={orderItems}
             onDelete={handleRemoveOrderItem}
             handleSendOrder={handleSendOrder}
+            tableOrders={tableOrders}
             // deleteItem={handleRemoveOrderItem()}
           />
         </>

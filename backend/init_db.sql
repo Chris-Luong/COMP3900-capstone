@@ -123,16 +123,16 @@ INSERT INTO menuItemsCategories (itemId, categoryId) VALUES
     (10, 3) -- test item - dinner
 ;
 
-INSERT INTO orders (accountId, tableId) VALUES 
-    (1, 1),
-    (2, 2)
-;
+-- INSERT INTO orders (accountId, tableId) VALUES 
+--     (1, 1),
+--     (2, 2)
+-- ;
 
-INSERT INTO orderItems (orderId, itemId, quantity, note) VALUES 
-    (1, 1, 1, "test1"),
-    (1, 2, 1, "test2"),
-    (1, 3, 1, "test3"),
-    (2, 1, 2, "test4"),
-    (2, 2, 2, "test5"),
-    (2, 3, 2, "test6")
-;
+-- INSERT INTO orderItems (orderId, itemId, quantity, note) VALUES 
+--     (1, 1, 1, "test1"),
+--     (1, 2, 1, "test2"),
+--     (1, 3, 1, "test3"),
+--     (2, 1, 2, "test4"),
+--     (2, 2, 2, "test5"),
+--     (2, 3, 2, "test6")
+-- ;

@@ -137,7 +137,6 @@ class Order {
   }
 
   static getOrdersForTableId(tableId, next) {
-    console.log(tableId);
     db.query(getOrdersForTableId, tableId, (err, results) => {
       if (err) {
         next(
