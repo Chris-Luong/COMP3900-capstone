@@ -125,9 +125,9 @@ const OrderDrawer = ({ orderItems, onDelete, handleSendOrder, tableOrders }) => 
             <ListItem key={order.id}>
               <ListItemText
                 primary={`Order ID: ${order.id}`}
-                secondary={"Completed"}
+                secondary={"<status here>"}
               />
-              <ListItemText primary={`$39`} />
+              <ListItemText primary={`$<order total here>`} />
             </ListItem>
           ))}
         </List>

@@ -136,7 +136,7 @@ getOrdersForTableId = (req, res) => {
   const tableId = req.params["tableid"];
   Order.getOrdersForTableId(tableId, (err, result) => {
     if (err) {
-      return res.status(err.status).json({ message: "oop" });
+      return res.status(err.status).json({ message: err.message });
     }
     if (!result) {
       return res.status(NOT_FOUND).json({ message: "Cannot Retrieve Orders" });

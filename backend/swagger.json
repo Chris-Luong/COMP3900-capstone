@@ -1,11 +1,11 @@
-{ 
+{
   "swagger": "2.0",
   "info": {
     "version": "1.0.0",
     "title": "REST API",
     "description": ""
   },
-  "host": "localhost:8800",
+  "host": "localhost:3000",
   "basePath": "/",
   "schemes": [
     "http"
@@ -14,32 +14,7 @@
     "/register": {
       "post": {
         "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "firstName": {
-                  "example": "any"
-                },
-                "lastName": {
-                  "example": "any"
-                },
-                "email": {
-                  "example": "any"
-                },
-                "password": {
-                  "example": "any"
-                },
-                "role": {
-                  "example": 1
-                }
-              }
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "OK"
@@ -77,314 +52,106 @@
     "/menu": {
       "get": {
         "description": "",
-        "parameters": [
-          {
-            "name": "search",
-            "in": "query",
-            "type": "string",
-            "description": "Search term for menu items"
-          },
-          {
-            "name": "category",
-            "in": "query",
-            "type": "string",
-            "description": "Category of menu items"
-          },
-          {
-            "name": "min_price",
-            "in": "query",
-            "type": "number",
-            "format": "float",
-            "description": "Minimum price of menu items"
-          },
-          {
-            "name": "max_price",
-            "in": "query",
-            "type": "number",
-            "format": "float",
-            "description": "Maximum price of menu items"
-          },
-          {
-            "name": "sort_type",
-            "in": "query",
-            "type": "string",
-            "enum": ["price", "name"],
-            "description": "Sorting type for menu items"
-          },
-          {
-            "name": "sort_order",
-            "in": "query",
-            "type": "string",
-            "enum": ["ASC", "DESC"],
-            "description": "Sorting order for menu items"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/menu/edit": {
+      "put": {
+        "description": "",
+        "parameters": [],
+        "responses": {}
       }
     },
     "/menu/add": {
       "post": {
         "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "example": "Hot Apple Pie"
-                },
-                "description": {
-                  "example": "Yummy!"
-                },
-                "ingredients": {
-                  "example": "Apple, Sugar, Flour, Water"
-                },
-                "categories": {
-                  "example": ["Breakfast", "Lunch", "Dinner"]
-                },
-                "price": {
-                  "example": 4.99
-                },
-                "thumb": {
-                  "example": ""
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/menu/edit": {
-      "put": {
-        "description": "Edit a menu item",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "type": "integer",
-            "description": "ID of the menu item"
-          },
-          {
-            "name": "name",
-            "in": "query",
-            "type": "string",
-            "description": "Name of the menu item"
-          },
-          {
-            "name": "description",
-            "in": "query",
-            "type": "string",
-            "description": "Description of the menu item"
-          },
-          {
-            "name": "ingredients",
-            "in": "query",
-            "type": "string",
-            "description": "Ingredients of the menu item"
-          },
-          {
-            "name": "categories",
-            "in": "query",
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi",
-            "description": "Categories of the menu item"
-          },
-          {
-            "name": "price",
-            "in": "query",
-            "type": "int",
-            "description": "Price of the menu item"
-          },
-          {
-            "name": "thumbnail",
-            "in": "query",
-            "type": "string",
-            "description": "Path of the image"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "parameters": [],
+        "responses": {}
       }
     },
     "/menu/remove": {
       "delete": {
         "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/categories": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/categories/{itemid}": {
+      "get": {
+        "description": "",
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "example": 10
-                }
-              }
-            }
+            "name": "itemid",
+            "in": "path",
+            "required": true,
+            "type": "string"
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "responses": {}
       }
     },
     "/categories/add": {
       "post": {
         "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "example": "Dessert"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "parameters": [],
+        "responses": {}
       }
     },
     "/categories/remove": {
       "delete": {
         "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "example": 1
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "parameters": [],
+        "responses": {}
       }
     },
     "/orders": {
       "get": {
         "description": "",
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "query",
-            "type": "integer"
-          },
-          {
-            "name": "orderId",
-            "in": "query",
-            "type": "integer"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "parameters": [],
+        "responses": {}
       }
     },
     "/orders/create": {
       "post": {
         "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "accountId": {
-                  "example": 1
-                },
-                "tableId": {
-                  "example": 1
-                },
-                "items": {
-                  "example": [
-                    {
-                      "id": 1,
-                      "quantity": 1,
-                      "note": "Fresh..."
-                    },
-                    {
-                      "id": 2,
-                      "quantity": 2,
-                      "note": "Tasty..."
-                    },
-                    {
-                      "id": 3,
-                      "quantity": 3,
-                      "note": "Hot..."
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "parameters": [],
+        "responses": {}
       }
     },
     "/orders/delete": {
       "delete": {
         "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/tables/create": {
+      "post": {
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/orders/tables/{tableid}": {
+      "get": {
+        "description": "",
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "orderId": {
-                  "example": "any"
-                }
-              }
-            }
+            "name": "tableid",
+            "in": "path",
+            "required": true,
+            "type": "string"
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "responses": {}
       }
     }
   }
