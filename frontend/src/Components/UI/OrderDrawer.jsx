@@ -63,7 +63,6 @@ const OrderDrawer = ({ orderItems, onDelete, handleSendOrder, tableOrders }) => 
   // TODO: Get accountId from email of user?
   const list = (anchor) => (
     <Box
-      sx={{ width: 300 }}
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
@@ -151,11 +150,20 @@ const OrderDrawer = ({ orderItems, onDelete, handleSendOrder, tableOrders }) => 
   return (
     <div>
       <Fragment key={"right"}>
-        <Button onClick={toggleDrawer("right", true)}>View order</Button>
+        {/* <Button onClick={toggleDrawer("right", true)}>View order</Button> */}
         <Drawer
           anchor={"right"}
           open={state["right"]}
           onClose={toggleDrawer("right", false)}
+          variant="permanent"
+          sx={{
+            width: "400px",
+            flexShrink: 0,
+            "& .MuiDrawer-paper": {
+              width: "400px",
+              boxSizing: "border-box",
+            },
+          }}
         >
           {list("right")}
         </Drawer>
