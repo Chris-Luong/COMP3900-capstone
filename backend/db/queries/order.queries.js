@@ -19,14 +19,14 @@ const getMenuItemsByAccount = `
 `;
 
 const createOrder = `
-  INSERT INTO orders (accountId, tableId)
-  VALUES(?, ?);
+  INSERT INTO orders (accountId, tableId, subtotal)
+  VALUES(?, ?, ?);
 `;
 
-const createOrderWithAccountId = `
-  INSERT INTO orders (tableId, accountId) 
-  VALUES (?, ?)
-`;
+const getItemPrice = `
+  SELECT menuitems.price FROM menuItems
+  WHERE menuitems.id = ?
+`
 
 const deleteOrderById = `
   DELETE FROM orders where id = ?
@@ -51,6 +51,7 @@ module.exports = {
   addMenuItemsToOrder,
   deleteOrderById,
   deleteOrderItemsById,
+  getItemPrice,
   setNewTableId,
   getOrdersForTableId,
 };
