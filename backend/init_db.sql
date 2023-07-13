@@ -42,17 +42,19 @@ CREATE TABLE IF NOT EXISTS orders (
     tableId INT UNSIGNED,
     subtotal DECIMAL(9, 2) NOT NULL,
     orderTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    paid BOOLEAN NOT NULL,
     FOREIGN KEY (accountId) REFERENCES account(accountId)
 );
 
 CREATE TABLE IF NOT EXISTS orderItems (
-  orderId INT UNSIGNED,
-  itemId INT UNSIGNED,
-  quantity INT UNSIGNED NOT NULL,
-  note VARCHAR(255),
-  PRIMARY KEY(itemId, orderId),
-  FOREIGN KEY (orderId) REFERENCES orders(id),
-  FOREIGN KEY (itemId) REFERENCES menuItems(id)
+    id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    orderId INT UNSIGNED,
+    itemId INT UNSIGNED,
+    quantity INT UNSIGNED NOT NULL,
+    note VARCHAR(255),
+    status VARCHAR(255),
+    FOREIGN KEY (orderId) REFERENCES orders(id),
+    FOREIGN KEY (itemId) REFERENCES menuItems(id)
 );
 
 CREATE TABLE IF NOT EXISTS tables (
@@ -124,16 +126,16 @@ INSERT INTO menuItemsCategories (itemId, categoryId) VALUES
     (10, 3) -- test item - dinner
 ;
 
--- INSERT INTO orders (accountId, tableId, subtotal) VALUES 
---     (1, 1, 23.97),
---     (2, 2, 23.97)
+-- INSERT INTO orders (accountId, tableId, subtotal, paid) VALUES 
+--     (1, 1, 23.97, 0),
+--     (2, 2, 23.97, 0)
 -- ;
 
--- INSERT INTO orderItems (orderId, itemId, quantity, note) VALUES 
---     (1, 1, 1, "test1"),
---     (1, 2, 1, "test2"),
---     (1, 3, 1, "test3"),
---     (2, 1, 2, "test4"),
---     (2, 2, 2, "test5"),
---     (2, 3, 2, "test6")
+-- INSERT INTO orderItems (orderId, itemId, quantity, note, status) VALUES 
+--     (1, 1, 1, "test1", "Preparing"),
+--     (1, 2, 1, "test2", "Preparing"),
+--     (1, 3, 1, "test3", "Preparing"),
+--     (2, 1, 2, "test4", "Preparing"),
+--     (2, 2, 2, "test5", "Preparing"),
+--     (2, 3, 2, "test6", "Preparing")
 -- ;

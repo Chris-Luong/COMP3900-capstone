@@ -14,7 +14,32 @@
     "/register": {
       "post": {
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "example": "any"
+                },
+                "lastName": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                },
+                "role": {
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
