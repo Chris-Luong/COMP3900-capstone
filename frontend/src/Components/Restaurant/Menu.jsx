@@ -1,6 +1,12 @@
-import { Fragment, useState, useEffect } from "react";
-import { Button, CircularProgress, Grid } from "@mui/material";
-import { getAllMenuItems, getAllCategories, applyFilters, sendOrder, retrieveOrdersWithTableId } from "../Helper";
+import { Fragment, useState, useEffect, useCallback } from "react";
+import { Button, CircularProgress, Grid, Box } from "@mui/material";
+import {
+  getAllMenuItems,
+  getAllCategories,
+  applyFilters,
+  sendOrder,
+  retrieveOrdersWithTableId,
+} from "../Helper";
 import FilterModal from "../UI/FilterModal";
 import MenuItemCard from "../UI/MenuItemCard";
 import OrderDrawer from "../UI/OrderDrawer";
@@ -93,16 +99,20 @@ const Menu = () => {
       alert("Order shouldn't be empty!");
       return;
     }
-    console.log("items are ", items);
     const body = {
       accountId: accountId,
       tableId: tableId,
       items: items,
     };
-    console.log("body is ", body);
     await sendOrder(body);
     setOrderItems([]);
+    await updateTableOrdersData();
   };
+
+  const updateTableOrdersData = useCallback(async () => {
+    let ordersData = await retrieveOrdersWithTableId(tableId);
+    setTableOrders(ordersData);
+  }, [tableId]);
 
   useEffect(() => {
     setLoading(true);
@@ -118,13 +128,10 @@ const Menu = () => {
       setCategories(categoriesObject);
       setLoading(false);
     };
-    const getTableOrdersData = async () => {
-      let ordersData = await retrieveOrdersWithTableId(tableId);
-      setTableOrders(ordersData);
-    };
+
     getMenuData();
-    getTableOrdersData();
-  }, [tableId]);
+    updateTableOrdersData();
+  }, [updateTableOrdersData, tableId]);
 
   const handleUpdateOrderItems = (updatedOrderItems) => {
     setOrderItems(updatedOrderItems);
@@ -145,39 +152,41 @@ const Menu = () => {
     <>
       {loading && <CircularProgress />}
       {!loading && (
-        <>
-          <Button variant="contained" onClick={toggleFilter}>
-            Filter
-          </Button>
-          <Grid container>
-            {menuItems.map((item) => (
-              <MenuItemCard
-                key={item.id}
-                itemId={item.id}
-                name={item.name}
-                description={item.description}
-                price={item.price}
-                thumbnail={item.thumbnail}
-                onUpdateOrderItems={handleUpdateOrderItems}
+        <Box sx={{ display: "flex" }}>
+          <div>
+            <Button variant="contained" onClick={toggleFilter}>
+              Filter
+            </Button>
+            <Grid container>
+              {menuItems.map((item) => (
+                <MenuItemCard
+                  key={item.id}
+                  itemId={item.id}
+                  name={item.name}
+                  description={item.description}
+                  price={item.price}
+                  thumbnail={item.thumbnail}
+                  onUpdateOrderItems={handleUpdateOrderItems}
+                />
+              ))}
+              <FilterModal
+                showFilter={showFilter}
+                toggleFilter={toggleFilter}
+                searchString={searchString}
+                setSearchString={setSearchString}
+                categories={categories}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+                price={price}
+                setPrice={setPrice}
+                sortByValues={sortByValues}
+                sort={sort}
+                handleSortChange={handleSortChange}
+                clearFilters={clearFilters}
+                onSubmit={handleFilters}
               />
-            ))}
-            <FilterModal
-              showFilter={showFilter}
-              toggleFilter={toggleFilter}
-              searchString={searchString}
-              setSearchString={setSearchString}
-              categories={categories}
-              selectedCategory={selectedCategory}
-              setSelectedCategory={setSelectedCategory}
-              price={price}
-              setPrice={setPrice}
-              sortByValues={sortByValues}
-              sort={sort}
-              handleSortChange={handleSortChange}
-              clearFilters={clearFilters}
-              onSubmit={handleFilters}
-            />
-          </Grid>
+            </Grid>
+          </div>
           <OrderDrawer
             orderItems={orderItems}
             onDelete={handleRemoveOrderItem}
@@ -185,7 +194,7 @@ const Menu = () => {
             tableOrders={tableOrders}
             // deleteItem={handleRemoveOrderItem()}
           />
-        </>
+        </Box>
       )}
     </>
   );
