@@ -5,26 +5,25 @@ const { Order, NOT_FOUND, CANNOT_CREATE } = require("../models/order.model");
  * @callback callback
  * @param {object}        error            The error if encountered, null otherwise
  * @param {object}        result           List of order details and item details
- * @param {result}        [{
-                            accountId: 1,
-                            tableId: 1,
-                            itemId: 1,
-                            quantity: 1,
-                            note: 'burnt please',
-                            orderTime: 2023-07-08T12:46:16.000Z,
-                            id: 1,
-                            name: 'Pancakes',
-                            description: 'Delicious fluffy pancakes served with syrup and butter.',
-                            ingredients: null,
-                            price: 7.99,
-                            thumbnail: null,
-                            createdAt: 2023-07-08T12:46:15.000Z,
-                            updatedAt: 2023-07-08T12:46:15.000Z
-                          }]
+ * @param {result}        [
+                            {
+                              "orderId": 1,
+                              "paid": 0,
+                              "itemName": "Pancakes",
+                              "itemId": 1,
+                              "quantity": 1,
+                              "note": "Fresh...",
+                              "price": 7.99,
+                              "status": "Preparing",
+                              "thumbnail": "..."
+                            },
+                            { ... }
+                          ]
 */
 /**
  * Getting all the menu items from a given account id.
  * @param {int}           accountId        The id of the account
+ * @param {int}           orderId          The id of the order
  * @param {callback}      cb               Callback function
  *
  * @returns {null}
