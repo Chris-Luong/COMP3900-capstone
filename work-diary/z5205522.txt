@@ -44,8 +44,15 @@ items from the database into a JSON object. On the frontend side, I worked on Me
 ============================================================================================================================================================================================================
 Week6:
 
-Talked with Rodney about how to design the menu screen and how we could 
-incorporate filters and the order screen.
-Added a simple filter modal that pops up on a button click. Currently does not
-filter anything (will send a backend request that Rodney is working on).
+Talked with Rodney about how to design the menu screen and how we could incorporate filters and the order screen.
+Added a filter modal that pops up on a button click with the required functionality and marked the menu search filter and sort epic as completed.
+I started on the Manager Interactions epic by working on the UI and completing adding and deleting items. I worked with Rodney to design how we should design editing functionality.
+I created endpoints to retrieve categories to do with a menu item and completed the edit Jira ticket. I also fixed some issues to do with filtering. 
+MN3900-12, MN3900-13, MN3900-51, MN3900-29, MN3900-33, MN3900-35, MN3900-40 completed
+============================================================================================================================================================================================================
+Week7:
+
+I fixed issues to do with editing item categories with Rodney and added form validation. I worked on thumbnail support for menu items on both the frontend and backend from the menu ordering epic.
+I reworked the order drawer UI to show order history and fixed some bugs.
+For Sprint 3, I was tasked with the kitchen staff order fulfilment tickets and completing the rest of the manager interactions epic. 
 ============================================================================================================================================================================================================
