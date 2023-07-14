@@ -57,7 +57,19 @@ const getPendingOrders = `
   order by O.id
 `
 
+const getOrdersForTableId = `
+  SELECT * FROM orders WHERE tableId = ?
+`;
 
 module.exports = {
-  getMenuItemsByAccount, getMenuItemsByOrder, createOrder, addMenuItemsToOrder, getPendingOrders
+  getMenuItemsByAccount,
+  getMenuItemsByOrder,
+  createOrder,
+  addMenuItemsToOrder,
+  deleteOrderById,
+  deleteOrderItemsById,
+  getItemPrice,
+  setNewTableId,
+  getOrdersForTableId,
+  getPendingOrders
 };
