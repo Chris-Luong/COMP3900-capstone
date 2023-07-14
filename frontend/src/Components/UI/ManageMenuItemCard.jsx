@@ -104,7 +104,6 @@ const ManageMenuItemCard = ({
               className="highlight-card-on-hover"
             >
               <CardHeader title={name} />
-              {/* TODO: default images */}
               <CardMedia
                 component="img"
                 sx={{ width: "300px", maxHeight: "200px" }}

@@ -6,8 +6,10 @@ const {
   addMenuItemsToOrder,
   deleteOrderById,
   deleteOrderItemsById,
+  getItemPrice,
   setNewTableId,
   getOrdersForTableId,
+  getOrdersByStatus,
 } = require("../db/queries/order.queries");
 
 const NOT_FOUND = 401;
@@ -23,8 +25,6 @@ class Order {
   static getOrderByAccountId(accountId, next) {
     db.query(getMenuItemsByAccount, accountId, (err, results) => {
       if (err) {
-        console.log("MySQL Error: " + err);
-        console.log("MySQL Result:", results);
         next(
           {
             status: EXISTS,
@@ -43,78 +43,107 @@ class Order {
   static getOrderByOrderId(orderId, next) {
     db.query(getMenuItemsByOrder, orderId, (err, results) => {
       if (err) {
-        console.log("MySQL Error: " + err);
-        console.log("MySQL Result:", results);
         next(
           {
             status: EXISTS,
-            message: "Error retrieving menu items by the given account id",
+            message: "Error retrieving menu items by the given order id",
             kind: EXISTS_KIND,
           },
           null
         );
         return;
       }
-      console.log(results);
       let result = JSON.parse(JSON.stringify(results));
       next(null, result);
     });
   }
 
   static createOrder(accountId, tableId, items, next) {
-    let values = [accountId, tableId];
-    db.query(createOrder, values, (err, results) => {
-      if (err) {
-        next(
-          {
-            status: CANNOT_CREATE,
-            message: "Error inserting and creating an order",
-            kind: CANNOT_CREATE_KIND,
-          },
-          null
-        );
-        return;
-      }
-      if (results.affectedRows == 0) {
-        next(
-          {
-            status: CANNOT_CREATE,
-            message: "Error inserting and creating an order",
-            kind: CANNOT_CREATE_KIND,
-          },
-          null
-        );
-      }
+    let subtotal = 0;
+    let itemCount = 0;
 
-      let orderId = results.insertId;
-      items.forEach((item) => {
-        values = [orderId, item.id, item.quantity, item.note];
-        db.query(addMenuItemsToOrder, values, (err) => {
-          if (err) {
-            next(
-              {
-                status: CANNOT_CREATE,
-                message: "Error inserting and creating an order",
-                kind: CANNOT_CREATE_KIND,
-              },
-              null
-            );
-            return;
-          }
-          if (!results.affectedRows) {
-            next(
-              {
-                status: CANNOT_CREATE,
-                message: "Error inserting and creating order items",
-                kind: CANNOT_CREATE_KIND,
-              },
-              null
-            );
-            return;
-          }
+    const processItem = (item) => {
+      db.query(getItemPrice, item.id, (err, result) => {
+        if (err) {
+          next(
+            {
+              status: CANNOT_CREATE,
+              message: "Error inserting and creating an order",
+              kind: CANNOT_CREATE_KIND,
+            },
+            null
+          );
+          return;
+        }
+        subtotal += result[0].price;
+        itemCount++;
+        if (itemCount === items.length) {
+          processOrder();
+        }
+      });
+    };
+
+    const processOrder = () => {
+      let values = [accountId, tableId, subtotal];
+      db.query(createOrder, values, (err, results) => {
+        if (err) {
+          next(
+            {
+              status: CANNOT_CREATE,
+              message: "Error inserting and creating an order",
+              kind: CANNOT_CREATE_KIND,
+            },
+            null
+          );
+          return;
+        }
+        if (results.affectedRows == 0) {
+          next(
+            {
+              status: CANNOT_CREATE,
+              message: "Error inserting and creating an order",
+              kind: CANNOT_CREATE_KIND,
+            },
+            null
+          );
+          return;
+        }
+
+        let orderId = results.insertId;
+        let processedItemCount = 0;
+
+        const processMenuItem = (item) => {
+          values = [orderId, item.id, item.quantity, item.note];
+          db.query(addMenuItemsToOrder, values, (err) => {
+            if (err) {
+              next(
+                {
+                  status: CANNOT_CREATE,
+                  message: "Error inserting and creating an order",
+                  kind: CANNOT_CREATE_KIND,
+                },
+                null
+              );
+              return;
+            }
+            processedItemCount++;
+            if (processedItemCount === items.length) {
+              next(null, {
+                orderId: orderId,
+                subtotal: subtotal,
+              });
+            }
+          });
+        };
+
+        items.forEach((item) => {
+          processMenuItem(item);
         });
       });
-      next(null, { orderId: orderId });
+    };
+
+    items.forEach((item) => {
+      processItem(item);
     });
   }
 
@@ -137,14 +166,13 @@ class Order {
   }
 
   static getOrdersForTableId(tableId, next) {
-    console.log(tableId);
     db.query(getOrdersForTableId, tableId, (err, results) => {
       if (err) {
         next(
           {
             status: 500,
             message: "Error retrieving orders",
-            kind: CANNOT_CREATE_KIND,
+            kind: EXISTS_KIND,
           },
           null
         );
@@ -210,6 +238,41 @@ class Order {
       next(null, { deleted: results.affectedRows });
     });
   }
-}
 
+  static getOrdersByStatus(status, next) {
+    db.query(getOrdersByStatus, status, (err, results) => {
+      if (err) {
+        console.log("MySQL Error: " + err);
+        console.log("MySQL Result:", results);
+        next(
+          {
+            status: EXISTS,
+            message: "Error retrieving order menu items",
+            kind: EXISTS_KIND,
+          },
+          null
+        );
+        return;
+      }
+
+      const orders = {};
+      results.forEach((item) => {
+        if (!orders[item.orderId]) {
+          const time = new Date(item.orderTime).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+          orders[item.orderId] = {};
+          orders[item.orderId].tableId = item.tableId;
+          orders[item.orderId].orderTime = time;
+          orders[item.orderId].items = [];
+        }
+        orders[item.orderId].items.push(item);
+      });
+      console.log(orders);
+      let result = JSON.parse(JSON.stringify(orders));
+      next(null, result);
+    });
+  }
+} 
 module.exports = { Order, NOT_FOUND, EXISTS, CANNOT_CREATE };

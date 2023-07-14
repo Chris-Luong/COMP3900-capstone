@@ -14,7 +14,12 @@ import {
 } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
-const OrderDrawer = ({ orderItems, onDelete, handleSendOrder }) => {
+const OrderDrawer = ({
+  orderItems,
+  onDelete,
+  handleSendOrder,
+  tableOrders,
+}) => {
   const checkIn = useContext(RestaurantContext);
   const navigate = useNavigate();
   const [state, setState] = useState({
@@ -63,7 +68,6 @@ const OrderDrawer = ({ orderItems, onDelete, handleSendOrder }) => {
   // TODO: Get accountId from email of user?
   const list = (anchor) => (
     <Box
-      sx={{ width: 300 }}
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
@@ -104,34 +108,51 @@ const OrderDrawer = ({ orderItems, onDelete, handleSendOrder }) => {
             ))
           : null}
       </List>
-      <Divider sx={{ borderBottomWidth: 3 }} />
+      {/* <Divider sx={{ borderBottomWidth: 3 }} /> */}
       {/* TODO: useState fn to check hasSentOrder - if has sent then
       disable this button and enable the req bill button */}
-      <Container sx={{ mt: "1rem" }}>
+      <Container sx={{ mt: "0.5rem" }}>
         <Typography align="center">Order Total: ${orderSum}</Typography>
         <Button
-          fullWidth
           disabled={orderItems.length === 0}
           onClick={handleSendOrder}
+          fullWidth
         >
           Submit order
         </Button>
-        {/* TODO: add list of all orders associated with this table */}
-        {/* TODO: have another total for multiple submitted orders */}
       </Container>
       <Divider sx={{ borderBottomWidth: 3 }} />
-      <List>
-        <ListItem>ID: 1 | status: completed</ListItem>
-        <ListItem>ID: 2 | status: preparing</ListItem>
-        <ListItem>ID: 3 | status: sent to kitchen</ListItem>
-      </List>
+      {tableOrders.length !== 0 ? (
+        <List>
+          {tableOrders.map((order) => (
+            <>
+              <ListItem key={order.id}>
+                <ListItemText primary={`Order ID: ${order.id}`} />
+                <ListItemText primary={`$${order.subtotal}`} />
+              </ListItem>
+              {order.menuItems && order.menuItems.length !== 0 && (
+                <List sx={{ padding: "0 28px" }}>
+                  {order.menuItems.map((item) => (
+                    <ListItemText
+                      primary={item.itemName}
+                      secondary={item.status}
+                    />
+                  ))}
+                </List>
+              )}
+            </>
+          ))}
+        </List>
+      ) : null}
       <Container sx={{ mt: "0.5rem" }}>
         <Typography align="center">Table Total: $100.00</Typography>
-        <Button fullWidth onClick={handleRequestBill}>
+        <Button
+          disabled={tableOrders.length === 0}
+          onClick={handleRequestBill}
+          fullWidth
+        >
           Request Bill
         </Button>
-        {/* TODO: add list of all orders associated with this table */}
-        {/* TODO: have another total for multiple submitted orders */}
       </Container>
     </Box>
   );
@@ -139,11 +160,19 @@ const OrderDrawer = ({ orderItems, onDelete, handleSendOrder }) => {
   return (
     <div>
       <Fragment key={"right"}>
-        <Button onClick={toggleDrawer("right", true)}>View order</Button>
         <Drawer
           anchor={"right"}
           open={state["right"]}
           onClose={toggleDrawer("right", false)}
+          variant="permanent"
+          sx={{
+            width: "400px",
+            flexShrink: 0,
+            "& .MuiDrawer-paper": {
+              width: "400px",
+              boxSizing: "border-box",
+            },
+          }}
         >
           {list("right")}
         </Drawer>

@@ -24,7 +24,6 @@ for (let query of INIT_DB) {
       console.error("Error initialising database:", err);
       return;
     }
-    console.log(query);
   });
 }
 console.log("Database initialised.");

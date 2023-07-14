@@ -12,7 +12,14 @@ const {
   categoriesFromId,
   getCategories,
 } = require("../controller/menu");
-const { viewOrders, createOrder, deleteOrder, setNewTable, getOrdersForTableId } = require("../controller/order");
+const {
+  viewOrders,
+  createOrder,
+  deleteOrder,
+  setNewTable,
+  getOrdersForTableId,
+  viewOrdersByStatus,
+} = require("../controller/order");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 
@@ -62,4 +69,5 @@ router.post('/orders/create', createOrder);
 router.delete('/orders/delete', deleteOrder);
 router.post('/tables/create', setNewTable);
 router.get("/orders/tables/:tableid", getOrdersForTableId);
+router.get("/orders/pending/:status", viewOrdersByStatus);
 module.exports = router;

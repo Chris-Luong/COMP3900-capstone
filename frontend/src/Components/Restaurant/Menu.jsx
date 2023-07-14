@@ -1,10 +1,12 @@
-import { Fragment, useState, useEffect } from "react";
-import { Button, CircularProgress, Grid } from "@mui/material";
+import { Fragment, useState, useEffect, useCallback } from "react";
+import { Button, CircularProgress, Grid, Box } from "@mui/material";
 import {
   getAllMenuItems,
   getAllCategories,
   applyFilters,
   sendOrder,
+  retrieveOrdersWithTableId,
+  retrieveOrderItems,
 } from "../Helper";
 import FilterModal from "../UI/FilterModal";
 import MenuItemCard from "../UI/MenuItemCard";
@@ -35,6 +37,7 @@ const sortByValues = {
 
 const Menu = () => {
   const [menuItems, setMenuItems] = useState([]);
+  const [tableOrders, setTableOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
 
@@ -44,9 +47,9 @@ const Menu = () => {
   const [price, setPrice] = useState([0, 100]);
   const [sort, setSort] = useState(1);
   const [orderItems, setOrderItems] = useState([]);
+  const [tableId, setTableId] = useState();
 
   const accountId = 1; // Need to get actual account id
-  const tableId = localStorage.getItem("tableId");
 
   const toggleFilter = () => {
     setShowFilter(!showFilter);
@@ -97,19 +100,29 @@ const Menu = () => {
       alert("Order shouldn't be empty!");
       return;
     }
-    console.log("items are ", items);
     const body = {
       accountId: accountId,
       tableId: tableId,
       items: items,
     };
-    console.log("body is ", body);
     await sendOrder(body);
     setOrderItems([]);
+    await updateTableOrdersData();
   };
+
+  const updateTableOrdersData = useCallback(async () => {
+    let ordersData = await retrieveOrdersWithTableId(tableId);
+    ordersData.forEach(async (order) => {
+      const orderedItems = await retrieveOrderItems(order.id);
+      order.menuItems = orderedItems;
+    });
+    console.log(ordersData);
+    setTableOrders(ordersData);
+  }, [tableId]);
 
   useEffect(() => {
     setLoading(true);
+    setTableId(localStorage.getItem("tableId"));
     const getMenuData = async () => {
       let itemsData = await getAllMenuItems();
       setMenuItems(itemsData);
@@ -122,8 +135,10 @@ const Menu = () => {
       setCategories(categoriesObject);
       setLoading(false);
     };
+
     getMenuData();
-  }, []);
+    updateTableOrdersData();
+  }, [updateTableOrdersData, tableId]);
 
   const handleUpdateOrderItems = (updatedOrderItems) => {
     setOrderItems(updatedOrderItems);
@@ -144,45 +159,49 @@ const Menu = () => {
     <>
       {loading && <CircularProgress />}
       {!loading && (
-        <>
-          <Button variant='contained' onClick={toggleFilter}>
-            Filter
-          </Button>
-          <Grid container>
-            {menuItems.map((item) => (
-              <MenuItemCard
-                key={item.id}
-                itemId={item.id}
-                name={item.name}
-                description={item.description}
-                price={item.price}
-                thumbnail={item.thumbnail}
-                onUpdateOrderItems={handleUpdateOrderItems}
+        <Box sx={{ display: "flex" }}>
+          <div>
+            <Button variant='contained' onClick={toggleFilter}>
+              Filter
+            </Button>
+            <Grid container>
+              {menuItems.map((item) => (
+                <MenuItemCard
+                  key={item.id}
+                  itemId={item.id}
+                  name={item.name}
+                  description={item.description}
+                  price={item.price}
+                  thumbnail={item.thumbnail}
+                  onUpdateOrderItems={handleUpdateOrderItems}
+                />
+              ))}
+              <FilterModal
+                showFilter={showFilter}
+                toggleFilter={toggleFilter}
+                searchString={searchString}
+                setSearchString={setSearchString}
+                categories={categories}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+                price={price}
+                setPrice={setPrice}
+                sortByValues={sortByValues}
+                sort={sort}
+                handleSortChange={handleSortChange}
+                clearFilters={clearFilters}
+                onSubmit={handleFilters}
               />
-            ))}
-            <FilterModal
-              showFilter={showFilter}
-              toggleFilter={toggleFilter}
-              searchString={searchString}
-              setSearchString={setSearchString}
-              categories={categories}
-              selectedCategory={selectedCategory}
-              setSelectedCategory={setSelectedCategory}
-              price={price}
-              setPrice={setPrice}
-              sortByValues={sortByValues}
-              sort={sort}
-              handleSortChange={handleSortChange}
-              clearFilters={clearFilters}
-              onSubmit={handleFilters}
-            />
-          </Grid>
+            </Grid>
+          </div>
           <OrderDrawer
             orderItems={orderItems}
             onDelete={handleRemoveOrderItem}
             handleSendOrder={handleSendOrder}
+            tableOrders={tableOrders}
+            // deleteItem={handleRemoveOrderItem()}
           />
-        </>
+        </Box>
       )}
     </>
   );
