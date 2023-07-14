@@ -54,3 +54,4 @@ backend inserts orderItems and created an orderId.
 
 Week 7:
 Wednesday: Finished the backend implementations for removing the orders by orderId.
+Friday: Finished and tested the implementations for viewing all pending orders and refactored the orderItems table
