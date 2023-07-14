@@ -53,7 +53,7 @@ const getPendingOrders = `
   orders O 
     join orderItems OI on OI.orderId = O.id 
     join menuItems MI on MI.id = OI.itemId 
-  WHERE OI.status != "Completed"
+  WHERE OI.status != "Served"
   order by O.orderTime, O.id
 `
 
