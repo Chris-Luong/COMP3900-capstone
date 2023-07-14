@@ -83,6 +83,18 @@ export const retrieveOrderItems = async (orderId) => {
   }
 };
 
+export const retrieveOrdersByStatus = async () => {
+  const role = localStorage.getItem("role");
+  const status = (role === "Kitchen Staff") ? "Preparing" : "Ready To Serve";
+  try {
+    const res = await sendRequest(`/orders/pending/${status}`, "GET");
+    return res;
+  } catch (err) {
+    alert(err);
+    console.log(err);
+  }
+};
+
 export function fileToDataUrl(file) {
   if (!file) {
     return null;
