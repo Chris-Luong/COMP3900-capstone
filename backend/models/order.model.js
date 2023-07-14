@@ -258,8 +258,13 @@ class Order {
       const orders = {};
       results.forEach((item) => {
         if (!orders[item.orderId]) {
+          const time = new Date(item.orderTime).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
           orders[item.orderId] = {};
           orders[item.orderId].tableId = item.tableId;
+          orders[item.orderId].orderTime = time;
           orders[item.orderId].items = [];
         }
         orders[item.orderId].items.push(item);
