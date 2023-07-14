@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS orderItems (
     itemId INT UNSIGNED,
     quantity INT UNSIGNED NOT NULL,
     note VARCHAR(255),
-    status ENUM("Preparing", "Ready", "Completed"),
+    status ENUM("Preparing", "Ready To Serve", "Served"),
     FOREIGN KEY (orderId) REFERENCES orders(id),
     FOREIGN KEY (itemId) REFERENCES menuItems(id)
 );
@@ -138,5 +138,5 @@ INSERT INTO orderItems (orderId, itemId, quantity, note, status) VALUES
      (2, 1, 2, "test4", "Preparing"),
      (2, 2, 2, "test5", "Preparing"),
      (2, 3, 2, "test6", "Preparing"),
-     (2, 5, 3, "test7", "Completed")
+     (2, 5, 3, "test7", "Served")
 ;
