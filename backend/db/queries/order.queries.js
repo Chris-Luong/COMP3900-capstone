@@ -49,12 +49,12 @@ const setNewTableId = `
 `;
 
 const getPendingOrders = `
-  SELECT O.id as orderId, MI.name as itemName, MI.id as itemId, OI.quantity as quantity, OI.status as status, OI.note as note FROM 
+  SELECT O.id as orderId, O.orderTime as orderTime, MI.name as itemName, MI.id as itemId, OI.quantity as quantity, OI.status as status, OI.note as note FROM 
   orders O 
     join orderItems OI on OI.orderId = O.id 
     join menuItems MI on MI.id = OI.itemId 
   WHERE OI.status != "Completed"
-  order by O.id
+  order by O.orderTime, O.id
 `
 
 const getOrdersForTableId = `

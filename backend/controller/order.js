@@ -149,7 +149,7 @@ getOrdersForTableId = (req, res) => {
  * This viewPendingOrders function is for kitchen stuff / wait stuff to view all pending orders
  * This should typically be called when opening up the orders interface
  *
- * @returns {List of orderItems that are not completed: {orderId, itemName, itemId, quantity, status, note}}
+ * @returns {List of orderItems that are not completed: {orderId, orderTime, itemName, itemId, quantity, status, note}}
 */
 
 viewPendingOrders = (req, res) => { 
