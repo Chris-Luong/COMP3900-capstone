@@ -120,8 +120,6 @@ const OrderDrawer = ({
         >
           Submit order
         </Button>
-        {/* TODO: add list of all orders associated with this table */}
-        {/* TODO: have another total for multiple submitted orders */}
       </Container>
       <Divider sx={{ borderBottomWidth: 3 }} />
       {tableOrders.length !== 0 ? (
@@ -155,8 +153,6 @@ const OrderDrawer = ({
         >
           Request Bill
         </Button>
-        {/* TODO: add list of all orders associated with this table */}
-        {/* TODO: have another total for multiple submitted orders */}
       </Container>
     </Box>
   );
@@ -164,7 +160,6 @@ const OrderDrawer = ({
   return (
     <div>
       <Fragment key={"right"}>
-        {/* <Button onClick={toggleDrawer("right", true)}>View order</Button> */}
         <Drawer
           anchor={"right"}
           open={state["right"]}
