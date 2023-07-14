@@ -1,4 +1,6 @@
 import * as React from "react";
+import { getOrders } from "../Helper";
+
 import Link from "@mui/material/Link";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -11,6 +13,16 @@ import { Paper, Typography } from "@mui/material";
 function createData(id, date, name, shipTo, paymentMethod, amount) {
   return { id, date, name, shipTo, paymentMethod, amount };
 }
+
+// TODO: Get all orders and arrange according to their orderId
+// Then display batched orders in cards - may need OrderItemCard
+// 3 papers with Pending, Preparing and Completed Orders.
+
+// TODO: Get order everytime orders is updated from menu - cannot use useState?
+// useState worked only because Menu was parent but WaitStaff is parent
+// Need local storage?
+const orders = await getOrders();
+console.log(orders);
 
 const rows = [
   createData(
@@ -62,17 +74,20 @@ function preventDefault(event) {
 const OrderDashboard = () => {
   return (
     <React.Fragment>
-      <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
+      <Paper
+        elevation={6}
+        sx={{ p: 2, display: "flex", flexDirection: "column" }}
+      >
         <Typography component='h2' variant='h6' color='primary' gutterBottom>
-          Recent Orders
+          Pending Orders
         </Typography>
         <Table size='small'>
           <TableHead>
             <TableRow>
-              <TableCell>Date</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Ship To</TableCell>
-              <TableCell>Payment Method</TableCell>
+              <TableCell>Order Time</TableCell>
+              <TableCell>Item</TableCell>
+              <TableCell>Quantity</TableCell>
+              <TableCell>Note</TableCell>
               <TableCell align='right'>Sale Amount</TableCell>
             </TableRow>
           </TableHead>
