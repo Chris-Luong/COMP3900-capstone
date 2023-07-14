@@ -14,7 +14,12 @@ import {
 } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
-const OrderDrawer = ({ orderItems, onDelete, handleSendOrder, tableOrders }) => {
+const OrderDrawer = ({
+  orderItems,
+  onDelete,
+  handleSendOrder,
+  tableOrders,
+}) => {
   const checkIn = useContext(RestaurantContext);
   const navigate = useNavigate();
   const [state, setState] = useState({
@@ -115,20 +120,25 @@ const OrderDrawer = ({ orderItems, onDelete, handleSendOrder, tableOrders }) => 
         >
           Submit order
         </Button>
-        {/* TODO: add list of all orders associated with this table */}
-        {/* TODO: have another total for multiple submitted orders */}
       </Container>
       <Divider sx={{ borderBottomWidth: 3 }} />
       {tableOrders.length !== 0 ? (
         <List>
           {tableOrders.map((order) => (
-            <ListItem key={order.id}>
-              <ListItemText
-                primary={`Order ID: ${order.id}`}
-                secondary={"<status here>"}
-              />
-              <ListItemText primary={`$<order total here>`} />
-            </ListItem>
+            <>
+              <ListItem key={order.id}>
+                <ListItemText primary={`Order ID: ${order.id}`} />
+                <ListItemText primary={`$${order.subtotal}`} />
+              </ListItem>
+              <List sx={{ padding: "0 28px" }}>
+                {order.menuItems.map((item) => (
+                  <ListItemText
+                    primary={item.itemName}
+                    secondary={item.status}
+                  />
+                ))}
+              </List>
+            </>
           ))}
         </List>
       ) : null}
