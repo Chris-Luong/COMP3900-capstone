@@ -45,7 +45,7 @@ class Order {
         next(
           {
             status: EXISTS,
-            message: "Error retrieving menu items by the given account id",
+            message: "Error retrieving menu items by the given order id",
             kind: EXISTS_KIND,
           },
           null
@@ -171,7 +171,7 @@ class Order {
           {
             status: 500,
             message: "Error retrieving orders",
-            kind: CANNOT_CREATE_KIND,
+            kind: EXISTS_KIND,
           },
           null
         );
