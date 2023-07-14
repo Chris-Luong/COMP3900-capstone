@@ -9,7 +9,7 @@ const {
   getItemPrice,
   setNewTableId,
   getOrdersForTableId,
-  getPendingOrders
+  getOrdersByStatus,
 } = require("../db/queries/order.queries");
 
 const NOT_FOUND = 401;
@@ -61,7 +61,7 @@ class Order {
   static createOrder(accountId, tableId, items, next) {
     let subtotal = 0;
     let itemCount = 0;
-  
+
     const processItem = (item) => {
       db.query(getItemPrice, item.id, (err, result) => {
         if (err) {
@@ -82,7 +82,7 @@ class Order {
         }
       });
     };
-  
+
     const processOrder = () => {
       let values = [accountId, tableId, subtotal];
       db.query(createOrder, values, (err, results) => {
@@ -108,10 +108,10 @@ class Order {
           );
           return;
         }
-  
+
         let orderId = results.insertId;
         let processedItemCount = 0;
-  
+
         const processMenuItem = (item) => {
           values = [orderId, item.id, item.quantity, item.note];
           db.query(addMenuItemsToOrder, values, (err) => {
@@ -130,18 +130,18 @@ class Order {
             if (processedItemCount === items.length) {
               next(null, {
                 orderId: orderId,
-                subtotal: subtotal
+                subtotal: subtotal,
               });
             }
           });
         };
-  
+
         items.forEach((item) => {
           processMenuItem(item);
         });
       });
     };
-  
+
     items.forEach((item) => {
       processItem(item);
     });
@@ -239,8 +239,8 @@ class Order {
     });
   }
 
-  static getPendingOrders(next) {
-    db.query(getPendingOrders, (err, results) => {
+  static getOrdersByStatus(status, next) {
+    db.query(getOrdersByStatus, status, (err, results) => {
       if (err) {
         console.log("MySQL Error: " + err);
         console.log("MySQL Result:", results);
@@ -254,8 +254,18 @@ class Order {
         );
         return;
       }
-      console.log(results);
-      let result = JSON.parse(JSON.stringify(results));
+
+      const orders = {};
+      results.forEach((item) => {
+        if (!orders[item.orderId]) {
+          orders[item.orderId] = {};
+          orders[item.orderId].tableId = item.tableId;
+          orders[item.orderId].items = [];
+        }
+        orders[item.orderId].items.push(item);
+      });
+      console.log(orders);
+      let result = JSON.parse(JSON.stringify(orders));
       next(null, result);
     });
   }

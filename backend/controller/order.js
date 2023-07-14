@@ -146,29 +146,32 @@ getOrdersForTableId = (req, res) => {
 };
 
 /**
- * This viewPendingOrders function is for kitchen stuff / wait stuff to view all pending orders
+ * This viewOrdersByStatus function is for kitchen stuff / wait stuff to view all pending orders
  * This should typically be called when opening up the orders interface
+ * 
+ *  * @param {string}           status          status of orders to retrieve
  *
- * @returns {List of orderItems that are not completed: {orderId, orderTime, itemName, itemId, quantity, status, note}}
+ * @returns {List of orderItems with the given status grouped by order id: {orderId, orderTime, itemName, itemId, quantity, status, note}}
 */
 
-viewPendingOrders = (req, res) => { 
-  Order.getPendingOrders((err, result) => {
+viewOrdersByStatus = (req, res) => { 
+  const status = req.params["status"];
+  Order.getOrdersByStatus(status, (err, result) => {
     if (err) {
       return res.status(err.status).json({ message: err.message });
     }
     if (!result) {
       return res.status(NOT_FOUND).json({ message: "Error Retrieving Orders" });
     }
-    return res.status(200).json(result); 
+    return res.status(200).json(result);
   });
 };
 
-module.exports = { 
+module.exports = {
   viewOrders,
   createOrder,
   setNewTable,
   getOrdersForTableId,
   deleteOrder,
-  viewPendingOrders 
+  viewOrdersByStatus,
 };
