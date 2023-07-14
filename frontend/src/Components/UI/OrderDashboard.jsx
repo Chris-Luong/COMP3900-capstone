@@ -81,6 +81,7 @@ const OrderDashboard = () => {
         <Typography component='h2' variant='h6' color='primary' gutterBottom>
           Pending Orders
         </Typography>
+        {/* TODO: Map cards of orders instead? */}
         <Table size='small'>
           <TableHead>
             <TableRow>

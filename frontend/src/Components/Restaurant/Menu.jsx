@@ -1,6 +1,11 @@
 import { Fragment, useState, useEffect } from "react";
 import { Button, CircularProgress, Grid } from "@mui/material";
-import { getAllMenuItems, getAllCategories, applyFilters, sendOrder } from "../Helper";
+import {
+  getAllMenuItems,
+  getAllCategories,
+  applyFilters,
+  sendOrder,
+} from "../Helper";
 import FilterModal from "../UI/FilterModal";
 import MenuItemCard from "../UI/MenuItemCard";
 import OrderDrawer from "../UI/OrderDrawer";
@@ -140,7 +145,7 @@ const Menu = () => {
       {loading && <CircularProgress />}
       {!loading && (
         <>
-          <Button variant="contained" onClick={toggleFilter}>
+          <Button variant='contained' onClick={toggleFilter}>
             Filter
           </Button>
           <Grid container>
@@ -176,7 +181,6 @@ const Menu = () => {
             orderItems={orderItems}
             onDelete={handleRemoveOrderItem}
             handleSendOrder={handleSendOrder}
-            // deleteItem={handleRemoveOrderItem()}
           />
         </>
       )}
