@@ -7,7 +7,18 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { Paper, Typography } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Divider,
+  Grid,
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
+  Typography,
+} from "@mui/material";
 
 // Generate Order Data
 function createData(id, date, name, shipTo, paymentMethod, amount) {
@@ -16,15 +27,15 @@ function createData(id, date, name, shipTo, paymentMethod, amount) {
 
 // TODO: Get all orders and arrange according to their orderId
 // Then display batched orders in cards - may need OrderItemCard
-// 3 papers with Pending, Preparing and Completed Orders.
+// 3 papers with Pending, Preparing and Completed Orders - check discord.
 
 // TODO: Get order everytime orders is updated from menu - cannot use useState?
 // useState worked only because Menu was parent but WaitStaff is parent
 // Need local storage?
-const orders = await getOrders();
-console.log(orders);
+// const orders = await getOrders(); // Use the one for waitstaff
+// console.log(orders);
 
-const rows = [
+const fakeItems1 = [
   createData(
     0,
     "16 Mar, 2019",
@@ -49,8 +60,11 @@ const rows = [
     "MC ⠀•••• 1253",
     100.81
   ),
+];
+
+const fakeItems2 = [
   createData(
-    3,
+    0,
     "16 Mar, 2019",
     "Michael Jackson",
     "Gary, IN",
@@ -58,7 +72,7 @@ const rows = [
     654.39
   ),
   createData(
-    4,
+    1,
     "15 Mar, 2019",
     "Bruce Springsteen",
     "Long Branch, NJ",
@@ -66,6 +80,12 @@ const rows = [
     212.79
   ),
 ];
+const orders = [fakeItems1, fakeItems2];
+
+console.log(orders);
+console.log(
+  orders.map((order, idx) => orders[idx].map((item, idx) => item.name))
+);
 
 function preventDefault(event) {
   event.preventDefault();
@@ -82,7 +102,7 @@ const OrderDashboard = () => {
           Pending Orders
         </Typography>
         {/* TODO: Map cards of orders instead? */}
-        <Table size='small'>
+        {/* <Table size='small'>
           <TableHead>
             <TableRow>
               <TableCell>Order Time</TableCell>
@@ -92,18 +112,68 @@ const OrderDashboard = () => {
               <TableCell align='right'>Sale Amount</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>{row.date}</TableCell>
-                <TableCell>{row.name}</TableCell>
-                <TableCell>{row.shipTo}</TableCell>
-                <TableCell>{row.paymentMethod}</TableCell>
-                <TableCell align='right'>{`$${row.amount}`}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+          <TableBody> */}
+        {/* {fakeItems1.map((item) => (
+          <TableRow key={item.id}>
+            <TableCell>{item.date}</TableCell>
+            <TableCell>{item.name}</TableCell>
+            <TableCell>{item.shipTo}</TableCell>
+            <TableCell>{item.paymentMethod}</TableCell>
+            <TableCell align='right'>{`$${item.amount}`}</TableCell>
+          </TableRow>
+        ))} */}
+        <Grid container spacing={2}>
+          {/* TODO: check format of orders and orderItems from reqs 
+          maybe replace idx with the actual orderId like KitchenStaff
+          */}
+          {orders.map((order, idx) => (
+            <Grid item xs={12} sm={4} md={3} key={idx}>
+              <Card
+                sx={{
+                  borderRadius: "15px",
+                  border: 0.5,
+                  borderWidth: "0.5px",
+                }}
+              >
+                <CardHeader
+                  title={`Order ${idx} Table ${orders[idx].id}`}
+                  subheader={orders[idx][0].id}
+                />
+                <Divider />
+                <CardContent>
+                  <List>
+                    {orders[idx].map((item) => (
+                      <ListItem
+                        key={`${idx}-${item.id}`}
+                        onClick={() => {
+                          console.log("updating status!");
+                        }}
+                        sx={{
+                          "&:hover": {
+                            backgroundColor: "orange",
+                            border: 1,
+                            borderColor: "black",
+                            cursor: "pointer",
+                          },
+                          borderRadius: "15px",
+                          border: 1,
+                          borderColor: "white",
+                        }}
+                      >
+                        <ListItemText
+                          primary={`${item.amount} ${item.name}`}
+                          secondary={item.shipTo}
+                        />
+                      </ListItem>
+                    ))}
+                  </List>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+        {/* </TableBody>
+        </Table> */}
         <Link color='primary' href='#' onClick={preventDefault} sx={{ mt: 3 }}>
           See more orders
         </Link>
