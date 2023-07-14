@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS orderItems (
     itemId INT UNSIGNED,
     quantity INT UNSIGNED NOT NULL,
     note VARCHAR(255),
-    status VARCHAR(255),
+    status ENUM("Preparing", "Ready", "Completed"),
     FOREIGN KEY (orderId) REFERENCES orders(id),
     FOREIGN KEY (itemId) REFERENCES menuItems(id)
 );
@@ -126,16 +126,17 @@ INSERT INTO menuItemsCategories (itemId, categoryId) VALUES
     (10, 3) -- test item - dinner
 ;
 
--- INSERT INTO orders (accountId, tableId, subtotal, paid) VALUES 
---     (1, 1, 23.97, 0),
---     (2, 2, 23.97, 0)
--- ;
+INSERT INTO orders (accountId, tableId, subtotal, paid) VALUES 
+     (1, 1, 23.97, 0),
+     (2, 2, 23.97, 0)
+;
 
--- INSERT INTO orderItems (orderId, itemId, quantity, note, status) VALUES 
---     (1, 1, 1, "test1", "Preparing"),
---     (1, 2, 1, "test2", "Preparing"),
---     (1, 3, 1, "test3", "Preparing"),
---     (2, 1, 2, "test4", "Preparing"),
---     (2, 2, 2, "test5", "Preparing"),
---     (2, 3, 2, "test6", "Preparing")
--- ;
+INSERT INTO orderItems (orderId, itemId, quantity, note, status) VALUES 
+     (1, 1, 1, "test1", "Preparing"),
+     (1, 2, 1, "test2", "Preparing"),
+     (1, 3, 1, "test3", "Preparing"),
+     (2, 1, 2, "test4", "Preparing"),
+     (2, 2, 2, "test5", "Preparing"),
+     (2, 3, 2, "test6", "Preparing"),
+     (2, 5, 3, "test7", "Completed")
+;

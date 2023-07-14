@@ -9,6 +9,7 @@ const {
   getItemPrice,
   setNewTableId,
   getOrdersForTableId,
+  getPendingOrders
 } = require("../db/queries/order.queries");
 
 const NOT_FOUND = 401;
@@ -237,6 +238,26 @@ class Order {
       next(null, { deleted: results.affectedRows });
     });
   }
-}
 
+  static getPendingOrders(next) {
+    db.query(getPendingOrders, (err, results) => {
+      if (err) {
+        console.log("MySQL Error: " + err);
+        console.log("MySQL Result:", results);
+        next(
+          {
+            status: EXISTS,
+            message: "Error retrieving order menu items",
+            kind: EXISTS_KIND,
+          },
+          null
+        );
+        return;
+      }
+      console.log(results);
+      let result = JSON.parse(JSON.stringify(results));
+      next(null, result);
+    });
+  }
+} 
 module.exports = { Order, NOT_FOUND, EXISTS, CANNOT_CREATE };

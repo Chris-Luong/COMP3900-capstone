@@ -6,6 +6,14 @@ const getMenuItemsByOrder = `
   where O.id = ?
 `;
 
+const getMenuDetailsByOrder = `
+  SELECT MI.name as itemName, MI.id as itemId, OI.quantity as quantity, OI.note as note FROM 
+  orders O 
+    join orderItems OI on OI.orderId = O.id 
+    join menuItems MI on MI.id = OI.itemId 
+  where O.id = ?
+`;
+
 const addMenuItemsToOrder = `
     INSERT INTO orderItems(orderId, itemId, quantity, note, status) VALUES(?, ?, ?, ?, "Preparing")
 `;
@@ -40,6 +48,15 @@ const setNewTableId = `
   INSERT INTO tables VALUES (id);
 `;
 
+const getPendingOrders = `
+  SELECT O.id as orderId, MI.name as itemName, MI.id as itemId, OI.quantity as quantity, OI.status as status, OI.note as note FROM 
+  orders O 
+    join orderItems OI on OI.orderId = O.id 
+    join menuItems MI on MI.id = OI.itemId 
+  WHERE OI.status != "Completed"
+  order by O.id
+`
+
 const getOrdersForTableId = `
   SELECT * FROM orders WHERE tableId = ?
 `;
@@ -54,4 +71,5 @@ module.exports = {
   getItemPrice,
   setNewTableId,
   getOrdersForTableId,
+  getPendingOrders
 };
