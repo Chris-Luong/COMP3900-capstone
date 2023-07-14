@@ -48,12 +48,12 @@ const setNewTableId = `
   INSERT INTO tables VALUES (id);
 `;
 
-const getPendingOrders = `
-  SELECT O.id as orderId, O.orderTime as orderTime, MI.name as itemName, MI.id as itemId, OI.quantity as quantity, OI.status as status, OI.note as note FROM 
+const getOrdersByStatus = `
+  SELECT O.id as orderId, O.tableId as tableId, O.orderTime as orderTime, MI.name as itemName, MI.id as itemId, OI.quantity as quantity, OI.status as status, OI.note as note FROM 
   orders O 
     join orderItems OI on OI.orderId = O.id 
     join menuItems MI on MI.id = OI.itemId 
-  WHERE OI.status != "Completed"
+  WHERE OI.status = ?
   order by O.orderTime, O.id
 `
 
@@ -71,5 +71,5 @@ module.exports = {
   getItemPrice,
   setNewTableId,
   getOrdersForTableId,
-  getPendingOrders
+  getOrdersByStatus,
 };
