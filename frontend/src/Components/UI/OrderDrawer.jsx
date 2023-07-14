@@ -120,6 +120,8 @@ const OrderDrawer = ({
         >
           Submit order
         </Button>
+        {/* TODO: add list of all orders associated with this table */}
+        {/* TODO: have another total for multiple submitted orders */}
       </Container>
       <Divider sx={{ borderBottomWidth: 3 }} />
       {tableOrders.length !== 0 ? (
@@ -130,14 +132,16 @@ const OrderDrawer = ({
                 <ListItemText primary={`Order ID: ${order.id}`} />
                 <ListItemText primary={`$${order.subtotal}`} />
               </ListItem>
-              <List sx={{ padding: "0 28px" }}>
-                {order.menuItems.map((item) => (
-                  <ListItemText
-                    primary={item.itemName}
-                    secondary={item.status}
-                  />
-                ))}
-              </List>
+              {order.menuItems && order.menuItems.length !== 0 && (
+                <List sx={{ padding: "0 28px" }}>
+                  {order.menuItems.map((item) => (
+                    <ListItemText
+                      primary={item.itemName}
+                      secondary={item.status}
+                    />
+                  ))}
+                </List>
+              )}
             </>
           ))}
         </List>
