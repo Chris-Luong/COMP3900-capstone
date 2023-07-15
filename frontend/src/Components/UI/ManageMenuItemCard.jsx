@@ -46,7 +46,11 @@ const ManageMenuItemCard = ({
 
   const handleSubmit = async (values) => {
     console.log(itemValues);
-    let fileToUrl = await fileToDataUrl(itemValues.thumbnail);
+    const thumbnail =
+      itemValues.thumbnail === defaultItemValues.thumbnail
+        ? defaultItemValues.thumbnail
+        : await fileToDataUrl(itemValues.thumbnail);
+    // let fileToUrl = await fileToDataUrl(itemValues.thumbnail);
     let message = await editItem(
       id,
       itemValues.name,
@@ -54,7 +58,7 @@ const ManageMenuItemCard = ({
       itemValues.ingredients,
       values.categories,
       itemValues.price,
-      fileToUrl
+      thumbnail
     );
     alert(message);
     setTriggerRerender(!triggerRerender);
