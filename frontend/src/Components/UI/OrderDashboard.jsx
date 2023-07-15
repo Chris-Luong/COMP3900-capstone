@@ -142,9 +142,10 @@ const dashboard = (type) => {
                       }}
                     >
                       <ListItemText
-                        primary={`${item.amount} ${item.name}`}
+                        primary={item.name}
                         secondary={item.shipTo}
                       />
+                      <Typography align='right'>{item.amount}</Typography>
                     </ListItem>
                   ))}
                 </List>
