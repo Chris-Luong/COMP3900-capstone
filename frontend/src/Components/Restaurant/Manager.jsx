@@ -5,12 +5,14 @@ import sendRequest from "../Utils/Request";
 import { fileToDataUrl } from "../Helper";
 import NewItemModal from "../UI/NewItemModal";
 import ManageMenuItemCard from "../UI/ManageMenuItemCard";
+import ManageCategoryModal from "../UI/ManageCategoryModal";
 
 const Manager = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showNewItemModal, setShowNewItemModal] = useState(false);
-  const [categories, setCategories] = useState([]);
+  const [showManageCategoryModal, setShowManageCategoryModal] = useState(false);
+  const [categories, setCategories] = useState({});
   const [triggerRerender, setTriggerRerender] = useState(false);
 
   const toggleNewItemModal = () => {
@@ -43,17 +45,42 @@ const Manager = () => {
     }
   };
 
+  const toggleManageCategoryModal = () => {
+    setShowManageCategoryModal(!showManageCategoryModal);
+  };
+
+  const handleDeleteCategory = async (e) => {
+    try {
+      const res = await sendRequest("/categories/remove", "DELETE", {id: e.target.value});
+      alert(res.message);
+      toggleManageCategoryModal();
+      setTriggerRerender(!triggerRerender);
+    } catch (err) {
+      alert(err);
+      console.log(err);
+    }
+  };
+
+  const handleNewCategorySubmit = async (values) => {
+    const name = values.name.charAt(0).toUpperCase() + values.name.slice(1);
+    try {
+      const res = await sendRequest("/categories/add", "POST", {name});
+      alert(`Created new category with id ${res}`);
+      toggleManageCategoryModal();
+      setTriggerRerender(!triggerRerender);
+    } catch (err) {
+      alert(err);
+      console.log(err);
+    }
+  }
+
   useEffect(() => {
     setLoading(true);
     const getMenuData = async () => {
       let itemsData = await getAllMenuItems();
       setMenuItems(itemsData);
       let categoriesData = await getAllCategories();
-      let categoriesArr = [];
-      categoriesData.forEach((c) => {
-        categoriesArr.push(c.name);
-      });
-      setCategories(categoriesArr);
+      setCategories(categoriesData);
       setLoading(false);
     };
     getMenuData();
@@ -68,10 +95,17 @@ const Manager = () => {
           <Typography variant="h5">Manage the menu here</Typography>
           <Button
             variant="outlined"
-            sx={{ mb: 1, mt: 1 }}
+            sx={{ margin: "5px 5px 5px 0" }}
             onClick={toggleNewItemModal}
           >
             Add New Menu Item
+          </Button>
+          <Button
+            variant="outlined"
+            sx={{ margin: "5px 5px 5px 0" }}
+            onClick={toggleManageCategoryModal}
+          >
+            Manage Categories
           </Button>
           <Grid container spacing={2} sx={{ display: "flex" }}>
             {menuItems.map((item) => (
@@ -96,6 +130,15 @@ const Manager = () => {
               toggleModal={toggleNewItemModal}
               categories={categories}
               handleSubmit={handleNewItemSubmit}
+            />
+          )}
+          {showManageCategoryModal && (
+            <ManageCategoryModal
+              showModal={showManageCategoryModal}
+              toggleModal={toggleManageCategoryModal}
+              categories={categories}
+              handleDelete={handleDeleteCategory}
+              handleSubmit={handleNewCategorySubmit}
             />
           )}
         </>

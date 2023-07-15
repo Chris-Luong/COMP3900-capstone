@@ -11,7 +11,7 @@ import {
   FormHelperText,
   Typography,
 } from "@mui/material";
-import { menuItemSchema, checkboxStyle } from "../Helper";
+import { createMenuItemSchema, checkboxStyle } from "../Helper";
 import { Formik } from "formik";
 
 const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
@@ -30,7 +30,7 @@ const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
         }}
       >
         <Formik
-          validationSchema={menuItemSchema}
+          validationSchema={createMenuItemSchema}
           onSubmit={(values) => handleSubmit(values)}
           initialValues={{
             name: "",
@@ -109,7 +109,23 @@ const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
                   error={touched.categories && errors.categories}
                 >
                   <FormGroup sx={checkboxStyle}>
-                    {categories.map((c) => (
+                    {Object.keys(categories).map((key) => (
+                      <FormControlLabel
+                        key={key}
+                        control={
+                          <Checkbox
+                            name="categories"
+                            value={categories[key].name}
+                            checked={values.categories.includes(
+                              categories[key].name
+                            )}
+                            onChange={handleChange}
+                          />
+                        }
+                        label={categories[key].name}
+                      />
+                    ))}
+                    {/* {categories.map((c) => (
                       <FormControlLabel
                         key={c}
                         control={
@@ -122,7 +138,7 @@ const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
                         }
                         label={c}
                       />
-                    ))}
+                    ))} */}
                   </FormGroup>
                   {errors.categories && (
                     <FormHelperText>{errors.categories}</FormHelperText>

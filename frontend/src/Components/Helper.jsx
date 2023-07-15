@@ -198,7 +198,7 @@ export const checkboxStyle = {
   gridTemplateColumns: "repeat(3, 1fr)",
 };
 
-export const menuItemSchema = Yup.object().shape({
+export const createMenuItemSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
   description: Yup.string().required("Description is required"),
   ingredients: Yup.string().required("Ingredients are required"),
@@ -210,4 +210,22 @@ export const menuItemSchema = Yup.object().shape({
     .min(0, "Price can't be negative")
     .max(1000, "Maximum price is 1000"),
   thumbnail: Yup.mixed().required("Thumbnail is required"),
+});
+
+export const editMenuItemSchema = Yup.object().shape({
+  name: Yup.string().required("Name is required"),
+  description: Yup.string().required("Description is required"),
+  ingredients: Yup.string().required("Ingredients are required"),
+  categories: Yup.array()
+    .required("Categories required.")
+    .min(1, "Categories required."),
+  price: Yup.number()
+    .required("Price is required")
+    .min(0, "Price can't be negative")
+    .max(1000, "Maximum price is 1000"),
+  thumbnail: Yup.mixed(),
+});
+
+export const newCategorySchema = Yup.object().shape({
+  name: Yup.string().required("Name is required")
 });
