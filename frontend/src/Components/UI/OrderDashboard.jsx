@@ -2,11 +2,6 @@ import * as React from "react";
 import { getOrders } from "../Helper";
 
 import Link from "@mui/material/Link";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
 import {
   Card,
   CardContent,
@@ -82,10 +77,88 @@ const fakeItems2 = [
 ];
 const orders = [fakeItems1, fakeItems2];
 
-console.log(orders);
-console.log(
-  orders.map((order, idx) => orders[idx].map((item, idx) => item.name))
-);
+// console.log(orders);
+// console.log(
+//   orders.map((order, idx) => orders[idx].map((item, idx) => item.name))
+// );
+
+const dashboard = (type) => {
+  return (
+    <Paper
+      elevation={6}
+      sx={{
+        p: 2,
+        display: "flex",
+        flexDirection: "column",
+        padding: 5,
+        margin: 5,
+      }}
+    >
+      <Typography
+        component='h2'
+        variant='h5'
+        color='primary'
+        gutterBottom
+        sx={{ mb: 3 }}
+      >
+        {type} Orders
+      </Typography>
+      <Grid container spacing={2}>
+        {/* TODO: check format of orders and orderItems from reqs 
+      maybe replace idx with the actual orderId like KitchenStaff
+      */}
+        {orders.map((order, idx) => (
+          <Grid item xs={12} sm={4} md={3} key={idx}>
+            <Card
+              sx={{
+                borderRadius: "15px",
+                border: 0.5,
+                borderWidth: "0.5px",
+              }}
+            >
+              <CardHeader
+                title={`Order ${idx} Table ${orders[idx].id}`}
+                subheader={orders[idx][0].id}
+              />
+              <Divider />
+              <CardContent>
+                <List>
+                  {orders[idx].map((item) => (
+                    <ListItem
+                      key={`${idx}-${item.id}`}
+                      onClick={() => {
+                        console.log("updating status!");
+                      }}
+                      sx={{
+                        "&:hover": {
+                          backgroundColor: "orange",
+                          border: 1,
+                          borderColor: "black",
+                          cursor: "pointer",
+                        },
+                        borderRadius: "15px",
+                        border: 1,
+                        borderColor: "white",
+                      }}
+                    >
+                      <ListItemText
+                        primary={`${item.amount} ${item.name}`}
+                        secondary={item.shipTo}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+      <Link color='primary' href='#' onClick={preventDefault} sx={{ mt: 3 }}>
+        See more orders? Probably just show all in the paper
+      </Link>
+    </Paper>
+  );
+};
 
 function preventDefault(event) {
   event.preventDefault();
@@ -93,92 +166,11 @@ function preventDefault(event) {
 
 const OrderDashboard = () => {
   return (
-    <React.Fragment>
-      <Paper
-        elevation={6}
-        sx={{ p: 2, display: "flex", flexDirection: "column" }}
-      >
-        <Typography component='h2' variant='h6' color='primary' gutterBottom>
-          Pending Orders
-        </Typography>
-        {/* TODO: Map cards of orders instead? */}
-        {/* <Table size='small'>
-          <TableHead>
-            <TableRow>
-              <TableCell>Order Time</TableCell>
-              <TableCell>Item</TableCell>
-              <TableCell>Quantity</TableCell>
-              <TableCell>Note</TableCell>
-              <TableCell align='right'>Sale Amount</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody> */}
-        {/* {fakeItems1.map((item) => (
-          <TableRow key={item.id}>
-            <TableCell>{item.date}</TableCell>
-            <TableCell>{item.name}</TableCell>
-            <TableCell>{item.shipTo}</TableCell>
-            <TableCell>{item.paymentMethod}</TableCell>
-            <TableCell align='right'>{`$${item.amount}`}</TableCell>
-          </TableRow>
-        ))} */}
-        <Grid container spacing={2}>
-          {/* TODO: check format of orders and orderItems from reqs 
-          maybe replace idx with the actual orderId like KitchenStaff
-          */}
-          {orders.map((order, idx) => (
-            <Grid item xs={12} sm={4} md={3} key={idx}>
-              <Card
-                sx={{
-                  borderRadius: "15px",
-                  border: 0.5,
-                  borderWidth: "0.5px",
-                }}
-              >
-                <CardHeader
-                  title={`Order ${idx} Table ${orders[idx].id}`}
-                  subheader={orders[idx][0].id}
-                />
-                <Divider />
-                <CardContent>
-                  <List>
-                    {orders[idx].map((item) => (
-                      <ListItem
-                        key={`${idx}-${item.id}`}
-                        onClick={() => {
-                          console.log("updating status!");
-                        }}
-                        sx={{
-                          "&:hover": {
-                            backgroundColor: "orange",
-                            border: 1,
-                            borderColor: "black",
-                            cursor: "pointer",
-                          },
-                          borderRadius: "15px",
-                          border: 1,
-                          borderColor: "white",
-                        }}
-                      >
-                        <ListItemText
-                          primary={`${item.amount} ${item.name}`}
-                          secondary={item.shipTo}
-                        />
-                      </ListItem>
-                    ))}
-                  </List>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-        {/* </TableBody>
-        </Table> */}
-        <Link color='primary' href='#' onClick={preventDefault} sx={{ mt: 3 }}>
-          See more orders
-        </Link>
-      </Paper>
-    </React.Fragment>
+    <>
+      {dashboard("Preparing")}
+      {dashboard("Ready To Serve")}
+      {dashboard("Served")}
+    </>
   );
 };
 
