@@ -6,7 +6,7 @@ import {
   applyFilters,
   sendOrder,
   retrieveOrdersWithTableId,
-  retrieveOrderItems
+  retrieveOrderItems,
 } from "../Helper";
 import FilterModal from "../UI/FilterModal";
 import MenuItemCard from "../UI/MenuItemCard";
@@ -112,7 +112,7 @@ const Menu = () => {
 
   const updateTableOrdersData = useCallback(async () => {
     let ordersData = await retrieveOrdersWithTableId(tableId);
-    ordersData.forEach(async order => {
+    ordersData.forEach(async (order) => {
       const orderedItems = await retrieveOrderItems(order.id);
       order.menuItems = orderedItems;
     });
@@ -161,7 +161,7 @@ const Menu = () => {
       {!loading && (
         <Box sx={{ display: "flex" }}>
           <div>
-            <Button variant="contained" onClick={toggleFilter}>
+            <Button variant='contained' onClick={toggleFilter}>
               Filter
             </Button>
             <Grid container>

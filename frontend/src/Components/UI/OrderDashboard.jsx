@@ -1,18 +1,36 @@
 import * as React from "react";
+import { getOrders } from "../Helper";
+
 import Link from "@mui/material/Link";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import { Paper, Typography } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Divider,
+  Grid,
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
+  Typography,
+} from "@mui/material";
 
 // Generate Order Data
 function createData(id, date, name, shipTo, paymentMethod, amount) {
   return { id, date, name, shipTo, paymentMethod, amount };
 }
 
-const rows = [
+// TODO: Get all orders and arrange according to their orderId
+// Then display batched orders in cards - may need OrderItemCard
+// 3 papers with Pending, Preparing and Completed Orders - check discord.
+
+// TODO: Get order everytime orders is updated from menu - cannot use useState?
+// useState worked only because Menu was parent but WaitStaff is parent
+// Need local storage?
+// const orders = await getOrders(); // Use the one for waitstaff
+// console.log(orders);
+
+const fakeItems1 = [
   createData(
     0,
     "16 Mar, 2019",
@@ -37,8 +55,11 @@ const rows = [
     "MC ⠀•••• 1253",
     100.81
   ),
+];
+
+const fakeItems2 = [
   createData(
-    3,
+    0,
     "16 Mar, 2019",
     "Michael Jackson",
     "Gary, IN",
@@ -46,7 +67,7 @@ const rows = [
     654.39
   ),
   createData(
-    4,
+    1,
     "15 Mar, 2019",
     "Bruce Springsteen",
     "Long Branch, NJ",
@@ -54,6 +75,91 @@ const rows = [
     212.79
   ),
 ];
+const orders = [fakeItems1, fakeItems2];
+
+// console.log(orders);
+// console.log(
+//   orders.map((order, idx) => orders[idx].map((item, idx) => item.name))
+// );
+
+const dashboard = (type) => {
+  return (
+    <Paper
+      elevation={6}
+      sx={{
+        p: 2,
+        display: "flex",
+        flexDirection: "column",
+        padding: 5,
+        margin: 5,
+      }}
+    >
+      <Typography
+        component='h2'
+        variant='h5'
+        color='primary'
+        gutterBottom
+        sx={{ mb: 3 }}
+      >
+        {type} Orders
+      </Typography>
+      <Grid container spacing={2}>
+        {/* TODO: check format of orders and orderItems from reqs 
+      maybe replace idx with the actual orderId like KitchenStaff
+      */}
+        {orders.map((order, idx) => (
+          <Grid item xs={12} sm={4} md={3} key={idx}>
+            <Card
+              sx={{
+                borderRadius: "15px",
+                border: 0.5,
+                borderWidth: "0.5px",
+              }}
+            >
+              <CardHeader
+                title={`Order ${idx} Table ${orders[idx].id}`}
+                subheader={orders[idx][0].id}
+              />
+              <Divider />
+              <CardContent>
+                <List>
+                  {orders[idx].map((item) => (
+                    <ListItem
+                      key={`${idx}-${item.id}`}
+                      onClick={() => {
+                        console.log("updating status!");
+                      }}
+                      sx={{
+                        "&:hover": {
+                          backgroundColor: "orange",
+                          border: 1,
+                          borderColor: "black",
+                          cursor: "pointer",
+                        },
+                        borderRadius: "15px",
+                        border: 1,
+                        borderColor: "white",
+                      }}
+                    >
+                      <ListItemText
+                        primary={item.name}
+                        secondary={item.shipTo}
+                      />
+                      <Typography align='right'>{item.amount}</Typography>
+                    </ListItem>
+                  ))}
+                </List>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+      <Link color='primary' href='#' onClick={preventDefault} sx={{ mt: 3 }}>
+        See more orders? Probably just show all in the paper
+      </Link>
+    </Paper>
+  );
+};
 
 function preventDefault(event) {
   event.preventDefault();
@@ -61,38 +167,11 @@ function preventDefault(event) {
 
 const OrderDashboard = () => {
   return (
-    <React.Fragment>
-      <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-        <Typography component='h2' variant='h6' color='primary' gutterBottom>
-          Recent Orders
-        </Typography>
-        <Table size='small'>
-          <TableHead>
-            <TableRow>
-              <TableCell>Date</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Ship To</TableCell>
-              <TableCell>Payment Method</TableCell>
-              <TableCell align='right'>Sale Amount</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>{row.date}</TableCell>
-                <TableCell>{row.name}</TableCell>
-                <TableCell>{row.shipTo}</TableCell>
-                <TableCell>{row.paymentMethod}</TableCell>
-                <TableCell align='right'>{`$${row.amount}`}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <Link color='primary' href='#' onClick={preventDefault} sx={{ mt: 3 }}>
-          See more orders
-        </Link>
-      </Paper>
-    </React.Fragment>
+    <>
+      {dashboard("Preparing")}
+      {dashboard("Ready To Serve")}
+      {dashboard("Served")}
+    </>
   );
 };
 
