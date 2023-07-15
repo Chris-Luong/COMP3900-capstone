@@ -12,7 +12,7 @@ import {
   FormHelperText,
 } from "@mui/material";
 import { Formik } from "formik";
-import { checkboxStyle, menuItemSchema } from "../Helper";
+import { checkboxStyle, editMenuItemSchema } from "../Helper";
 
 const ManageItemModal = ({
   inputChanged,
@@ -38,7 +38,7 @@ const ManageItemModal = ({
         }}
       >
         <Formik
-          validationSchema={menuItemSchema}
+          validationSchema={editMenuItemSchema}
           onSubmit={(values) => handleSubmit(values)}
           initialValues={{
             name: itemValues.name,
@@ -136,14 +136,16 @@ const ManageItemModal = ({
                   error={touched.categories && errors.categories}
                 >
                   <FormGroup sx={checkboxStyle}>
-                    {categories.map((c) => (
+                    {Object.keys(categories).map((key) => (
                       <FormControlLabel
-                        key={c}
+                        key={key}
                         control={
                           <Checkbox
                             name="categories"
-                            value={c}
-                            checked={values.categories.includes(c)}
+                            value={categories[key].name}
+                            checked={values.categories.includes(
+                              categories[key].name
+                            )}
                             onChange={(e) => {
                               setItemValues({
                                 ...itemValues,
@@ -153,7 +155,7 @@ const ManageItemModal = ({
                             }}
                           />
                         }
-                        label={c}
+                        label={categories[key].name}
                       />
                     ))}
                   </FormGroup>
