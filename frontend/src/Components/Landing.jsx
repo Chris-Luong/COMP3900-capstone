@@ -26,15 +26,12 @@ const Landing = () => {
           QueueQuicker
         </Typography>
         <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button variant="outlined" color="primary" component={RouterLink} to="../contact">
-            Contact Us
-          </Button>
-          <Button variant="outlined" color="primary" component={RouterLink} to="../learnmore">
-            Learn More
-          </Button>
-          <Button variant="outlined" color="primary" component={RouterLink} to="../restaurants">
-            See Our Restaurants
-          </Button>
+          <Button variant="contained" color="primary" component={RouterLink} to="../login" sx={{ mr: 2, p: 2, borderRadius: 2 }}>
+              Login
+            </Button>
+            <Button variant="contained" color="secondary" component={RouterLink} to="../register" sx={{ p: 2, borderRadius: 2 }}>
+              Sign Up
+            </Button>
         </Box>
       </Box>
 
@@ -72,11 +69,11 @@ const Landing = () => {
         <Pagination count={quotes.length} page={activePage} onChange={handlePageChange} sx={{ mx: 'auto' }} />
 
         <Box sx={{ mt: 4 }}>
-          <Button variant="contained" color="primary" component={RouterLink} to="../pricing" sx={{ mr: 2, p: 2, borderRadius: 2 }}>
-            See Pricing
-          </Button>
-          <Button variant="contained" color="secondary" component={RouterLink} to="../menus" sx={{ p: 2, borderRadius: 2 }}>
-            Check Our Menus
+           <Typography variant="h4" gutterBottom sx={{ color: '#666' }}>
+              Inside our restaurant? 
+            </Typography>
+          <Button variant="contained" color="secondary" component={RouterLink} to="../restaurant" sx={{ p: 2, borderRadius: 2 }}>
+            Check in and Order
           </Button>
         </Box>
 
@@ -87,9 +84,6 @@ const Landing = () => {
             </Typography>
             <Typography variant="body1" gutterBottom sx={{ color: '#666' }}>
               Don't have an account? <MuiLink component={RouterLink} to="../register">Register here</MuiLink>
-            </Typography>
-            <Typography variant="body1" gutterBottom sx={{ color: '#666' }}>
-              Inside our restaurant? <MuiLink component={RouterLink} to="../restaurant">Check in and order here</MuiLink>
             </Typography>
           </Box>
         )}
