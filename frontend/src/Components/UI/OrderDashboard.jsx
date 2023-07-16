@@ -165,6 +165,10 @@ const handleCompleteItem = (orderId, itemId) => {
   console.log(orderId);
   console.log(itemId);
   // TODO: send request to change order item status to Served
+};
+
+// NOTE: could just get all menu items?
+const checkItemsStatus = (orderId, itemId) => {
   // TODO: loop through each order, count num. items in each status category
   // if num == 0 then do not show order in that status category
 };
