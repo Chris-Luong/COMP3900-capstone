@@ -155,6 +155,27 @@ const Menu = () => {
     });
   };
 
+  const demoItems = [
+    {
+      id: "demo1",
+      name: "Demo Item 1",
+      description: "This is a demo item.",
+      price: "9.99",
+      availability: 1,
+      imageUrl: "/path/to/image1.jpg"
+    },
+    {
+      id: "demo2",
+      name: "Demo Item 2",
+      description: "This is another demo item.",
+      price: "14.99",
+      availability: 0,
+      imageUrl: "/path/to/image2.jpg"
+    },
+  ];
+
+  const allItems = [...menuItems, ...demoItems];
+
   return (
     <>
       {loading && <CircularProgress />}
