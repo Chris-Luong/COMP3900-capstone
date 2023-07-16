@@ -71,3 +71,5 @@ Helped add image/thumbnail functionality to the menu cards. Improved UI of order
 Started working on the dashboard for waitstaff to view orders and order items according to their status
  (Preparing, Ready To Serve and Served). Included the functionality to change the status of order items 
 by clicking on them.
+
+Worked with Gungeet to improve the UI of the whole website - common colour scheme and modern design.
