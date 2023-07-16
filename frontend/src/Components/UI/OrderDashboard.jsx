@@ -16,8 +16,8 @@ import {
 } from "@mui/material";
 
 // Generate Order Data
-function createData(id, date, name, shipTo, paymentMethod, amount) {
-  return { id, date, name, shipTo, paymentMethod, amount };
+function createData(id, date, name, shipTo, status, amount) {
+  return { id, date, name, shipTo, status, amount };
 }
 
 // TODO: Get all orders and arrange according to their orderId
@@ -36,7 +36,7 @@ const fakeItems1 = [
     "16 Mar, 2019",
     "Elvis Presley",
     "Tupelo, MS",
-    "VISA ⠀•••• 3719",
+    "Preparing",
     312.44
   ),
   createData(
@@ -44,17 +44,10 @@ const fakeItems1 = [
     "16 Mar, 2019",
     "Paul McCartney",
     "London, UK",
-    "VISA ⠀•••• 2574",
+    "Ready To Serve",
     866.99
   ),
-  createData(
-    2,
-    "16 Mar, 2019",
-    "Tom Scholz",
-    "Boston, MA",
-    "MC ⠀•••• 1253",
-    100.81
-  ),
+  createData(2, "16 Mar, 2019", "Tom Scholz", "Boston, MA", "Served", 100.81),
 ];
 
 const fakeItems2 = [
@@ -63,7 +56,7 @@ const fakeItems2 = [
     "16 Mar, 2019",
     "Michael Jackson",
     "Gary, IN",
-    "AMEX ⠀•••• 2000",
+    "Ready To Serve",
     654.39
   ),
   createData(
@@ -71,7 +64,7 @@ const fakeItems2 = [
     "15 Mar, 2019",
     "Bruce Springsteen",
     "Long Branch, NJ",
-    "VISA ⠀•••• 5919",
+    "Ready To Serve",
     212.79
   ),
 ];
@@ -117,36 +110,38 @@ const dashboard = (type) => {
               }}
             >
               <CardHeader
-                title={`Order ${idx} Table ${orders[idx].id}`}
+                title={`Order ${idx} Table ${orders[idx][idx].id}`}
                 subheader={orders[idx][0].id}
               />
               <Divider />
               <CardContent>
                 <List>
                   {orders[idx].map((item) => (
-                    <ListItem
-                      key={`${idx}-${item.id}`}
-                      onClick={() => {
-                        console.log("updating status!");
-                      }}
-                      sx={{
-                        "&:hover": {
-                          backgroundColor: "orange",
-                          border: 1,
-                          borderColor: "black",
-                          cursor: "pointer",
-                        },
-                        borderRadius: "15px",
-                        border: 1,
-                        borderColor: "white",
-                      }}
-                    >
-                      <ListItemText
-                        primary={item.name}
-                        secondary={item.shipTo}
-                      />
-                      <Typography align='right'>{item.amount}</Typography>
-                    </ListItem>
+                    <>
+                      {item.status === type ? (
+                        <ListItem
+                          key={`${idx}-${item.id}`}
+                          onClick={() => handleCompleteItem(idx, item.id)}
+                          sx={{
+                            "&:hover": {
+                              backgroundColor: "orange",
+                              border: 1,
+                              borderColor: "black",
+                              cursor: "pointer",
+                            },
+                            borderRadius: "15px",
+                            border: 1,
+                            borderColor: "white",
+                          }}
+                        >
+                          <ListItemText
+                            primary={item.name}
+                            secondary={item.shipTo}
+                          />
+                          <Typography align='right'>{item.amount}</Typography>
+                        </ListItem>
+                      ) : null}
+                    </>
                   ))}
                 </List>
               </CardContent>
@@ -165,11 +160,20 @@ function preventDefault(event) {
   event.preventDefault();
 }
 
+const handleCompleteItem = (orderId, itemId) => {
+  console.log("Item clicked");
+  console.log(orderId);
+  console.log(itemId);
+  // TODO: send request to change order item status to Served
+  // TODO: loop through each order, count num. items in each status category
+  // if num == 0 then do not show order in that status category
+};
+
 const OrderDashboard = () => {
   return (
     <>
-      {dashboard("Preparing")}
       {dashboard("Ready To Serve")}
+      {dashboard("Preparing")}
       {dashboard("Served")}
     </>
   );

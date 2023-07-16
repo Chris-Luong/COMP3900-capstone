@@ -68,3 +68,6 @@ WEEK 7:
 
 
 Helped add image/thumbnail functionality to the menu cards. Improved UI of orderDrawer component.
+Started working on the dashboard for waitstaff to view orders and order items according to their status
+ (Preparing, Ready To Serve and Served). Included the functionality to change the status of order items 
+by clicking on them.
