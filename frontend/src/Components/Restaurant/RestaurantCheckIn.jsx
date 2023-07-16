@@ -58,6 +58,7 @@ const RestaurantCheckIn = () => {
           <Button
             variant="outlined"
             type="button"
+            color="secondary"
             onClick={() => guestCheckIn()}
           >
             Check In as Guest

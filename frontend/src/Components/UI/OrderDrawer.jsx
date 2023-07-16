@@ -102,6 +102,7 @@ const OrderDrawer = ({
                   </Container>
                   <DeleteOutlineIcon
                     color='warning'
+                    sx={{ cursor: "pointer" }}
                     onClick={() => handleRemoveFromCart(index)}
                   />
                 </ListItem>
@@ -115,6 +116,7 @@ const OrderDrawer = ({
       <Container sx={{ mt: "0.5rem" }}>
         <Typography align='center'>Order Total: ${orderSum}</Typography>
         <Button
+          color='secondary'
           disabled={orderItems.length === 0}
           onClick={handleSendOrder}
           fullWidth
@@ -148,6 +150,7 @@ const OrderDrawer = ({
       <Container sx={{ mt: "0.5rem" }}>
         <Typography align='center'>Table Total: $100.00</Typography>
         <Button
+          color='secondary'
           disabled={tableOrders.length === 0}
           onClick={handleRequestBill}
           fullWidth

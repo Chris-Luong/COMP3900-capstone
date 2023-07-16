@@ -128,7 +128,9 @@ INSERT INTO menuItemsCategories (itemId, categoryId) VALUES
 
 INSERT INTO orders (accountId, tableId, subtotal, paid) VALUES 
      (1, 1, 23.97, 0),
-     (2, 2, 23.97, 0)
+     (2, 2, 23.97, 0),
+     (3, 3, 69.97, 0),
+     (4, 3, 2.97, 0)
 ;
 
 INSERT INTO orderItems (orderId, itemId, quantity, note, status) VALUES 
@@ -138,5 +140,12 @@ INSERT INTO orderItems (orderId, itemId, quantity, note, status) VALUES
      (2, 1, 2, "test4", "Preparing"),
      (2, 2, 2, "test5", "Preparing"),
      (2, 3, 2, "test6", "Preparing"),
-     (2, 5, 3, "test7", "Served")
+     (2, 5, 3, "test7", "Served"),
+     (3, 3, 1, "test8", "Ready To Serve"),
+     (3, 1, 2, "test9", "Ready To Serve"),
+     (3, 2, 3, "test10", "Ready To Serve"),
+     (3, 3, 2, "test11", "Ready To Serve"),
+     (3, 3, 2, "test12", "Served"),
+     (4, 3, 2, "test13", "Ready To Serve"),
+     (4, 3, 2, "", "Ready To Serve")
 ;
