@@ -182,7 +182,7 @@ const Menu = () => {
       {!loading && (
         <Box sx={{ display: "flex" }}>
           <div>
-            <Button variant='contained' onClick={toggleFilter}>
+            <Button variant='contained' color="secondary" sx={{ ml:1 }} onClick={toggleFilter}>
               Filter
             </Button>
             <Grid container>
