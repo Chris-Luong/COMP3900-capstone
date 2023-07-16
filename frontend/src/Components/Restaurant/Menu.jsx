@@ -1,5 +1,5 @@
 import { Fragment, useState, useEffect, useCallback } from "react";
-import { Button, CircularProgress, Grid, Box } from "@mui/material";
+import { Button, CircularProgress, Grid, Box, Typography } from "@mui/material";
 import {
   getAllMenuItems,
   getAllCategories,
@@ -178,11 +178,14 @@ const Menu = () => {
 
   return (
     <>
+      <Typography variant="h1" sx={{ ml:0.4 }}> 
+        Menu
+      </Typography>
       {loading && <CircularProgress />}
       {!loading && (
         <Box sx={{ display: "flex" }}>
           <div>
-            <Button variant='contained' onClick={toggleFilter}>
+            <Button variant='contained' color="secondary" sx={{ ml:1.3, mb:1 }} onClick={toggleFilter}>
               Filter
             </Button>
             <Grid container>
