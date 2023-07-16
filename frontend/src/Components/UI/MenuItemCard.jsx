@@ -139,9 +139,9 @@ const MenuItemCard = ({
             mt={2}
           >
             Quantity:
-            <Button onClick={handleDecrementQuantity}>-</Button>
+            <Button onClick={handleDecrementQuantity} color="secondary">-</Button>
             {quantity}
-            <Button onClick={handleIncrementQuantity}>+</Button>
+            <Button onClick={handleIncrementQuantity} color="secondary">+</Button>
           </Typography>
 
           <TextField
@@ -153,11 +153,11 @@ const MenuItemCard = ({
             id='note'
           />
 
-          <Button label='AddItem' type='submit' variant='contained' mt={3}>
+          <Button label='AddItem' type='submit' variant='contained' mt={3} color="secondary">
             Add to Cart
           </Button>
           <Grid container justifyContent='flex-end'>
-            <Button onClick={toggleModal}>Close</Button>
+            <Button onClick={toggleModal} color="secondary">Close</Button>
           </Grid>
         </Box>
       </Modal>
