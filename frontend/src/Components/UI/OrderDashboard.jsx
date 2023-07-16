@@ -1,11 +1,12 @@
 import * as React from "react";
-import { getOrders } from "../Helper";
+import { retrieveOrdersByStatus } from "../Helper";
+import { useState, useEffect } from "react";
 
-import Link from "@mui/material/Link";
 import {
   Card,
   CardContent,
   CardHeader,
+  CircularProgress,
   Divider,
   Grid,
   List,
@@ -15,162 +16,108 @@ import {
   Typography,
 } from "@mui/material";
 
-// Generate Order Data
-function createData(id, date, name, shipTo, paymentMethod, amount) {
-  return { id, date, name, shipTo, paymentMethod, amount };
-}
-
-// TODO: Get all orders and arrange according to their orderId
-// Then display batched orders in cards - may need OrderItemCard
-// 3 papers with Pending, Preparing and Completed Orders - check discord.
-
 // TODO: Get order everytime orders is updated from menu - cannot use useState?
 // useState worked only because Menu was parent but WaitStaff is parent
 // Need local storage?
 // const orders = await getOrders(); // Use the one for waitstaff
 // console.log(orders);
 
-const fakeItems1 = [
-  createData(
-    0,
-    "16 Mar, 2019",
-    "Elvis Presley",
-    "Tupelo, MS",
-    "VISA ⠀•••• 3719",
-    312.44
-  ),
-  createData(
-    1,
-    "16 Mar, 2019",
-    "Paul McCartney",
-    "London, UK",
-    "VISA ⠀•••• 2574",
-    866.99
-  ),
-  createData(
-    2,
-    "16 Mar, 2019",
-    "Tom Scholz",
-    "Boston, MA",
-    "MC ⠀•••• 1253",
-    100.81
-  ),
-];
-
-const fakeItems2 = [
-  createData(
-    0,
-    "16 Mar, 2019",
-    "Michael Jackson",
-    "Gary, IN",
-    "AMEX ⠀•••• 2000",
-    654.39
-  ),
-  createData(
-    1,
-    "15 Mar, 2019",
-    "Bruce Springsteen",
-    "Long Branch, NJ",
-    "VISA ⠀•••• 5919",
-    212.79
-  ),
-];
-const orders = [fakeItems1, fakeItems2];
-
-// console.log(orders);
-// console.log(
-//   orders.map((order, idx) => orders[idx].map((item, idx) => item.name))
-// );
-
-const dashboard = (type) => {
-  return (
-    <Paper
-      elevation={6}
-      sx={{
-        p: 2,
-        display: "flex",
-        flexDirection: "column",
-        padding: 5,
-        margin: 5,
-      }}
-    >
-      <Typography
-        component='h2'
-        variant='h5'
-        color='primary'
-        gutterBottom
-        sx={{ mb: 3 }}
-      >
-        {type} Orders
-      </Typography>
-      <Grid container spacing={2}>
-        {/* TODO: check format of orders and orderItems from reqs 
-      maybe replace idx with the actual orderId like KitchenStaff
-      */}
-        {orders.map((order, idx) => (
-          <Grid item xs={12} sm={4} md={3} key={idx}>
-            <Card
-              sx={{
-                borderRadius: "15px",
-                border: 0.5,
-                borderWidth: "0.5px",
-              }}
-            >
-              <CardHeader
-                title={`Order ${idx} Table ${orders[idx].id}`}
-                subheader={orders[idx][0].id}
-              />
-              <Divider />
-              <CardContent>
-                <List>
-                  {orders[idx].map((item) => (
-                    <ListItem
-                      key={`${idx}-${item.id}`}
-                      onClick={() => {
-                        console.log("updating status!");
-                      }}
-                      sx={{
-                        "&:hover": {
-                          backgroundColor: "orange",
-                          border: 1,
-                          borderColor: "black",
-                          cursor: "pointer",
-                        },
-                        borderRadius: "15px",
-                        border: 1,
-                        borderColor: "white",
-                      }}
-                    >
-                      <ListItemText
-                        primary={item.name}
-                        secondary={item.shipTo}
-                      />
-                      <Typography align='right'>{item.amount}</Typography>
-                    </ListItem>
-                  ))}
-                </List>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-      <Link color='primary' href='#' onClick={preventDefault} sx={{ mt: 3 }}>
-        See more orders? Probably just show all in the paper
-      </Link>
-    </Paper>
-  );
+const handleCompleteItem = (orderId, itemId) => {
+  console.log("Item clicked");
+  console.log(orderId);
+  console.log(itemId);
+  // TODO: send request to change order item status to Served
 };
 
-function preventDefault(event) {
-  event.preventDefault();
-}
-
 const OrderDashboard = () => {
+  const [loading, setLoading] = useState(false);
+  const [orders, setOrders] = useState({});
+
+  useEffect(() => {
+    setLoading(true);
+    const retrieveOrders = async () => {
+      const orderData = await retrieveOrdersByStatus();
+      console.log(orderData);
+      setOrders(orderData);
+      setLoading(false);
+    };
+    retrieveOrders();
+  }, []);
+
+  console.log(orders);
   return (
     <>
-      {dashboard("Preparing")}
-      {dashboard("Ready To Serve")}
-      {dashboard("Served")}
+      {loading && <CircularProgress />}
+      {!loading && (
+        <Paper
+          elevation={6}
+          sx={{
+            p: 2,
+            display: "flex",
+            flexDirection: "column",
+            padding: 5,
+            margin: 5,
+          }}
+        >
+          <Typography
+            component='h2'
+            variant='h5'
+            color='primary'
+            gutterBottom
+            sx={{ mb: 3 }}
+          >
+            Ready To Serve Orders
+          </Typography>
+          <Grid container spacing={2}>
+            {Object.keys(orders).map((orderId) => (
+              <Grid item xs={12} sm={4} md={3} key={orderId}>
+                <Card
+                  sx={{
+                    borderRadius: "15px",
+                    border: 0.5,
+                    borderWidth: "0.5px",
+                  }}
+                >
+                  <CardHeader
+                    title={`Order ${orderId} Table ${orders[orderId].tableId}`}
+                    subheader={orders[orderId].orderTime}
+                  />
+                  <Divider />
+                  <CardContent>
+                    <List>
+                      {orders[orderId].items.map((item) => (
+                        <ListItem
+                          key={`${orderId}-${item.itemId}`}
+                          onClick={() =>
+                            handleCompleteItem(orderId, item.itemId)
+                          }
+                          sx={{
+                            "&:hover": {
+                              backgroundColor: "orange",
+                              border: 1,
+                              borderColor: "black",
+                              cursor: "pointer",
+                            },
+                            borderRadius: "15px",
+                            border: 1,
+                            borderColor: "white",
+                          }}
+                        >
+                          <ListItemText
+                            primary={`${item.quantity} ${item.itemName}`}
+                            secondary={item.note ? `Note: ${item.note}` : null}
+                          />
+                          {/* <Typography align='right'>{item.amount}</Typography> */}
+                        </ListItem>
+                      ))}
+                    </List>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Paper>
+      )}
     </>
   );
 };
