@@ -148,6 +148,7 @@ const MenuItemCard = ({
             margin='normal'
             fullWidth
             name='note'
+            color="secondary"
             label='Notes for chef'
             type='text'
             id='note'
