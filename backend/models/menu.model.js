@@ -1,6 +1,10 @@
 const db = require("../db/db");
 const { getAllMenuItems,
-        getCategories, 
+        getCategories,
+        insertCategory,
+        deleteCategory,
+        deleteCategoryMenuItems,
+        getCategoryNamesFromItemId,
         filterCategory, 
         searchMenuItemsAND, 
         searchMenuItems, 
@@ -81,7 +85,14 @@ class Menu {
   }
 
   static editMenuItem(id, name, description, ingredients, categories, price, thumb, cb) {
-    const menuItemValues = [name, description, ingredients, price, thumb, id];
+    const menuItemValues = [name.replace(/["']/g, ''), description.replace(/["']/g, ''), 
+                            ingredients.replace(/["']/g, ''), price, thumb, id];
+    let new_categories = [];
+    if (!Array.isArray(categories)) {
+      new_categories.push(categories);
+    } else {
+      new_categories = categories
+    }
     db.query(updateMenuItem, menuItemValues, (err) => {
       if (err) {
         cb({
@@ -102,7 +113,8 @@ class Menu {
         return;
       }
     });
-    categories.forEach((category) => {
+    new_categories.forEach((category) => {
+      category = category.replace(/["']/g, '');
       db.query(getCategory, category, (err, result) => {
         if (err) {
           cb({
@@ -186,7 +198,7 @@ class Menu {
    * 
    * @returns {null}
    */
-  static getFilteredMenuItems(search=null, category=null, min_price=0, max_price=100, sort_type="name", sort_order="ASC", cb) {
+  static getFilteredMenuItems(search=null, category=null, min_price=0, max_price=1000, sort_type="name", sort_order="ASC", cb) {
     let final_query = getAllMenuItems;
     let params = [];
     if (category) {
@@ -240,6 +252,72 @@ class Menu {
 
       let result = JSON.parse(JSON.stringify(results));
       return next(null, result);
+    });
+  }
+
+  static addCategory(name, cb) {
+    db.query(insertCategory, name, (err, result) => {
+      if (err) {
+        cb(
+          {
+            status: 500,
+            message: "Failed to add categories",
+            kind: "Internal Server Error",
+          },
+          null
+        );
+      }
+
+      cb(null, result.insertId);
+    });
+  }
+
+  static removeCategory(id, cb) {
+    db.query(deleteCategoryMenuItems, id, (err) => {
+      if (err) {
+        cb(
+          {
+            status: 500,
+            message: "Failed to delete categories",
+            kind: "Internal Server Error",
+          },
+          null
+        );
+      }
+    });
+    db.query(deleteCategory, id, (err) => {
+      if (err) {
+        cb(
+          {
+            status: 500,
+            message: "Failed to delete categories",
+            kind: "Internal Server Error",
+          },
+          null
+        );
+      }
+
+      cb(null, {message: "Successfully deleted item from menu"});
+    });
+  }
+
+  static getCategoryNames(itemId, cb) {
+    db.query(getCategoryNamesFromItemId, [itemId], (err, result) => {
+      if (err) {
+        cb(
+          {
+            status: 500,
+            message: "Failed to get categories",
+            kind: "Internal Server Error",
+          },
+          null
+        );
+        return;
+      }
+      const names = [];
+      result.forEach(packet => names.push(packet.name));
+      let res = JSON.parse(JSON.stringify(names));
+      cb(null, res);
     });
   }
 }

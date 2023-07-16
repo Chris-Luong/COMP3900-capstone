@@ -1,10 +1,27 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const register = require('../controller/register')
-const login = require('../controller/login');
-const {menu, addItem, removeItem, editItem} = require('../controller/menu');
-const categories = require('../controller/categories');
-const { viewOrders, addMenuItems, createOrder } = require('../controller/orderItem');
+const register = require("../controller/register");
+const login = require("../controller/login");
+const {
+  menu,
+  addItem,
+  removeItem,
+  editItem,
+  addCategory,
+  removeCategory,
+  categoriesFromId,
+  getCategories,
+} = require("../controller/menu");
+const {
+  viewOrders,
+  createOrder,
+  deleteOrder,
+  setNewTable,
+  getOrdersForTableId,
+  viewOrdersByStatus,
+} = require("../controller/order");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
 /**
  * @swagger
@@ -37,49 +54,20 @@ const { viewOrders, addMenuItems, createOrder } = require('../controller/orderIt
  *         description: Invalid credentials
  */
 
-
-router.post('/register', register);
-router.post('/login', login);
-router.get('/menu', menu);
-router.put('/menu/edit', editItem);
-router.post('/menu/add', addItem);
-router.delete('/menu/remove', removeItem);
-router.get('/categories', categories);
- /**
- * @swagger
- * /orderItems/createOrder:
- *   post:
- *     summary: Create A New Order
- *     tags: [Order]
- *     parameters:
- *       name: body
- *       in: body
- *       schema:
- *          type: object
- *          properties:
- *            accountId:
- *              example: "any"
- *            tableId:
- *              example: "any"
- *     responses:
- *       200:
- *         description: Successful Creation
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 orderId:
- *                   type: string
- *                   description: The created order id
- *       400:
- *         description: Failed to Create
- */
-router.post('/orderItem/createOrder', createOrder)
-
-router.post('/orderItem/add', addMenuItems)
-/**
- * /order?order=orderId
- */
-router.get('/order', viewOrders)
+router.post("/register", register);
+router.post("/login", login);
+router.get("/menu", menu);
+router.put("/menu/edit", upload.single("thumbnail"), editItem);
+router.post("/menu/add", upload.single("thumbnail"), addItem);
+router.delete("/menu/remove", removeItem);
+router.get("/categories", getCategories);
+router.get("/categories/:itemid", categoriesFromId);
+router.post("/categories/add", addCategory);
+router.delete("/categories/remove", removeCategory);
+router.get('/orders', viewOrders);
+router.post('/orders/create', createOrder);
+router.delete('/orders/delete', deleteOrder);
+router.post('/tables/create', setNewTable);
+router.get("/orders/tables/:tableid", getOrdersForTableId);
+router.get("/orders/pending/:status", viewOrdersByStatus);
 module.exports = router;

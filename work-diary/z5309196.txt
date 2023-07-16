@@ -46,5 +46,25 @@ Changes were made to the staff login page such that instead of an email, a user 
 Saturday: Had meeting to discuss the plan for the the project demo. Assigned tasks. I will continue working on
 the login pages to make sure the correct functionality is there.
 
-I completed the staff login page, having consisten styling with the resgister page. A POST request was included
+WEEK 5:
+
+
+I completed the staff login page, having consistent styling with the resgister page. A POST request was included
 in this page and will be tested on Tuesday when the group goes through a practice demo.
+
+I experienced issues connecting the MySQL database to the backend and so, I couldn't test the POST request.
+Alan was able to test the POST request as his app was working. The POST request worked and my pull request was
+merged into the main branch.
+
+WEEK 6:
+
+
+Managed to connect MySQL Workbench with my code. Created the frontend for ordering
+menu items. Completed user stories MN3900-36, -46 and -47. Discussed with Grace how
+the backend could work with the frontend and took Rodney's suggested method of
+implementation.
+
+WEEK 7:
+
+
+Helped add image/thumbnail functionality to the menu cards. Improved UI of orderDrawer component.
