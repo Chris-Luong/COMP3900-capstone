@@ -10,6 +10,7 @@ const {
   setNewTableId,
   getOrdersForTableId,
   getOrdersByStatus,
+  updateOrderItemStatus,
 } = require("../db/queries/order.queries");
 
 const NOT_FOUND = 401;
@@ -271,6 +272,25 @@ class Order {
       });
       console.log(orders);
       let result = JSON.parse(JSON.stringify(orders));
+      next(null, result);
+    });
+  }
+
+  static updateOrderItemStatus(id, newStatus, next) {
+    db.query(updateOrderItemStatus, [newStatus, id], (err, results) => {
+      if (err) {
+        next(
+          {
+            status: EXISTS,
+            message: "Error updating order menu item",
+            kind: EXISTS_KIND,
+          },
+          null
+        );
+        return;
+      }
+
+      let result = JSON.parse(JSON.stringify(results));
       next(null, result);
     });
   }
