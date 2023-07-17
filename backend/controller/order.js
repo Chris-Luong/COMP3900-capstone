@@ -29,7 +29,6 @@ const { Order, NOT_FOUND, CANNOT_CREATE } = require("../models/order.model");
  * @returns {null}
  */
 viewOrders = (req, res) => {
-  console.log("called view");
   if (req.query.accountId) {
     Order.getOrderByAccountId(req.query.accountId, (err, result) => {
       if (err) {
@@ -67,7 +66,6 @@ viewOrders = (req, res) => {
  * @returns {orderId: orderId}
  */
 createOrder = (req, res) => {
-  console.log(req.body);
   const { accountId, tableId, items } = req.body;
   Order.createOrder(accountId, tableId, items, (err, result) => {
     if (err) {
@@ -136,7 +134,6 @@ setNewTable = (req, res) => {
  */
 getOrdersForTableId = (req, res) => {
   const tableId = req.params["tableid"];
-  console.log("called table");
   Order.getOrdersForTableId(tableId, (err, result) => {
     if (err) {
       return res.status(err.status).json({ message: err.message });
@@ -193,6 +190,19 @@ updateOrderItemStatus = (req, res) => {
   });
 };
 
+payBill = (req, res) => {
+  const { orderIds, status} = req.query;
+  Order.payBill(orderIds, status, (err, result) => {
+    if (err) {
+      return res.status(err.status).json({ message: err.message });
+    }
+    if (!result) {
+      return res.status(NOT_FOUND).json({ message: "Error updating paid statuses on orders" });
+    }
+    return res.status(200).json(result);
+  });
+}
+
 module.exports = {
   viewOrders,
   createOrder,
@@ -201,4 +211,5 @@ module.exports = {
   deleteOrder,
   viewOrdersByStatus,
   updateOrderItemStatus,
+  payBill
 };
