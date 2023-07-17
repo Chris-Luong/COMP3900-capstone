@@ -97,18 +97,19 @@ const FilterModal = ({
             defaultValue=""
             value={selectedCategory}
           >
-            <FormControlLabel value="" control={<Radio />} label="All" />
+            <FormControlLabel value="" control={<Radio color="secondary"/>} label="All" />
             {Object.keys(categories).map((c) => (
               <FormControlLabel
                 key={c}
                 value={categories[c]}
-                control={<Radio />}
+                control={<Radio color="secondary"/>}
                 label={categories[c]}
               />
             ))}
           </RadioGroup>
           <Typography variant="h6">Price</Typography>
           <Slider
+            color="secondary"
             value={price}
             onChange={handlePriceChange}
             valueLabelDisplay="auto"

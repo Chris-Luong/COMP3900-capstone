@@ -63,6 +63,16 @@ export const sendOrder = async (body) => {
   }
 };
 
+export const getOrders = async () => {
+  try {
+    const res = await sendRequest("/orders", "GET");
+    return res;
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+};
+
 export const retrieveOrdersWithTableId = async (tableId) => {
   try {
     const res = await sendRequest(`/orders/tables/${tableId}`, "GET");
@@ -85,7 +95,7 @@ export const retrieveOrderItems = async (orderId) => {
 
 export const retrieveOrdersByStatus = async () => {
   const role = localStorage.getItem("role");
-  const status = (role === "Kitchen Staff") ? "Preparing" : "Ready To Serve";
+  const status = role === "Kitchen Staff" ? "Preparing" : "Ready To Serve";
   try {
     const res = await sendRequest(`/orders/pending/${status}`, "GET");
     return res;

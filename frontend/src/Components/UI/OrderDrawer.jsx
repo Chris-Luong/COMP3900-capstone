@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
+// TODO: Make delete cursor: pointer on hover
 const OrderDrawer = ({
   orderItems,
   onDelete,
@@ -68,14 +69,14 @@ const OrderDrawer = ({
   // TODO: Get accountId from email of user?
   const list = (anchor) => (
     <Box
-      role="presentation"
+      role='presentation'
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <Typography
-        variant="h4"
+        variant='h4'
         gutterBottom
-        align="center"
+        align='center'
         sx={{ margin: "10px" }}
       >
         My Order
@@ -100,7 +101,8 @@ const OrderDrawer = ({
                     />
                   </Container>
                   <DeleteOutlineIcon
-                    color="warning"
+                    color='warning'
+                    sx={{ cursor: "pointer" }}
                     onClick={() => handleRemoveFromCart(index)}
                   />
                 </ListItem>
@@ -112,8 +114,9 @@ const OrderDrawer = ({
       {/* TODO: useState fn to check hasSentOrder - if has sent then
       disable this button and enable the req bill button */}
       <Container sx={{ mt: "0.5rem" }}>
-        <Typography align="center">Order Total: ${orderSum}</Typography>
+        <Typography align='center'>Order Total: ${orderSum}</Typography>
         <Button
+          color='secondary'
           disabled={orderItems.length === 0}
           onClick={handleSendOrder}
           fullWidth
@@ -145,8 +148,9 @@ const OrderDrawer = ({
         </List>
       ) : null}
       <Container sx={{ mt: "0.5rem" }}>
-        <Typography align="center">Table Total: $100.00</Typography>
+        <Typography align='center'>Table Total: $100.00</Typography>
         <Button
+          color='secondary'
           disabled={tableOrders.length === 0}
           onClick={handleRequestBill}
           fullWidth
@@ -164,7 +168,7 @@ const OrderDrawer = ({
           anchor={"right"}
           open={state["right"]}
           onClose={toggleDrawer("right", false)}
-          variant="permanent"
+          variant='permanent'
           sx={{
             width: "400px",
             flexShrink: 0,
