@@ -77,7 +77,7 @@ class Order {
           );
           return;
         }
-        subtotal += result[0].price;
+        subtotal += result[0].price * item.quantity;
         itemCount++;
         if (itemCount === items.length) {
           processOrder();
