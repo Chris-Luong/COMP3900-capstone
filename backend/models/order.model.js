@@ -304,8 +304,6 @@ class Order {
     new_orderIds.forEach((orderId) => {
       const values = [status, orderId]
       db.query(updateOrderPayStatus, values, (err, results) => {
-        console.log("MySQL Error: " + err);
-        console.log("MySQL Result:", results);
         if (err) {
           cb(
             {
