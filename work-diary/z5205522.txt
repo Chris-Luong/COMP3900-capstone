@@ -58,3 +58,8 @@ For Sprint 3, I was tasked with the kitchen staff order fulfilment tickets and c
 While completing MN3900-14 and MN3900-97, I fixed a bug to do with thumbnails and editing menu items.
 I also completed the UI for kitchen staff, and am waiting on a status endpoint
 ============================================================================================================================================================================================================
+Week8:
+
+I created an endpoint to update status and updated staff components to use this endpoint.
+This means that MN3900-11, MN3900-6, MN3900-49, MN3900-7 and MN3900-50 are completed.
+============================================================================================================================================================================================================
