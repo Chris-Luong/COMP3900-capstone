@@ -1,14 +1,17 @@
 import { useState, useEffect } from "react";
-import { retrieveOrdersByStatus } from "../Helper";
+import {
+  retrieveOrdersByStatus,
+  PREPARING_STATUS,
+  READY_STATUS,
+  updateOrderItemStatus,
+} from "../Helper";
 import {
   Box,
   CircularProgress,
   Card,
   CardContent,
   CardHeader,
-  CardActions,
   Grid,
-  Button,
   Typography,
   List,
   Divider,
@@ -19,17 +22,27 @@ import {
 const KitchenStaff = () => {
   const [loading, setLoading] = useState(false);
   const [orders, setOrders] = useState({});
+  const [triggerRerender, setTriggerRerender] = useState(false);
+
+  const handleStatusUpdate = async (orderItemId) => {
+    setLoading(true);
+    console.log(orderItemId);
+    const res = await updateOrderItemStatus(orderItemId, READY_STATUS);
+    alert(res.message);
+    setTriggerRerender(!triggerRerender);
+    setLoading(false);
+  };
 
   useEffect(() => {
     setLoading(true);
     const retrieveOrders = async () => {
-      const orderData = await retrieveOrdersByStatus();
+      const orderData = await retrieveOrdersByStatus(PREPARING_STATUS);
       console.log(orderData);
       setOrders(orderData);
       setLoading(false);
     };
     retrieveOrders();
-  }, []);
+  }, [triggerRerender]);
 
   return (
     <>
@@ -55,8 +68,8 @@ const KitchenStaff = () => {
                     <List>
                       {orders[orderId].items.map((item) => (
                         <ListItem
-                          key={`${orderId}-${item.itemId}`}
-                          onClick={() => {console.log('updating status!')}}
+                          key={item.orderItemId}
+                          onClick={() => handleStatusUpdate(item.orderItemId)}
                           sx={{
                             "&:hover": {
                               backgroundColor: "orange",
@@ -66,7 +79,7 @@ const KitchenStaff = () => {
                             },
                             borderRadius: "15px",
                             border: 1,
-                            borderColor: "white"
+                            borderColor: "white",
                           }}
                         >
                           <ListItemText
@@ -83,6 +96,9 @@ const KitchenStaff = () => {
           </Grid>
         </Box>
       )}
+      {!loading && Object.keys(orders).length === 0 ? (
+        <Typography sx={{mt: "35px"}}>No orders!</Typography>
+      ) : null}
     </>
   );
 };
