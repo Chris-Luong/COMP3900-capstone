@@ -72,4 +72,6 @@ Started working on the dashboard for waitstaff to view orders and order items ac
  (Preparing, Ready To Serve and Served). Included the functionality to change the status of order items 
 by clicking on them.
 
-Worked with Gungeet to improve the UI of the whole website - common colour scheme and modern design.
+Helped Gungeet to improve the UI of the whole website - common colour scheme and modern design.
+Changed implementation of OrderDashboard to show only Ready To Serve order items and to match KitchenStaff
+UI after discussing with Alan.
