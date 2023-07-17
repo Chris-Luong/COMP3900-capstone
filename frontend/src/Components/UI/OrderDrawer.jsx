@@ -64,11 +64,11 @@ const OrderDrawer = ({
         total += item.quantity * item.price;
       });
     }
-    setOrderSum(Math.round(total * 100) / 100);
+    setOrderSum(+total.toFixed(2));
   }, [orderItems]);
 
   const handleSubmit = () => {
-    setTableSum(Math.round((tableSum + orderSum) * 100) / 100);
+    setTableSum(+(tableSum + orderSum).toFixed(2));
     handleSendOrder();
   };
 
