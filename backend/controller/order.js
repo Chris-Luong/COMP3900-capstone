@@ -167,6 +167,29 @@ viewOrdersByStatus = (req, res) => {
   });
 };
 
+/**
+ * for staff to update individual order items
+ * 
+ *  * @param {string}           id          id from orderItems table
+ *  * @param {string}           newStatus          new status
+ *
+ * @returns {List of orderItems with the given status grouped by order id: {orderId, orderTime, itemName, itemId, quantity, status, note}}
+*/
+updateOrderItemStatus = (req, res) => {
+  const {id, newStatus} = req.query;
+  Order.updateOrderItemStatus(id, newStatus, (err, result) => {
+    if (err) {
+      return res.status(err.status).json({ message: err.message });
+    }
+    if (!result) {
+      return res
+        .status(NOT_FOUND)
+        .json({ message: "Error Updating Order Item Status" });
+    }
+    return res.status(200).json({message: `order item with ${id} is now ${newStatus}`});
+  });
+};
+
 module.exports = {
   viewOrders,
   createOrder,
@@ -174,4 +197,5 @@ module.exports = {
   getOrdersForTableId,
   deleteOrder,
   viewOrdersByStatus,
+  updateOrderItemStatus,
 };

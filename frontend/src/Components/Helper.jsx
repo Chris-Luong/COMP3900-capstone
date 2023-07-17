@@ -93,11 +93,24 @@ export const retrieveOrderItems = async (orderId) => {
   }
 };
 
-export const retrieveOrdersByStatus = async () => {
-  const role = localStorage.getItem("role");
-  const status = role === "Kitchen Staff" ? "Preparing" : "Ready To Serve";
+// String constants for status
+export const PREPARING_STATUS = "Preparing";
+export const READY_STATUS = "Ready To Serve";
+export const SERVED_STATUS = "Served";
+
+export const retrieveOrdersByStatus = async (status) => {
   try {
-    const res = await sendRequest(`/orders/pending/${status}`, "GET");
+    const res = await sendRequest(`/orders/${status}`, "GET");
+    return res;
+  } catch (err) {
+    alert(err);
+    console.log(err);
+  }
+};
+
+export const updateOrderItemStatus = async (id, status) => {
+  try {
+    const res = await sendRequest(`/orders/update?id=${id}&newStatus=${status}`, "PUT");
     return res;
   } catch (err) {
     alert(err);

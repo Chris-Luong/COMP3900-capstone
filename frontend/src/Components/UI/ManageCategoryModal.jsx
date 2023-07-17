@@ -5,7 +5,6 @@ import {
   Box,
   Stack,
   List,
-  Divider,
   ListItem,
   ListItemText,
   Typography,

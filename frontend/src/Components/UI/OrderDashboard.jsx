@@ -1,5 +1,10 @@
 import * as React from "react";
-import { retrieveOrdersByStatus } from "../Helper";
+import {
+  retrieveOrdersByStatus,
+  READY_STATUS,
+  SERVED_STATUS,
+  updateOrderItemStatus,
+} from "../Helper";
 import { useState, useEffect } from "react";
 
 import {
@@ -22,27 +27,30 @@ import {
 // const orders = await getOrders(); // Use the one for waitstaff
 // console.log(orders);
 
-const handleCompleteItem = (orderId, itemId) => {
-  console.log("Item clicked");
-  console.log(orderId);
-  console.log(itemId);
-  // TODO: send request to change order item status to Served
-};
-
 const OrderDashboard = () => {
   const [loading, setLoading] = useState(false);
   const [orders, setOrders] = useState({});
+  const [triggerRerender, setTriggerRerender] = useState(false);
+
+  const handleStatusUpdate = async (orderItemId) => {
+    setLoading(true);
+    console.log(orderItemId);
+    const res = await updateOrderItemStatus(orderItemId, SERVED_STATUS);
+    alert(res.message);
+    setTriggerRerender(!triggerRerender);
+    setLoading(false);
+  };
 
   useEffect(() => {
     setLoading(true);
     const retrieveOrders = async () => {
-      const orderData = await retrieveOrdersByStatus();
+      const orderData = await retrieveOrdersByStatus(READY_STATUS);
       console.log(orderData);
       setOrders(orderData);
       setLoading(false);
     };
     retrieveOrders();
-  }, []);
+  }, [triggerRerender]);
 
   console.log(orders);
   return (
@@ -60,9 +68,9 @@ const OrderDashboard = () => {
           }}
         >
           <Typography
-            component='h2'
-            variant='h5'
-            color='primary'
+            component="h2"
+            variant="h5"
+            color="primary"
             gutterBottom
             sx={{ mb: 3 }}
           >
@@ -88,9 +96,7 @@ const OrderDashboard = () => {
                       {orders[orderId].items.map((item) => (
                         <ListItem
                           key={`${orderId}-${item.itemId}`}
-                          onClick={() =>
-                            handleCompleteItem(orderId, item.itemId)
-                          }
+                          onClick={() => handleStatusUpdate(item.orderItemId)}
                           sx={{
                             "&:hover": {
                               backgroundColor: "orange",
