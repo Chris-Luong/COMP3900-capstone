@@ -55,4 +55,6 @@ Week7:
 I fixed issues to do with editing item categories with Rodney and added form validation. I worked on thumbnail support for menu items on both the frontend and backend from the menu ordering epic.
 I reworked the order drawer UI to show order history and fixed some bugs.
 For Sprint 3, I was tasked with the kitchen staff order fulfilment tickets and completing the rest of the manager interactions epic. 
+While completing MN3900-14 and MN3900-97, I fixed a bug to do with thumbnails and editing menu items.
+I also completed the UI for kitchen staff, and am waiting on a status endpoint
 ============================================================================================================================================================================================================
