@@ -39,6 +39,7 @@ const OrderDrawer = ({
   };
 
   const [orderSum, setOrderSum] = useState(0);
+  const [tableSum, setTableSum] = useState(0);
 
   console.log(orderItems);
 
@@ -63,8 +64,13 @@ const OrderDrawer = ({
         total += item.quantity * item.price;
       });
     }
-    setOrderSum(total);
+    setOrderSum(Math.round(total * 100) / 100);
   }, [orderItems]);
+
+  const handleSubmit = () => {
+    setTableSum(Math.round((tableSum + orderSum) * 100) / 100);
+    handleSendOrder();
+  };
 
   // TODO: Get accountId from email of user?
   const list = (anchor) => (
@@ -118,7 +124,7 @@ const OrderDrawer = ({
         <Button
           color='secondary'
           disabled={orderItems.length === 0}
-          onClick={handleSendOrder}
+          onClick={handleSubmit}
           fullWidth
         >
           Submit order
@@ -148,7 +154,7 @@ const OrderDrawer = ({
         </List>
       ) : null}
       <Container sx={{ mt: "0.5rem" }}>
-        <Typography align='center'>Table Total: $100.00</Typography>
+        <Typography align='center'>Table Total: ${tableSum}</Typography>
         <Button
           color='secondary'
           disabled={tableOrders.length === 0}
