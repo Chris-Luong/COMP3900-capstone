@@ -139,6 +139,8 @@ const OrderDrawer = ({
                 <ListItemText primary={`Order ID: ${order.id}`} />
                 <ListItemText primary={`$${order.subtotal}`} />
               </ListItem>
+              {/* TODO: should show this all the time but isnt
+              refreshing sometimes shows it */}
               {order.menuItems && order.menuItems.length !== 0 && (
                 <List sx={{ padding: "0 28px" }}>
                   {order.menuItems.map((item) => (
