@@ -28,7 +28,7 @@ const getMenuItemsByAccount = `
 
 const createOrder = `
   INSERT INTO orders (accountId, tableId, subtotal, paid)
-  VALUES(?, ?, ?, 0);
+  VALUES(?, ?, ?, 1);
 `;
 
 const getItemPrice = `
