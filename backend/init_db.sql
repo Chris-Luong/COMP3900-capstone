@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS orders (
     tableId INT UNSIGNED,
     subtotal DECIMAL(9, 2) NOT NULL,
     orderTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    paid BOOLEAN NOT NULL,
+    paid ENUM("Unpaid", "Requesting", "Paid") NOT NULL DEFAULT "Unpaid",
     FOREIGN KEY (accountId) REFERENCES account(accountId)
 );
 
@@ -126,11 +126,11 @@ INSERT INTO menuItemsCategories (itemId, categoryId) VALUES
     (10, 3) -- test item - dinner
 ;
 
-INSERT INTO orders (accountId, tableId, subtotal, paid) VALUES 
-     (1, 1, 23.97, 0),
-     (2, 2, 23.97, 0),
-     (3, 3, 69.97, 0),
-     (4, 3, 2.97, 0)
+INSERT INTO orders (accountId, tableId, subtotal) VALUES 
+     (1, 1, 23.97),
+     (2, 2, 23.97),
+     (3, 3, 69.97),
+     (4, 3, 2.97)
 ;
 
 INSERT INTO orderItems (orderId, itemId, quantity, note, status) VALUES 

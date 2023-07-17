@@ -67,6 +67,12 @@ const getOrdersForTableId = `
   SELECT * FROM orders WHERE tableId = ?
 `;
 
+const updateOrderPayStatus = `
+  UPDATE orders
+  SET paid = ?
+  WHERE orders.id = ?
+`
+
 module.exports = {
   getMenuItemsByAccount,
   getMenuItemsByOrder,
@@ -79,4 +85,5 @@ module.exports = {
   getOrdersForTableId,
   getOrdersByStatus,
   updateOrderItemStatus,
+  updateOrderPayStatus,
 };
