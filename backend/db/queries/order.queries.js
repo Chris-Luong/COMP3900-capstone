@@ -1,5 +1,5 @@
 const getMenuItemsByOrder = `
-  SELECT O.accountId as accountId, O.paid as paid, MI.name as itemName, MI.id as itemId, OI.quantity as quantity, OI.note as note, MI.price as price, OI.status, MI.thumbnail as thumbnail FROM 
+  SELECT OI.id as orderItemId, O.accountId as accountId, O.paid as paid, MI.name as itemName, MI.id as itemId, OI.quantity as quantity, OI.note as note, MI.price as price, OI.status, MI.thumbnail as thumbnail FROM 
   orders O 
     join orderItems OI on OI.orderId = O.id 
     join menuItems MI on MI.id = OI.itemId 

@@ -11,6 +11,7 @@ import {
   Divider,
   ListItem,
   ListItemText,
+  CircularProgress,
 } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
@@ -41,7 +42,7 @@ const OrderDrawer = ({
   const [orderSum, setOrderSum] = useState(0);
   const [tableSum, setTableSum] = useState(0);
 
-  console.log(orderItems);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleRemoveFromCart = (index) => {
     onDelete(index);
@@ -58,6 +59,7 @@ const OrderDrawer = ({
 
   // Updated order total everytime the order is updated
   useEffect(() => {
+    setIsLoading(true);
     let total = 0;
     if (orderItems && orderItems.length > 0) {
       orderItems.forEach((item) => {
@@ -65,24 +67,27 @@ const OrderDrawer = ({
       });
     }
     setOrderSum(+total.toFixed(2));
+    setIsLoading(false);
   }, [orderItems]);
 
   const handleSubmit = () => {
+    setIsLoading(true);
     setTableSum(+(tableSum + orderSum).toFixed(2));
     handleSendOrder();
+    setIsLoading(false);
   };
 
   // TODO: Get accountId from email of user?
   const list = (anchor) => (
     <Box
-      role='presentation'
+      role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <Typography
-        variant='h4'
+        variant="h4"
         gutterBottom
-        align='center'
+        align="center"
         sx={{ margin: "10px" }}
       >
         My Order
@@ -107,7 +112,7 @@ const OrderDrawer = ({
                     />
                   </Container>
                   <DeleteOutlineIcon
-                    color='warning'
+                    color="warning"
                     sx={{ cursor: "pointer" }}
                     onClick={() => handleRemoveFromCart(index)}
                   />
@@ -120,9 +125,9 @@ const OrderDrawer = ({
       {/* TODO: useState fn to check hasSentOrder - if has sent then
       disable this button and enable the req bill button */}
       <Container sx={{ mt: "0.5rem" }}>
-        <Typography align='center'>Order Total: ${orderSum}</Typography>
+        <Typography align="center">Order Total: ${orderSum}</Typography>
         <Button
-          color='secondary'
+          color="secondary"
           disabled={orderItems.length === 0}
           onClick={handleSubmit}
           fullWidth
@@ -134,29 +139,31 @@ const OrderDrawer = ({
       {tableOrders.length !== 0 ? (
         <List>
           {tableOrders.map((order) => (
-            <>
-              <ListItem key={order.id}>
+            <Box key={order.id}>
+              <ListItem>
                 <ListItemText primary={`Order ID: ${order.id}`} />
                 <ListItemText primary={`$${order.subtotal}`} />
               </ListItem>
+              {console.log(tableOrders)}
               {order.menuItems && order.menuItems.length !== 0 && (
                 <List sx={{ padding: "0 28px" }}>
                   {order.menuItems.map((item) => (
                     <ListItemText
+                      key={item.orderItemId}
                       primary={item.itemName}
                       secondary={item.status}
                     />
                   ))}
                 </List>
               )}
-            </>
+            </Box>
           ))}
         </List>
       ) : null}
       <Container sx={{ mt: "0.5rem" }}>
-        <Typography align='center'>Table Total: ${tableSum}</Typography>
+        <Typography align="center">Table Total: ${tableSum}</Typography>
         <Button
-          color='secondary'
+          color="secondary"
           disabled={tableOrders.length === 0}
           onClick={handleRequestBill}
           fullWidth
@@ -184,7 +191,7 @@ const OrderDrawer = ({
             },
           }}
         >
-          {list("right")}
+          {isLoading ? <CircularProgress /> : list("right")}
         </Drawer>
       </Fragment>
     </div>

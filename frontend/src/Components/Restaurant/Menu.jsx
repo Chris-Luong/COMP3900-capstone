@@ -106,18 +106,25 @@ const Menu = () => {
       items: items,
     };
     await sendOrder(body);
-    setOrderItems([]);
     await updateTableOrdersData();
+    setOrderItems([]);
   };
 
   const updateTableOrdersData = useCallback(async () => {
+    setLoading(true);
     let ordersData = await retrieveOrdersWithTableId(tableId);
     ordersData.forEach(async (order) => {
       const orderedItems = await retrieveOrderItems(order.id);
       order.menuItems = orderedItems;
     });
-    console.log(ordersData);
+    await Promise.all(
+      ordersData.map(async (order) => {
+        const orderedItems = await retrieveOrderItems(order.id);
+        order.menuItems = orderedItems;
+      })
+    );
     setTableOrders(ordersData);
+    setLoading(false);
   }, [tableId]);
 
   useEffect(() => {
@@ -133,11 +140,11 @@ const Menu = () => {
         categoriesObject[c.id] = c.name;
       });
       setCategories(categoriesObject);
-      setLoading(false);
     };
-
+    
     getMenuData();
     updateTableOrdersData();
+    setLoading(false);
   }, [updateTableOrdersData, tableId]);
 
   const handleUpdateOrderItems = (updatedOrderItems) => {
@@ -223,7 +230,6 @@ const Menu = () => {
             onDelete={handleRemoveOrderItem}
             handleSendOrder={handleSendOrder}
             tableOrders={tableOrders}
-            // deleteItem={handleRemoveOrderItem()}
           />
         </Box>
       )}
