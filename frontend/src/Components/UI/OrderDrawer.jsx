@@ -96,7 +96,7 @@ const OrderDrawer = ({
       <List>
         {orderItems && orderItems.length > 0
           ? orderItems.map((item, index) => (
-              <Box key={`pending-order-container-${item.id}-${index}`}>
+              <Box key={`pending-order-ctn-${item.id}-${index}`}>
                 {index !== 0 ? <Divider key={`Divider-${index}`} /> : null}
                 <ListItem
                   key={`pending-order-${item}-${index}`}
@@ -140,7 +140,7 @@ const OrderDrawer = ({
       {tableOrders.length !== 0 ? (
         <List>
           {tableOrders.map((order) => (
-            <Box key={`order-container-${order.id}`}>
+            <Box key={`order-ctn-${order.id}`}>
               <ListItem key={`order-${order.id}`}>
                 <ListItemText primary={`Order ID: ${order.id}`} />
                 <ListItemText primary={`$${order.subtotal}`} />
@@ -151,11 +151,17 @@ const OrderDrawer = ({
                   sx={{ padding: "0 28px" }}
                 >
                   {order.menuItems.map((item) => (
-                    <ListItemText
-                      key={`order-item-${item.orderItemId}`}
-                      primary={item.itemName}
-                      secondary={item.status}
-                    />
+                    <Box key={`order-item-ctn-${item.orderItemId}`}>
+                      <ListItemText
+                        key={`order-item-${item.orderItemId}`}
+                        primary={item.itemName}
+                        secondary={`Qty: ${item.quantity}`}
+                      />
+                      <ListItemText
+                        key={`order-item-status-${item.orderItemId}`}
+                        secondary={item.status}
+                      />
+                    </Box>
                   ))}
                 </List>
               )}
