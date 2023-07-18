@@ -55,6 +55,7 @@ const OrderDrawer = ({
     checkIn.setIsCheckedIn(false);
     localStorage.removeItem("token");
     localStorage.removeItem("checkedIn");
+    localStorage.removeItem("tableId");
     navigate("/restaurant");
   };
 
