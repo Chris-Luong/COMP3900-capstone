@@ -11,6 +11,7 @@ const {
   getOrdersForTableId,
   getOrdersByStatus,
   updateOrderItemStatus,
+  updateOrderPayStatus,
 } = require("../db/queries/order.queries");
 
 const NOT_FOUND = 401;
@@ -76,7 +77,7 @@ class Order {
           );
           return;
         }
-        subtotal += result[0].price;
+        subtotal += result[0].price * item.quantity;
         itemCount++;
         if (itemCount === items.length) {
           processOrder();
@@ -243,8 +244,6 @@ class Order {
   static getOrdersByStatus(status, next) {
     db.query(getOrdersByStatus, status, (err, results) => {
       if (err) {
-        console.log("MySQL Error: " + err);
-        console.log("MySQL Result:", results);
         next(
           {
             status: EXISTS,
@@ -270,7 +269,6 @@ class Order {
         }
         orders[item.orderId].items.push(item);
       });
-      console.log(orders);
       let result = JSON.parse(JSON.stringify(orders));
       next(null, result);
     });
@@ -294,5 +292,33 @@ class Order {
       next(null, result);
     });
   }
-} 
+
+  static payBill(orderIds, status, cb) {
+    let new_orderIds = [];
+    if (!Array.isArray(orderIds)) {
+      new_orderIds.push(orderIds);
+    } else {
+      new_orderIds = orderIds
+    }
+
+    new_orderIds.forEach((orderId) => {
+      const values = [status, orderId]
+      db.query(updateOrderPayStatus, values, (err, results) => {
+        if (err) {
+          cb(
+            {
+              status: EXISTS,
+              message: "Error updating order pay status",
+              kind: EXISTS_KIND,
+            },
+            null
+          );
+          return;
+        }
+      })
+    });
+
+    cb(null, {message: "Successfully updated pay status on orders"});
+  }
+}
 module.exports = { Order, NOT_FOUND, EXISTS, CANNOT_CREATE };

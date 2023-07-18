@@ -28,7 +28,7 @@ const getMenuItemsByAccount = `
 
 const createOrder = `
   INSERT INTO orders (accountId, tableId, subtotal, paid)
-  VALUES(?, ?, ?, 0);
+  VALUES(?, ?, ?, 1);
 `;
 
 const getItemPrice = `
@@ -67,6 +67,12 @@ const getOrdersForTableId = `
   SELECT * FROM orders WHERE tableId = ?
 `;
 
+const updateOrderPayStatus = `
+  UPDATE orders
+  SET paid = ?
+  WHERE orders.id = ?
+`
+
 module.exports = {
   getMenuItemsByAccount,
   getMenuItemsByOrder,
@@ -79,4 +85,5 @@ module.exports = {
   getOrdersForTableId,
   getOrdersByStatus,
   updateOrderItemStatus,
+  updateOrderPayStatus,
 };
