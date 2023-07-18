@@ -106,8 +106,10 @@ const Menu = () => {
       items: items,
     };
     await sendOrder(body);
+    setLoading(true);
     await updateTableOrdersData();
     setOrderItems([]);
+    setLoading(false);
   };
 
   const updateTableOrdersData = useCallback(async () => {
@@ -230,6 +232,7 @@ const Menu = () => {
             onDelete={handleRemoveOrderItem}
             handleSendOrder={handleSendOrder}
             tableOrders={tableOrders}
+            loading={loading}
           />
         </Box>
       )}
