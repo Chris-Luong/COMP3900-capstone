@@ -21,6 +21,7 @@ const OrderDrawer = ({
   onDelete,
   handleSendOrder,
   tableOrders,
+  loading
 }) => {
   const checkIn = useContext(RestaurantContext);
   const navigate = useNavigate();
@@ -42,7 +43,7 @@ const OrderDrawer = ({
   const [orderSum, setOrderSum] = useState(0);
   const [tableSum, setTableSum] = useState(0);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleRemoveFromCart = (index) => {
     onDelete(index);
@@ -95,10 +96,10 @@ const OrderDrawer = ({
       <List>
         {orderItems && orderItems.length > 0
           ? orderItems.map((item, index) => (
-              <>
-                {index !== 0 ? <Divider key={item} /> : null}
+              <Box key={`pending-order-container-${item.id}-${index}`}>
+                {index !== 0 ? <Divider key={`Divider-${index}`} /> : null}
                 <ListItem
-                  key={item}
+                  key={`pending-order-${item}-${index}`}
                   sx={{ display: "flex", justifyContent: "flex-end" }}
                 >
                   <Container>
@@ -117,11 +118,10 @@ const OrderDrawer = ({
                     onClick={() => handleRemoveFromCart(index)}
                   />
                 </ListItem>
-              </>
+              </Box>
             ))
           : null}
       </List>
-      {/* <Divider sx={{ borderBottomWidth: 3 }} /> */}
       {/* TODO: useState fn to check hasSentOrder - if has sent then
       disable this button and enable the req bill button */}
       <Container sx={{ mt: "0.5rem" }}>
@@ -136,20 +136,23 @@ const OrderDrawer = ({
         </Button>
       </Container>
       <Divider sx={{ borderBottomWidth: 3 }} />
+      {loading && <CircularProgress sx={{ alignSelf: "center", mt: "50%" }} />}
       {tableOrders.length !== 0 ? (
         <List>
           {tableOrders.map((order) => (
-            <Box key={order.id}>
-              <ListItem>
+            <Box key={`order-container-${order.id}`}>
+              <ListItem key={`order-${order.id}`}>
                 <ListItemText primary={`Order ID: ${order.id}`} />
                 <ListItemText primary={`$${order.subtotal}`} />
               </ListItem>
-              {console.log(tableOrders)}
               {order.menuItems && order.menuItems.length !== 0 && (
-                <List sx={{ padding: "0 28px" }}>
+                <List
+                  key={`order-item-list-${order.id}`}
+                  sx={{ padding: "0 28px" }}
+                >
                   {order.menuItems.map((item) => (
                     <ListItemText
-                      key={item.orderItemId}
+                      key={`order-item-${item.orderItemId}`}
                       primary={item.itemName}
                       secondary={item.status}
                     />
