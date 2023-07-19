@@ -68,9 +68,16 @@ const OrderDrawer = ({
         total += item.quantity * item.price;
       });
     }
+    let tableTotal = 0;
+    if (tableOrders.length > 0) {
+      tableOrders.forEach(tableOrder => {
+        tableTotal += tableOrder.subtotal
+      });
+    }
+    setTableSum(tableTotal);
     setOrderSum(+total.toFixed(2));
     setIsLoading(false);
-  }, [orderItems]);
+  }, [orderItems, tableOrders]);
 
   const handleSubmit = () => {
     setIsLoading(true);

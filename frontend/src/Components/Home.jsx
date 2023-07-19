@@ -1,18 +1,49 @@
-import WaitStaff from './Restaurant/WaitStaff';
-import KitchenStaff from './Restaurant/KitchenStaff';
-import Manager from './Restaurant/Manager';
+import WaitStaff from "./Restaurant/WaitStaff";
+import KitchenStaff from "./Restaurant/KitchenStaff";
+import Manager from "./Restaurant/Manager";
+import { Box, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import RestaurantContext from "./Context/restaurant-context";
+import LoginContext from "./Context/login-context";
 
 const Home = () => {
   const role = localStorage.getItem("role");
 
+  const checkIn = useContext(RestaurantContext);
+  const login = useContext(LoginContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    const items = { ...localStorage };
+    console.log(items);
+    checkIn.setIsCheckedIn(false);
+    login.setIsLoggedIn(false);
+    localStorage.clear();
+    console.log(items);
+    navigate("/");
+  };
+
   return (
-    <div>
-      You are logged in! log out by clearing local storage
-      {role === "Customer" && <div>booking and loyalty here</div>}
-      {role === "Wait Staff" && <WaitStaff />}
-      {role === "Kitchen Staff" && <KitchenStaff />}
-      {role === "Manager" && <Manager />}
-    </div>
+    <Box>
+      <div>
+        You are logged in! log out by clearing local storage
+        {role === "Customer" && <div>booking and loyalty here</div>}
+        {role === "Wait Staff" && <WaitStaff />}
+        {role === "Kitchen Staff" && <KitchenStaff />}
+        {role === "Manager" && <Manager />}
+      </div>
+      <Button
+        sx={{
+          position: "fixed",
+          right: 30,
+          top: 15,
+        }}
+        onClick={handleLogout}
+      >
+        Logout
+      </Button>
+    </Box>
   );
 };
 
