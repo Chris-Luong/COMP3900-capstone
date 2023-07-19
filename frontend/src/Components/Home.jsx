@@ -40,6 +40,7 @@ const Home = () => {
           top: 15,
         }}
         onClick={handleLogout}
+        color='secondary'
       >
         Logout
       </Button>
