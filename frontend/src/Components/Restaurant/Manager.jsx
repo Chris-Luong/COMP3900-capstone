@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
 import { getAllMenuItems, getAllCategories, addItem } from "../Helper";
-import { Button, CircularProgress, Grid, Typography } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Grid,
+  Typography,
+  TextField,
+} from "@mui/material";
 import sendRequest from "../Utils/Request";
 import { fileToDataUrl } from "../Helper";
 import NewItemModal from "../UI/NewItemModal";
@@ -14,6 +20,7 @@ const Manager = () => {
   const [showManageCategoryModal, setShowManageCategoryModal] = useState(false);
   const [categories, setCategories] = useState({});
   const [triggerRerender, setTriggerRerender] = useState(false);
+  const [searchString, setSearchString] = useState("");
 
   const toggleNewItemModal = () => {
     setShowNewItemModal(!showNewItemModal);
@@ -51,7 +58,9 @@ const Manager = () => {
 
   const handleDeleteCategory = async (e) => {
     try {
-      const res = await sendRequest("/categories/remove", "DELETE", {id: e.target.value});
+      const res = await sendRequest("/categories/remove", "DELETE", {
+        id: e.target.value,
+      });
       alert(res.message);
       toggleManageCategoryModal();
       setTriggerRerender(!triggerRerender);
@@ -64,7 +73,7 @@ const Manager = () => {
   const handleNewCategorySubmit = async (values) => {
     const name = values.name.charAt(0).toUpperCase() + values.name.slice(1);
     try {
-      const res = await sendRequest("/categories/add", "POST", {name});
+      const res = await sendRequest("/categories/add", "POST", { name });
       alert(`Created new category with id ${res}`);
       toggleManageCategoryModal();
       setTriggerRerender(!triggerRerender);
@@ -72,7 +81,7 @@ const Manager = () => {
       alert(err);
       console.log(err);
     }
-  }
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -107,22 +116,34 @@ const Manager = () => {
           >
             Manage Categories
           </Button>
+          <TextField
+            size="small"
+            placeholder="Search by name"
+            value={searchString}
+            onChange={(e) => setSearchString(e.target.value)}
+          />
           <Grid container spacing={2} sx={{ display: "flex" }}>
-            {menuItems.map((item) => (
-              <ManageMenuItemCard
-                key={item.id}
-                id={item.id}
-                name={item.name}
-                description={item.description}
-                ingredients={item.ingredients}
-                price={item.price}
-                thumbnail={item.thumbnail}
-                handleItemDelete={handleItemDelete}
-                categories={categories}
-                triggerRerender={triggerRerender}
-                setTriggerRerender={setTriggerRerender}
-              />
-            ))}
+            {menuItems
+              .filter((item) =>
+                searchString
+                  ? item.name.toLowerCase().includes(searchString.toLowerCase())
+                  : true
+              )
+              .map((item) => (
+                <ManageMenuItemCard
+                  key={item.id}
+                  id={item.id}
+                  name={item.name}
+                  description={item.description}
+                  ingredients={item.ingredients}
+                  price={item.price}
+                  thumbnail={item.thumbnail}
+                  handleItemDelete={handleItemDelete}
+                  categories={categories}
+                  triggerRerender={triggerRerender}
+                  setTriggerRerender={setTriggerRerender}
+                />
+              ))}
           </Grid>
           {showNewItemModal && (
             <NewItemModal

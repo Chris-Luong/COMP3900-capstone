@@ -57,24 +57,36 @@ class Menu {
       itemId = result.insertId;
     });
 
-    categories.forEach((category) => {
+    let new_categories = [];
+    if (!Array.isArray(categories)) {
+      new_categories.push(categories);
+    } else {
+      new_categories = categories;
+    }
+    new_categories.forEach((category) => {
       db.query(getCategory, category, (err, result) => {
         if (err) {
-          cb({
-            status: 500,
-            message: "Failed to get category id",
-            kind: "Internal Server Error."
-          }, null);
+          cb(
+            {
+              status: 500,
+              message: "Failed to get category id",
+              kind: "Internal Server Error.",
+            },
+            null
+          );
           return;
         }
         const categoryValues = [itemId, result[0].id];
         db.query(insertMenuItemCategories, categoryValues, (err) => {
           if (err) {
-            cb({
-              status: 500,
-              message: "Failed to add category to menu item",
-              kind: "Internal Server Error."
-            }, null);
+            cb(
+              {
+                status: 500,
+                message: "Failed to add category to menu item",
+                kind: "Internal Server Error.",
+              },
+              null
+            );
             return;
           }
         });
