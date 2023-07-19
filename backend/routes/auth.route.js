@@ -20,7 +20,7 @@ const {
   getOrdersForTableId,
   viewOrdersByStatus,
   updateOrderItemStatus,
-  payBill
+  updateOrderPayStatus
 } = require("../controller/order");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
@@ -73,5 +73,5 @@ router.post('/tables/create', setNewTable);
 router.get("/orders/tables/:tableid", getOrdersForTableId);
 router.get("/orders/:status", viewOrdersByStatus);
 router.put("/orders/update", updateOrderItemStatus);
-router.put("/orders/pay", payBill);
+router.put("/orders/pay", updateOrderPayStatus);
 module.exports = router;

@@ -190,9 +190,9 @@ updateOrderItemStatus = (req, res) => {
   });
 };
 
-payBill = (req, res) => {
+updateOrderPayStatus = (req, res) => {
   const { orderIds, status} = req.query;
-  Order.payBill(orderIds, status, (err, result) => {
+  Order.updatePayStatus(orderIds, status, (err, result) => {
     if (err) {
       return res.status(err.status).json({ message: err.message });
     }
@@ -211,5 +211,5 @@ module.exports = {
   deleteOrder,
   viewOrdersByStatus,
   updateOrderItemStatus,
-  payBill
+  updateOrderPayStatus
 };
