@@ -75,3 +75,9 @@ by clicking on them.
 Helped Gungeet to improve the UI of the whole website - common colour scheme and modern design.
 Changed implementation of OrderDashboard to show only Ready To Serve order items and to match KitchenStaff
 UI after discussing with Alan.
+
+WEEK 8:
+
+
+Implemented the calculation and display of the table total in the frontend order component.
+Implemented logout button.
