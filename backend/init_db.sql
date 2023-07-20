@@ -134,9 +134,9 @@ INSERT INTO orders (accountId, tableId, subtotal) VALUES
 ;
 
 INSERT INTO orderItems (orderId, itemId, quantity, note, status) VALUES 
-     (1, 1, 1, "test1", "Preparing"),
-     (1, 2, 1, "test2", "Preparing"),
-     (1, 3, 1, "test3", "Preparing"),
+     (1, 1, 1, "test1", "Served"),
+     (1, 2, 1, "test2", "Served"),
+     (1, 3, 1, "test3", "Served"),
      (2, 1, 2, "test4", "Preparing"),
      (2, 2, 2, "test5", "Preparing"),
      (2, 3, 2, "test6", "Preparing"),

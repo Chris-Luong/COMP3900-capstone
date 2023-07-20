@@ -73,6 +73,10 @@ const updateOrderPayStatus = `
   WHERE orders.id = ?
 `
 
+const checkOrderItemsQuery = `
+  SELECT COUNT(*) AS total FROM orderItems WHERE orderItems.orderId = ? AND status != 'Served'
+`
+
 module.exports = {
   getMenuItemsByAccount,
   getMenuItemsByOrder,
@@ -86,4 +90,5 @@ module.exports = {
   getOrdersByStatus,
   updateOrderItemStatus,
   updateOrderPayStatus,
+  checkOrderItemsQuery,
 };

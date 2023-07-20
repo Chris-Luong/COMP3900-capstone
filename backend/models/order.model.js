@@ -12,6 +12,7 @@ const {
   getOrdersByStatus,
   updateOrderItemStatus,
   updateOrderPayStatus,
+  checkOrderItemsQuery,
 } = require("../db/queries/order.queries");
 
 const NOT_FOUND = 401;
@@ -293,13 +294,25 @@ class Order {
     });
   }
 
-  static payBill(orderIds, status, cb) {
-    let new_orderIds = [];
-    if (!Array.isArray(orderIds)) {
-      new_orderIds.push(orderIds);
-    } else {
-      new_orderIds = orderIds
-    }
+  static updatePayStatus(orderIds, status, cb) {
+    let new_orderIds = Array.isArray(orderIds) ? orderIds : [orderIds];
+
+    const deleteCompletedOrders = (orderId) => {
+      db.query(checkOrderItemsQuery, [orderId], (err, results) => {
+        if (err) {return 1;}
+  
+        if (results[0].total === 0) {
+          db.query(deleteOrderItemsById, [orderId], (err, results) => {
+            if (err) {return 1;}
+  
+            db.query(deleteOrderById, [orderId], (err, results) => {
+              if (err) {return 1;}
+            });
+          });
+        }
+      });
+      return 0;
+    };
 
     new_orderIds.forEach((orderId) => {
       const values = [status, orderId]
@@ -315,7 +328,20 @@ class Order {
           );
           return;
         }
-      })
+      });
+      if (status == "Paid" || status == "3") {
+        if (deleteCompletedOrders(orderId)) {
+          cb(
+            {
+              status: EXISTS,
+              message: "Error deleting completed orders",
+              kind: EXISTS_KIND,
+            },
+            null
+          );
+          return;
+        }
+      }
     });
 
     cb(null, {message: "Successfully updated pay status on orders"});
