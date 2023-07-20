@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import RestaurantContext from "./Context/restaurant-context";
 import LoginContext from "./Context/login-context";
+import Customer from "./Restaurant/Customer";
 
 const Home = () => {
   const role = localStorage.getItem("role");
@@ -28,7 +29,7 @@ const Home = () => {
     <Box>
       <div>
         You are logged in! log out by clearing local storage
-        {role === "Customer" && <div>booking and loyalty here</div>}
+        {role === "Customer" && <Customer />}
         {role === "Wait Staff" && <WaitStaff />}
         {role === "Kitchen Staff" && <KitchenStaff />}
         {role === "Manager" && <Manager />}
