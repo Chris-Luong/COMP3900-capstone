@@ -1,5 +1,6 @@
 import { Typography } from "@mui/material";
 import OrderDashboard from "../UI/OrderDashboard";
+import { READY_STATUS } from "../Helper";
 
 const WaitStaff = () => {
   return (
@@ -13,8 +14,7 @@ const WaitStaff = () => {
       >
         Wait Staff Dashboard
       </Typography>
-      {/* Maybe map each dashboard to an order and clean up dashboard UI */}
-      <OrderDashboard />
+      <OrderDashboard status={READY_STATUS} />
     </>
   );
 };

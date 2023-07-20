@@ -18,6 +18,7 @@ import {
   ListItem,
   ListItemText,
 } from "@mui/material";
+import OrderDashboard from "../UI/OrderDashboard";
 
 const KitchenStaff = () => {
   const [loading, setLoading] = useState(false);
@@ -46,6 +47,17 @@ const KitchenStaff = () => {
 
   return (
     <>
+      <Typography
+        component='h1'
+        variant='h2'
+        color='primary'
+        gutterBottom
+        sx={{ mb: 3 }}
+      >
+        Kitchen Staff Dashboard
+      </Typography>
+      <OrderDashboard status={PREPARING_STATUS} />
+      {/* TODO: orderdashboard take props for completing orders depending on staff */}
       {loading && <CircularProgress />}
       {!loading && (
         <Box>
@@ -97,7 +109,7 @@ const KitchenStaff = () => {
         </Box>
       )}
       {!loading && Object.keys(orders).length === 0 ? (
-        <Typography sx={{mt: "35px"}}>No orders!</Typography>
+        <Typography sx={{ mt: "35px" }}>No orders!</Typography>
       ) : null}
     </>
   );

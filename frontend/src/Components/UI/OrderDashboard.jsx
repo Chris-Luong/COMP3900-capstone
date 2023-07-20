@@ -27,7 +27,8 @@ import {
 // const orders = await getOrders(); // Use the one for waitstaff
 // console.log(orders);
 
-const OrderDashboard = () => {
+const OrderDashboard = (props) => {
+  const status = props.status;
   const [loading, setLoading] = useState(false);
   const [orders, setOrders] = useState({});
   const [triggerRerender, setTriggerRerender] = useState(false);
@@ -44,13 +45,13 @@ const OrderDashboard = () => {
   useEffect(() => {
     setLoading(true);
     const retrieveOrders = async () => {
-      const orderData = await retrieveOrdersByStatus(READY_STATUS);
+      const orderData = await retrieveOrdersByStatus(status);
       console.log(orderData);
       setOrders(orderData);
       setLoading(false);
     };
     retrieveOrders();
-  }, [triggerRerender]);
+  }, [status, triggerRerender]);
 
   console.log(orders);
   return (
@@ -68,9 +69,9 @@ const OrderDashboard = () => {
           }}
         >
           <Typography
-            component="h2"
-            variant="h5"
-            color="primary"
+            component='h2'
+            variant='h5'
+            color='primary'
             gutterBottom
             sx={{ mb: 3 }}
           >
