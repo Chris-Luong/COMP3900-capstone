@@ -100,25 +100,38 @@ const Manager = () => {
       {loading && <CircularProgress />}
       {!loading && (
         <>
-          <Typography variant="h3">Hi Manager</Typography>
-          <Typography variant="h5">Manage the menu here</Typography>
+          <Typography
+            component='h1'
+            variant='h2'
+            color='secondary'
+            gutterBottom
+            sx={{ mb: 3 }}
+          >
+            Manager Dashboard
+          </Typography>
+          <Typography component='h2' variant='h5' gutterBottom sx={{ mb: 3 }}>
+            Manage the menu here
+          </Typography>
           <Button
-            variant="outlined"
+            variant='outlined'
+            color='secondary'
             sx={{ margin: "5px 5px 5px 0" }}
             onClick={toggleNewItemModal}
           >
             Add New Menu Item
           </Button>
           <Button
-            variant="outlined"
+            variant='outlined'
+            color='secondary'
             sx={{ margin: "5px 5px 5px 0" }}
             onClick={toggleManageCategoryModal}
           >
             Manage Categories
           </Button>
           <TextField
-            size="small"
-            placeholder="Search by name"
+            size='small'
+            color='secondary'
+            placeholder='Search by name'
             value={searchString}
             onChange={(e) => setSearchString(e.target.value)}
           />
