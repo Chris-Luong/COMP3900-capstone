@@ -21,6 +21,11 @@ const Customer = () => {
   const handleSubmit = () => {
     console.log("Hello Customer");
   };
+
+  // TODO: UAC for booking:
+  // Users can choose the specific date and time they want to book
+  // users input the number of guests
+  // the system displays the available date and time in a dropdown box
   return (
     <>
       <Typography

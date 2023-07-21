@@ -102,14 +102,20 @@ const ManageMenuItemCard = ({
         <>
           <Grid item xs={12} sm={4} md={3}>
             <Card
-              variant="outlined"
-              sx={{ width: "100%", height: "100%" }}
-              style={{ cursor: "pointer" }}
-              className="highlight-card-on-hover"
+              variant='outlined'
+              sx={{
+                width: "100%",
+                height: "100%",
+                margin: "10px",
+                cursor: "pointer",
+                transition: "all 0.3s ease-out",
+                "box-shadow": "0 14px 26px rgba(0, 0, 0, 0.04)",
+              }}
+              className='highlight-card-on-hover'
             >
               <CardHeader title={name} />
               <CardMedia
-                component="img"
+                component='img'
                 sx={{ width: "300px", maxHeight: "200px" }}
                 image={thumbnail}
                 alt={`${name}-image`}
@@ -122,7 +128,8 @@ const ManageMenuItemCard = ({
               <style>
                 {`
               .highlight-card-on-hover:hover {
-                outline: 2px solid blue;
+                transform: translateY(-5px) scale(1.005) translateZ(0);
+                box-shadow: 0 12px 24px rgba(156, 39, 176, 0.5);
               }
             `}
               </style>
