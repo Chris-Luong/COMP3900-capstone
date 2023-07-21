@@ -26,7 +26,7 @@ const Customer = () => {
       <Typography
         component='h1'
         variant='h2'
-        color='primary'
+        color='secondary'
         gutterBottom
         sx={{ mb: 3 }}
       >
@@ -34,11 +34,13 @@ const Customer = () => {
       </Typography>
       <Button
         variant='outlined'
+        color='secondary'
         sx={{ margin: "5px 5px 5px 0" }}
         onClick={toggleNewItemModal}
       >
-        Add New Menu Item
+        Make a reservation
       </Button>
+      {/* TODO: make a separate dashboard for customer */}
       {/* Maybe map each dashboard to an order and clean up dashboard UI */}
       <OrderDashboard />
       {showNewItemModal && (
