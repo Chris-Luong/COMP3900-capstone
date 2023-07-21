@@ -116,9 +116,16 @@ const OrderDashboard = (props) => {
                             }}
                           >
                             <ListItemText
-                              primary={`${item.quantity} ${item.itemName}`}
+                              disableTypography
+                              primary={
+                                <Typography>
+                                  {item.quantity} {item.itemName}
+                                </Typography>
+                              }
                               secondary={
-                                item.note ? `Note: ${item.note}` : null
+                                <Typography>
+                                  {item.note ? `Note: ${item.note}` : null}
+                                </Typography>
                               }
                             />
                             {/* <Typography align='right'>{item.amount}</Typography> */}
