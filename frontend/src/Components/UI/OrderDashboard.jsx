@@ -4,6 +4,7 @@ import {
   READY_STATUS,
   SERVED_STATUS,
   updateOrderItemStatus,
+  PREPARING_STATUS,
 } from "../Helper";
 import { useState, useEffect } from "react";
 
@@ -21,13 +22,14 @@ import {
   Typography,
 } from "@mui/material";
 
-// TODO: Get order everytime orders is updated from menu - cannot use useState?
-// useState worked only because Menu was parent but WaitStaff is parent
-// Need local storage?
-// const orders = await getOrders(); // Use the one for waitstaff
-// console.log(orders);
+// TODO: useTimeout or something to poll for new orders every 30 seconds
 
-const OrderDashboard = () => {
+const OrderDashboard = (props) => {
+  const status = props.status;
+  const newStatus = status === PREPARING_STATUS ? READY_STATUS : SERVED_STATUS;
+  const dashboardHeading =
+    status === PREPARING_STATUS ? "Orders To Prepare" : "Orders Ready To Serve";
+
   const [loading, setLoading] = useState(false);
   const [orders, setOrders] = useState({});
   const [triggerRerender, setTriggerRerender] = useState(false);
@@ -35,7 +37,7 @@ const OrderDashboard = () => {
   const handleStatusUpdate = async (orderItemId) => {
     setLoading(true);
     console.log(orderItemId);
-    const res = await updateOrderItemStatus(orderItemId, SERVED_STATUS);
+    const res = await updateOrderItemStatus(orderItemId, newStatus);
     alert(res.message);
     setTriggerRerender(!triggerRerender);
     setLoading(false);
@@ -44,13 +46,13 @@ const OrderDashboard = () => {
   useEffect(() => {
     setLoading(true);
     const retrieveOrders = async () => {
-      const orderData = await retrieveOrdersByStatus(READY_STATUS);
+      const orderData = await retrieveOrdersByStatus(status);
       console.log(orderData);
       setOrders(orderData);
       setLoading(false);
     };
     retrieveOrders();
-  }, [triggerRerender]);
+  }, [status, triggerRerender]);
 
   console.log(orders);
   return (
@@ -68,60 +70,74 @@ const OrderDashboard = () => {
           }}
         >
           <Typography
-            component="h2"
-            variant="h5"
-            color="primary"
+            component='h2'
+            variant='h5'
+            color='secondary'
             gutterBottom
             sx={{ mb: 3 }}
           >
-            Ready To Serve Orders
+            {dashboardHeading}
           </Typography>
-          <Grid container spacing={2}>
-            {Object.keys(orders).map((orderId) => (
-              <Grid item xs={12} sm={4} md={3} key={orderId}>
-                <Card
-                  sx={{
-                    borderRadius: "15px",
-                    border: 0.5,
-                    borderWidth: "0.5px",
-                  }}
-                >
-                  <CardHeader
-                    title={`Order ${orderId} Table ${orders[orderId].tableId}`}
-                    subheader={orders[orderId].orderTime}
-                  />
-                  <Divider />
-                  <CardContent>
-                    <List>
-                      {orders[orderId].items.map((item) => (
-                        <ListItem
-                          key={`${orderId}-${item.itemId}`}
-                          onClick={() => handleStatusUpdate(item.orderItemId)}
-                          sx={{
-                            "&:hover": {
-                              backgroundColor: "orange",
+          {Object.keys(orders).length === 0 ? (
+            <Typography sx={{ mt: "35px" }}>No orders 🥳</Typography>
+          ) : (
+            <Grid container spacing={2}>
+              {Object.keys(orders).map((orderId) => (
+                <Grid item xs={12} sm={4} md={3} key={orderId}>
+                  <Card
+                    sx={{
+                      borderRadius: "15px",
+                      border: 0.5,
+                      borderWidth: "0.5px",
+                    }}
+                  >
+                    <CardHeader
+                      title={`Order ${orderId} Table ${orders[orderId].tableId}`}
+                      subheader={orders[orderId].orderTime}
+                    />
+                    <Divider />
+                    <CardContent>
+                      <List>
+                        {orders[orderId].items.map((item) => (
+                          <ListItem
+                            key={`${orderId}-${item.itemId}`}
+                            onClick={() => handleStatusUpdate(item.orderItemId)}
+                            sx={{
+                              "&:hover": {
+                                backgroundColor: "purple",
+                                border: 1,
+                                borderColor: "black",
+                                color: "white",
+                                cursor: "pointer",
+                              },
+                              borderRadius: "15px",
                               border: 1,
-                              borderColor: "black",
-                              cursor: "pointer",
-                            },
-                            borderRadius: "15px",
-                            border: 1,
-                            borderColor: "white",
-                          }}
-                        >
-                          <ListItemText
-                            primary={`${item.quantity} ${item.itemName}`}
-                            secondary={item.note ? `Note: ${item.note}` : null}
-                          />
-                          {/* <Typography align='right'>{item.amount}</Typography> */}
-                        </ListItem>
-                      ))}
-                    </List>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
+                              borderColor: "white",
+                            }}
+                          >
+                            <ListItemText
+                              disableTypography
+                              primary={
+                                <Typography>
+                                  {item.quantity} {item.itemName}
+                                </Typography>
+                              }
+                              secondary={
+                                <Typography>
+                                  {item.note ? `Note: ${item.note}` : null}
+                                </Typography>
+                              }
+                            />
+                            {/* <Typography align='right'>{item.amount}</Typography> */}
+                          </ListItem>
+                        ))}
+                      </List>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          )}
         </Paper>
       )}
     </>
