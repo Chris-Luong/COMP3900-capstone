@@ -56,32 +56,33 @@ const OrderDashboard = (props) => {
 
   console.log(orders);
   return (
-    <>
-      {loading && <CircularProgress />}
-      {!loading && (
-        <Paper
-          elevation={6}
-          sx={{
-            p: 2,
-            display: "flex",
-            flexDirection: "column",
-            padding: 5,
-            margin: 5,
-          }}
-        >
-          <Typography
-            component='h2'
-            variant='h5'
-            color='secondary'
-            gutterBottom
-            sx={{ mb: 3 }}
-          >
-            {dashboardHeading}
-          </Typography>
-          {Object.keys(orders).length === 0 ? (
-            <Typography sx={{ mt: "35px" }}>No orders 🥳</Typography>
+    <Paper
+      elevation={6}
+      sx={{
+        p: 2,
+        display: "flex",
+        flexDirection: "column",
+        padding: 5,
+        margin: 5,
+      }}
+    >
+      <Typography
+        component="h2"
+        variant="h5"
+        color="secondary"
+        gutterBottom
+        sx={{ mb: 3 }}
+      >
+        {dashboardHeading}
+      </Typography>
+      {Object.keys(orders).length === 0 ? (
+        <Typography sx={{ mt: "35px" }}>No orders 🥳</Typography>
+      ) : (
+        <Grid container spacing={2}>
+          {loading ? (
+            <CircularProgress />
           ) : (
-            <Grid container spacing={2}>
+            <>
               {Object.keys(orders).map((orderId) => (
                 <Grid item xs={12} sm={4} md={3} key={orderId}>
                   <Card
@@ -108,9 +109,9 @@ const OrderDashboard = (props) => {
                     <Divider />
                     <CardContent>
                       <List>
-                        {orders[orderId].items.map((item) => (
+                        {orders[orderId].items.map((item, index) => (
                           <ListItem
-                            key={`${orderId}-${item.itemId}`}
+                            key={`${orderId}-${item.itemId}-${index}`}
                             onClick={() => handleStatusUpdate(item.orderItemId)}
                             sx={{
                               "&:hover": {
@@ -142,11 +143,11 @@ const OrderDashboard = (props) => {
                   </Card>
                 </Grid>
               ))}
-            </Grid>
+            </>
           )}
-        </Paper>
+        </Grid>
       )}
-    </>
+    </Paper>
   );
 };
 
