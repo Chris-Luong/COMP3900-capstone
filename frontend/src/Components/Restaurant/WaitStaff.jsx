@@ -2,6 +2,7 @@ import { Typography } from "@mui/material";
 import OrderDashboard from "../UI/OrderDashboard";
 import { PREPARING_STATUS, READY_STATUS } from "../Helper";
 import ReservationDashboard from "../UI/ReservationDashboard";
+import RequestDashboard from "../UI/RequestDashboard";
 
 const WaitStaff = () => {
   // TODO: make a reservation dashboard
@@ -32,14 +33,15 @@ const WaitStaff = () => {
   return (
     <>
       <Typography
-        component='h1'
-        variant='h2'
-        color='primary'
+        component="h1"
+        variant="h2"
+        color="primary"
         gutterBottom
         sx={{ mb: 3 }}
       >
         Wait Staff Dashboard
       </Typography>
+      <RequestDashboard />
       <OrderDashboard status={READY_STATUS} />
       <ReservationDashboard status={PREPARING_STATUS} />
     </>

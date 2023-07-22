@@ -20,8 +20,13 @@ const {
   getOrdersForTableId,
   viewOrdersByStatus,
   updateOrderItemStatus,
-  updateOrderPayStatus
+  updateOrderPayStatus,
 } = require("../controller/order");
+const {
+  createRequest,
+  getRequest,
+  updateRequest,
+} = require("../controller/request");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 
@@ -66,12 +71,15 @@ router.get("/categories", getCategories);
 router.get("/categories/:itemid", categoriesFromId);
 router.post("/categories/add", addCategory);
 router.delete("/categories/remove", removeCategory);
-router.get('/orders', viewOrders);
-router.post('/orders/create', createOrder);
-router.delete('/orders/delete', deleteOrder);
-router.post('/tables/create', setNewTable);
+router.get("/orders", viewOrders);
+router.post("/orders/create", createOrder);
+router.delete("/orders/delete", deleteOrder);
+router.post("/tables/create", setNewTable);
 router.get("/orders/tables/:tableid", getOrdersForTableId);
 router.get("/orders/:status", viewOrdersByStatus);
 router.put("/orders/update", updateOrderItemStatus);
 router.put("/orders/pay", updateOrderPayStatus);
+router.post("/request/create", createRequest);
+router.get("/request/", getRequest);
+router.put("/request/complete", updateRequest);
 module.exports = router;

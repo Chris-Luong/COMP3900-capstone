@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  FormHelperText,
   Modal,
   Stack,
   TextField,
@@ -9,7 +8,6 @@ import {
 } from "@mui/material";
 import OrderDashboard from "../UI/OrderDashboard";
 import { useState } from "react";
-import NewItemModal from "../UI/NewItemModal";
 import { Formik } from "formik";
 
 const Customer = () => {
@@ -36,17 +34,17 @@ const Customer = () => {
   return (
     <>
       <Typography
-        component='h1'
-        variant='h2'
-        color='secondary'
+        component="h1"
+        variant="h2"
+        color="secondary"
         gutterBottom
         sx={{ mb: 3 }}
       >
         Customer Dashboard
       </Typography>
       <Button
-        variant='outlined'
-        color='secondary'
+        variant="outlined"
+        color="secondary"
         sx={{ margin: "5px 5px 5px 0" }}
         onClick={toggleNewItemModal}
       >
@@ -90,10 +88,10 @@ const Customer = () => {
                 setFieldValue,
               }) => (
                 <form onSubmit={handleSubmit} noValidate>
-                  <Stack spacing={3} direction='column' width='100%'>
+                  <Stack spacing={3} direction="column" width="100%">
                     <TextField
-                      label='Name'
-                      name='name'
+                      label="Name"
+                      name="name"
                       value={values.name}
                       onChange={handleChange}
                       error={touched.name && errors.name}
@@ -101,8 +99,8 @@ const Customer = () => {
                       required
                     />
                     <TextField
-                      label='Description'
-                      name='description'
+                      label="Description"
+                      name="description"
                       value={values.description}
                       onChange={handleChange}
                       error={touched.description && errors.description}
@@ -112,8 +110,8 @@ const Customer = () => {
                       multiline
                     />
                     <TextField
-                      label='Ingredients'
-                      name='ingredients'
+                      label="Ingredients"
+                      name="ingredients"
                       value={values.ingredients}
                       onChange={handleChange}
                       error={touched.ingredients && errors.ingredients}
@@ -123,8 +121,8 @@ const Customer = () => {
                       multiline
                     />
                     <TextField
-                      label='Price $'
-                      name='price'
+                      label="Price $"
+                      name="price"
                       value={values.price}
                       onChange={handleChange}
                       error={touched.price && errors.price}
@@ -132,10 +130,10 @@ const Customer = () => {
                       required
                     />
                   </Stack>
-                  <Button color='success' onClick={handleSubmit}>
+                  <Button color="success" onClick={handleSubmit}>
                     Submit
                   </Button>
-                  <Button color='error' onClick={toggleNewItemModal}>
+                  <Button color="error" onClick={toggleNewItemModal}>
                     Close
                   </Button>
                 </form>

@@ -65,6 +65,13 @@ CREATE TABLE IF NOT EXISTS tables (
     -- status ENUM('available', 'occupied', 'reserved') DEFAULT 'available'
 );
 
+CREATE TABLE IF NOT EXISTS requests (
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    tableId INT NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('Waiting', 'Completed') NOT NULL DEFAULT 'Waiting',
+    type ENUM('Bill', 'Assistance') NOT NULL
+);
 
 -- guest accounts have password 'temp123'
 INSERT IGNORE INTO account(firstname, lastname, email, password, role) VALUES("guest", "account", "guest1", "$2b$10$4oKl80KpkMLh8kl4uA1ToOU/cX6lzjc3W8UXXCC5KUmnfkk8E6dNW", 1);

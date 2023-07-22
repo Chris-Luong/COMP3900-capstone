@@ -1,8 +1,11 @@
-// contains functions that are used by multiple components
-
 import sendRequest from "./Utils/Request";
 import * as Yup from "yup";
 
+// contains functions that are used by multiple components
+
+/*
+  menu functions
+*/
 export const getAllMenuItems = async () => {
   try {
     const res = await sendRequest("/menu", "GET");
@@ -93,11 +96,80 @@ export const retrieveOrderItems = async (orderId) => {
   }
 };
 
-// String constants for status
+/*
+  String constants for status
+*/
+// TODO: replace with enum
 export const PREPARING_STATUS = "Preparing";
 export const READY_STATUS = "Ready To Serve";
 export const SERVED_STATUS = "Served";
+export const ITEM_STATUS = {
+  Preparing: "Preparing",
+  Ready: "Ready To Serve",
+  Served: "Served",
+};
 
+export const PAID_STATUS = {
+  Unpaid: "Unpaid",
+  Requesting: "Requesting",
+  Paid: "Paid",
+};
+
+export const Request = {
+  Status: {
+    Waiting: "Waiting",
+    Completed: "Completed",
+  },
+  Type: {
+    Bill: "Bill",
+    Assistance: "Assistance",
+  },
+};
+
+/*
+  request functions
+*/
+export const createWaiterRequest = async (tableId, type, description) => {
+  try {
+    const body = {
+      tableId,
+      type,
+      description,
+    };
+    const res = await sendRequest("/request/create", "POST", body);
+    return res;
+  } catch (err) {
+    alert(err);
+    console.log(err);
+  }
+};
+
+export const getWaiterRequests = async () => {
+  try {
+    const res = await sendRequest(
+      `/request?status=${Request.Status.Waiting}`,
+      "GET"
+    );
+    return res;
+  } catch (err) {
+    alert(err);
+    console.log(err);
+  }
+};
+
+export const completeWaiterRequest = async (id) => {
+  try {
+    const res = await sendRequest(`/request/complete?id=${id}`, "PUT");
+    return res;
+  } catch (err) {
+    alert(err);
+    console.log(err);
+  }
+};
+
+/*
+  order functions
+*/
 export const retrieveOrdersByStatus = async (status) => {
   try {
     const res = await sendRequest(`/orders/${status}`, "GET");
@@ -110,7 +182,28 @@ export const retrieveOrdersByStatus = async (status) => {
 
 export const updateOrderItemStatus = async (id, status) => {
   try {
-    const res = await sendRequest(`/orders/update?id=${id}&newStatus=${status}`, "PUT");
+    const res = await sendRequest(
+      `/orders/update?id=${id}&newStatus=${status}`,
+      "PUT"
+    );
+    return res;
+  } catch (err) {
+    alert(err);
+    console.log(err);
+  }
+};
+
+export const updateOrderPayStatus = async (orderArr, status) => {
+  let params = "";
+  orderArr.forEach((orderId) => {
+    params += `orderIds=${orderId}&`;
+  });
+  console.log(`/orders/pay?${params}status=${status}`);
+  try {
+    const res = await sendRequest(
+      `/orders/pay?${params}status=${status}`,
+      "PUT"
+    );
     return res;
   } catch (err) {
     alert(err);
@@ -132,6 +225,9 @@ export function fileToDataUrl(file) {
   return dataUrlPromise;
 }
 
+/*
+  manager functions
+*/
 export const addItem = async ({
   name,
   description,
@@ -216,11 +312,17 @@ export const getCategoryNamesFromItemId = async (id) => {
   }
 };
 
+/*
+  style objects
+*/
 export const checkboxStyle = {
   display: "grid",
   gridTemplateColumns: "repeat(3, 1fr)",
 };
 
+/*
+  form validation schema
+*/
 export const createMenuItemSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
   description: Yup.string().required("Description is required"),
@@ -250,5 +352,5 @@ export const editMenuItemSchema = Yup.object().shape({
 });
 
 export const newCategorySchema = Yup.object().shape({
-  name: Yup.string().required("Name is required")
+  name: Yup.string().required("Name is required"),
 });

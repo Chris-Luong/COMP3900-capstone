@@ -26,12 +26,12 @@ const RestaurantCheckIn = () => {
       localStorage.setItem("token", res.token);
       localStorage.setItem("checkedIn", true);
       checkIn.setIsCheckedIn(true);
-      navigate('/restaurant');
+      navigate("/restaurant");
     } catch (err) {
       alert(err);
       console.log(err);
     }
-  };
+  }
 
   return (
     <CenterCard>

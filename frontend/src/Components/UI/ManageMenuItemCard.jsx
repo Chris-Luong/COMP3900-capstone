@@ -102,7 +102,7 @@ const ManageMenuItemCard = ({
         <>
           <Grid item xs={12} sm={4} md={3}>
             <Card
-              variant='outlined'
+              variant="outlined"
               sx={{
                 width: "100%",
                 height: "100%",
@@ -118,7 +118,7 @@ const ManageMenuItemCard = ({
             >
               <CardHeader title={name} />
               <CardMedia
-                component='img'
+                component="img"
                 sx={{ width: "300px", maxHeight: "200px" }}
                 image={thumbnail}
                 alt={`${name}-image`}
@@ -126,7 +126,7 @@ const ManageMenuItemCard = ({
               <CardContent>
                 <Typography>${price}</Typography>
                 <Button onClick={toggleModal}>Edit</Button>
-                <Button onClick={() => handleItemDelete(id)} color='error'>
+                <Button onClick={() => handleItemDelete(id)} color="error">
                   Delete
                 </Button>
               </CardContent>
