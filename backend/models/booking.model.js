@@ -1,5 +1,4 @@
-const db  = require('../db/db'); 
-const bcrypt = require('bcrypt');
+const db  = require('../db/db');
 const { findBooking, createBookingByTableId, viewBookingsByDate } = require('../db/queries/booking.queries');
 
 const NOT_FOUND = 401
@@ -18,8 +17,8 @@ class Booking {
     this.accountId = accountId;
   }
 
-  static createBooking(date, time, capacity, accountId, next) {
-    const param = [date,  time, capacity];
+  static createBooking(date, time, guests, accountId, next) {
+    const param = [date,  time, guests];
 
     return db.query(findBooking, param, (err, results) => {
       console.log("MySQL Error: " + err);
@@ -33,13 +32,23 @@ class Booking {
         }, null);
       }
       
+      if (results.length == 0) {
+        return next({
+          status: NOT_FOUND,
+          message: 'No Available Tables',
+          kind: NOT_FOUND_KIND
+        }, null);
+      }
+
       let result = JSON.parse(JSON.stringify(results)); 
-      let tableId = result.tableId;
-      
-      const param2 = [accountId, tableId, date, time];
+      console.log(result[0])
+      let tableId = result[0].tableId;
+      const param2 = [accountId, tableId, date, time, guests];
 
-      db.query(createBookingByTableId, [param2], (err, results) => {
-        if (err) {
+      db.query(createBookingByTableId, param2, (err2, create_results) => {
+        console.log("MySQL Error: " + err2);
+        console.log("MySQL Result:", create_results);
+        if (err2) {
           next(
             {
               status: CANNOT_CREATE,
@@ -49,8 +58,7 @@ class Booking {
             null
           ); 
         }
-
-        if (results.affectedRows == 0) {
+        if (create_results.affectedRows == 0) {
           next(
             {
               status: CANNOT_CREATE,
@@ -60,8 +68,8 @@ class Booking {
             null
           ); 
         }
+        next(null, create_results.insertId)
       })
-      next(null, results.insertId)
     })
     }
 

@@ -58,23 +58,22 @@ CREATE TABLE IF NOT EXISTS orderItems (
 );
 
 CREATE TABLE IF NOT EXISTS tables (
-    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT
+    id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     tableName VARCHAR(255) NOT NULL,
-    capacity INT UNSIGNED,
-    status ENUM('available', 'occupied', 'reserved') DEFAULT 'available'
+    capacity INT UNSIGNED
 );
 
 CREATE TABLE IF NOT EXISTS bookings (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    table_id INT NOT NULL,
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT UNSIGNED NOT NULL,
+    table_id INT UNSIGNED NOT NULL,
     date DATE NOT NULL,
     time TIME NOT NULL,
-    duration INT ,
-    FOREIGN KEY (user_id) REFERENCES account(accounId),
+    duration INT,
+    guests INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES account(accountId),
     FOREIGN KEY (table_id) REFERENCES tables(id)
 );
-
 
 -- guest accounts have password 'temp123'
 INSERT IGNORE INTO account(firstname, lastname, email, password, role) VALUES("guest", "account", "guest1", "$2b$10$4oKl80KpkMLh8kl4uA1ToOU/cX6lzjc3W8UXXCC5KUmnfkk8E6dNW", 1);
@@ -158,4 +157,21 @@ INSERT INTO orderItems (orderId, itemId, quantity, note, status) VALUES
      (3, 3, 2, "test12", "Served"),
      (4, 3, 2, "test13", "Ready To Serve"),
      (4, 3, 2, "", "Ready To Serve")
+;
+
+INSERT INTO tables(tableName, capacity) VALUES 
+("table1", 2),
+("table2", 2),
+("table3", 2),
+("table4", 4),
+("table5", 4),
+("table6", 6),
+("table7", 8)
+;
+
+INSERT INTO bookings(user_id, table_id, date, time, guests) VALUES
+(1, 1, "2023-07-22", "18:00:00", 2),
+(2, 2, "2023-07-23", "10:00:00", 2),
+(3, 3, "2023-07-22", "10:00:00", 2),
+(4, 4, "2023-07-22", "14:00:00", 4)
 ;
