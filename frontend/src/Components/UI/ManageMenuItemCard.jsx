@@ -110,8 +110,11 @@ const ManageMenuItemCard = ({
                 cursor: "pointer",
                 transition: "all 0.3s ease-out",
                 "box-shadow": "0 14px 26px rgba(0, 0, 0, 0.04)",
+                "&:hover": {
+                  transform: "translateY(-5px) scale(1.005) translateZ(0)",
+                  "box-shadow": "0 12px 24px rgba(156, 39, 176, 0.5)",
+                },
               }}
-              className="highlight-card-on-hover"
             >
               <CardHeader title={name} />
               <CardMedia
@@ -123,16 +126,10 @@ const ManageMenuItemCard = ({
               <CardContent>
                 <Typography>${price}</Typography>
                 <Button onClick={toggleModal}>Edit</Button>
-                <Button onClick={() => handleItemDelete(id)}>Delete</Button>
+                <Button onClick={() => handleItemDelete(id)} color="error">
+                  Delete
+                </Button>
               </CardContent>
-              <style>
-                {`
-              .highlight-card-on-hover:hover {
-                transform: translateY(-5px) scale(1.005) translateZ(0);
-                box-shadow: 0 12px 24px rgba(156, 39, 176, 0.5);
-              }
-            `}
-              </style>
             </Card>
           </Grid>
           <ManageItemModal

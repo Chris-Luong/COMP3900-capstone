@@ -24,11 +24,9 @@ import {
 
 // TODO: useTimeout or something to poll for new orders every 30 seconds
 
-const OrderDashboard = (props) => {
+const ReservationDashboard = (props) => {
   const status = props.status;
   const newStatus = status === PREPARING_STATUS ? READY_STATUS : SERVED_STATUS;
-  const dashboardHeading =
-    status === PREPARING_STATUS ? "Orders To Prepare" : "Orders Ready To Serve";
 
   const [loading, setLoading] = useState(false);
   const [orders, setOrders] = useState({});
@@ -76,7 +74,7 @@ const OrderDashboard = (props) => {
             gutterBottom
             sx={{ mb: 3 }}
           >
-            {dashboardHeading}
+            Today's Reservations
           </Typography>
           {Object.keys(orders).length === 0 ? (
             <Typography sx={{ mt: "35px" }}>No orders 🥳</Typography>
@@ -150,4 +148,4 @@ const OrderDashboard = (props) => {
   );
 };
 
-export default OrderDashboard;
+export default ReservationDashboard;
