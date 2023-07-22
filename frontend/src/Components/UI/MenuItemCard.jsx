@@ -66,7 +66,7 @@ const MenuItemCard = ({
   return (
     <div>
       <Grid item onClick={toggleModal}>
-      <Card
+        <Card
           variant='outlined'
           sx={{
             width: "250px",
@@ -75,8 +75,11 @@ const MenuItemCard = ({
             cursor: "pointer",
             transition: "all 0.3s ease-out",
             "box-shadow": "0 14px 26px rgba(0, 0, 0, 0.04)",
+            "&:hover": {
+              transform: "translateY(-5px) scale(1.005) translateZ(0)",
+              "box-shadow": "0 12px 24px rgba(156, 39, 176, 0.5)",
+            },
           }}
-          className='highlight-card-on-hover'
         >
           <CardMedia
             component='img'
@@ -88,14 +91,6 @@ const MenuItemCard = ({
           <CardContent>
             <Typography>${price}</Typography>
           </CardContent>
-          <style>
-            {`
-              .highlight-card-on-hover:hover {
-                transform: translateY(-5px) scale(1.005) translateZ(0);
-                box-shadow: 0 12px 24px rgba(156, 39, 176, 0.5);
-              }
-            `}
-          </style>
         </Card>
       </Grid>
 
@@ -139,26 +134,38 @@ const MenuItemCard = ({
             mt={2}
           >
             Quantity:
-            <Button onClick={handleDecrementQuantity} color="secondary">-</Button>
+            <Button onClick={handleDecrementQuantity} color='secondary'>
+              -
+            </Button>
             {quantity}
-            <Button onClick={handleIncrementQuantity} color="secondary">+</Button>
+            <Button onClick={handleIncrementQuantity} color='secondary'>
+              +
+            </Button>
           </Typography>
 
           <TextField
             margin='normal'
             fullWidth
             name='note'
-            color="secondary"
+            color='secondary'
             label='Notes for chef'
             type='text'
             id='note'
           />
 
-          <Button label='AddItem' type='submit' variant='contained' mt={3} color="secondary">
+          <Button
+            label='AddItem'
+            type='submit'
+            variant='contained'
+            mt={3}
+            color='secondary'
+          >
             Add to Cart
           </Button>
           <Grid container justifyContent='flex-end'>
-            <Button onClick={toggleModal} color="secondary">Close</Button>
+            <Button onClick={toggleModal} color='secondary'>
+              Close
+            </Button>
           </Grid>
         </Box>
       </Modal>
