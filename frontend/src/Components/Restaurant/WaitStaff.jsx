@@ -6,9 +6,9 @@ const WaitStaff = () => {
   return (
     <>
       <Typography
-        component='h1'
-        variant='h2'
-        color='primary'
+        component="h1"
+        variant="h2"
+        color="primary"
         gutterBottom
         sx={{ mb: 3 }}
       >

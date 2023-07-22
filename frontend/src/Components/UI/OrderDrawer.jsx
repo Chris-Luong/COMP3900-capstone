@@ -21,7 +21,7 @@ const OrderDrawer = ({
   onDelete,
   handleSendOrder,
   tableOrders,
-  loading
+  loading,
 }) => {
   const checkIn = useContext(RestaurantContext);
   const navigate = useNavigate();
@@ -70,8 +70,8 @@ const OrderDrawer = ({
     }
     let tableTotal = 0;
     if (tableOrders.length > 0) {
-      tableOrders.forEach(tableOrder => {
-        tableTotal += tableOrder.subtotal
+      tableOrders.forEach((tableOrder) => {
+        tableTotal += tableOrder.subtotal;
       });
     }
     setTableSum(tableTotal);
@@ -200,7 +200,7 @@ const OrderDrawer = ({
           anchor={"right"}
           open={state["right"]}
           onClose={toggleDrawer("right", false)}
-          variant='permanent'
+          variant="permanent"
           sx={{
             width: "400px",
             flexShrink: 0,

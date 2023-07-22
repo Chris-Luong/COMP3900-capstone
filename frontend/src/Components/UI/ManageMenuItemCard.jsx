@@ -102,7 +102,7 @@ const ManageMenuItemCard = ({
         <>
           <Grid item xs={12} sm={4} md={3}>
             <Card
-              variant='outlined'
+              variant="outlined"
               sx={{
                 width: "100%",
                 height: "100%",
@@ -111,11 +111,11 @@ const ManageMenuItemCard = ({
                 transition: "all 0.3s ease-out",
                 "box-shadow": "0 14px 26px rgba(0, 0, 0, 0.04)",
               }}
-              className='highlight-card-on-hover'
+              className="highlight-card-on-hover"
             >
               <CardHeader title={name} />
               <CardMedia
-                component='img'
+                component="img"
                 sx={{ width: "300px", maxHeight: "200px" }}
                 image={thumbnail}
                 alt={`${name}-image`}
