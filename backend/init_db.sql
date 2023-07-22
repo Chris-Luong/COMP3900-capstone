@@ -59,10 +59,20 @@ CREATE TABLE IF NOT EXISTS orderItems (
 
 CREATE TABLE IF NOT EXISTS tables (
     id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT
-    -- these may be used for loyalty/reservations later
-    -- tableName VARCHAR(255) NOT NULL,
-    -- capacity INT UNSIGNED,
-    -- status ENUM('available', 'occupied', 'reserved') DEFAULT 'available'
+    tableName VARCHAR(255) NOT NULL,
+    capacity INT UNSIGNED,
+    status ENUM('available', 'occupied', 'reserved') DEFAULT 'available'
+);
+
+CREATE TABLE IF NOT EXISTS bookings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    table_id INT NOT NULL,
+    date DATE NOT NULL,
+    time TIME NOT NULL,
+    duration INT ,
+    FOREIGN KEY (user_id) REFERENCES account(accounId),
+    FOREIGN KEY (table_id) REFERENCES tables(id)
 );
 
 
