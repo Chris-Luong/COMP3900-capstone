@@ -1,6 +1,6 @@
 const db  = require('../db/db'); 
 const bcrypt = require('bcrypt');
-const { findBooking, createBookingByTableId } = require('../db/queries/booking.queries');
+const { findBooking, createBookingByTableId, viewBookingsByDate } = require('../db/queries/booking.queries');
 
 const NOT_FOUND = 401
 const NOT_FOUND_KIND = "not_found"
@@ -64,6 +64,26 @@ class Booking {
       next(null, results.insertId)
     })
     }
+
+
+    static viewBooking(date, next) {
+      return db.query(viewBookingsByDate, [date], (err, results) => {
+        console.log("MySQL Error: " + err);
+        console.log("MySQL Result:", results);
+  
+        if (err) {
+          return next({
+            status: NOT_FOUND,
+            message: 'Cannot fetch reservations',
+            kind: NOT_FOUND_KIND
+          }, null);
+        }
+        
+        let result = JSON.parse(JSON.stringify(results)); 
+        next(null, result);
+      })
+      }
+
 }
 
 module.exports = { Booking, NOT_FOUND, NOT_FOUND_KIND, CANNOT_CREATE, CANNOT_CREATE_KIND };
