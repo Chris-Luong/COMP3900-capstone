@@ -29,11 +29,7 @@ import { Formik } from "formik";
 const Customer = () => {
   const [datetime, setDatetime] = useState(dayjs());
   const accountId = 1;
-  const MAX_GUESTS = 10;
-
-  const handleSubmit = () => {
-    console.log("Hello Customer");
-  };
+  const MAX_GUESTS = 12;
 
   // NOTE: UAC for booking:
   // Users can choose the specific date and time they want to book
@@ -41,14 +37,24 @@ const Customer = () => {
   // the system displays the available date and time in a dropdown box
   // numHours is integer
 
+  const setDuration = (numGuests) => {
+    if (numGuests <= 4) return 1;
+    if (numGuests <= 8) return 2;
+    return 3;
+  };
+
   const data = {
     date: "",
     time: "",
     accountId: accountId,
-    guests: 0,
-    numHours: 1,
+    guests: 1,
+    numHours: setDuration(MAX_GUESTS),
   };
   // Returns bookingId
+
+  const handleSubmit = () => {
+    console.log("Hello Customer");
+  };
 
   const bookingForm = (
     <Box
