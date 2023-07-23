@@ -76,8 +76,8 @@ CREATE TABLE IF NOT EXISTS bookings (
     user_id BIGINT UNSIGNED NOT NULL,
     table_id INT UNSIGNED NOT NULL,
     date DATE NOT NULL,
-    time TIME NOT NULL,
-    duration INT,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
     guests INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES account(accountId),
     FOREIGN KEY (table_id) REFERENCES tables(id)
@@ -177,9 +177,9 @@ INSERT INTO tables(tableName, capacity) VALUES
 ("table7", 8)
 ;
 
-INSERT INTO bookings(user_id, table_id, date, time, guests) VALUES
-(1, 1, "2023-07-22", "18:00:00", 2),
-(2, 2, "2023-07-23", "10:00:00", 2),
-(3, 3, "2023-07-22", "10:00:00", 2),
-(4, 4, "2023-07-22", "14:00:00", 4)
+INSERT INTO bookings(user_id, table_id, date, start_time, end_time, guests) VALUES
+(1, 1, "2023-07-22", "18:00:00", "20:00:00", 2),
+(2, 2, "2023-07-23", "10:00:00", "12:00:00", 2),
+(3, 3, "2023-07-22", "10:00:00", "13:00:00", 2),
+(4, 4, "2023-07-22", "14:00:00", "15:00:00", 4)
 ;

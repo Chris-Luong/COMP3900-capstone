@@ -65,3 +65,11 @@ do for backend.
 Friday & Saturday: Working on the structuring and desiging the tables for table bookings. We decided to only allow users to book tables for a
 fixed duration. Also implemented the backend API for creating bookings given the userId, datetime and number of guests. Tomorrow 
 will be testing it.
+Sunday: Implemented the backend GET request for viewing the table details for wait stuff. Tested the APIs successfully. Discussed with the team 
+and we need to allow customers to book more than 1 hours, so need to add "numHours" to the field of POST request for creating bookings. This means 
+that I need to restructure the database. 
+
+Week9:
+Monday: Added the bookingEnd for "bookings" table to accomodate users' needs to book more than 1 hours. Updated the POST API /bookings/create
+to fetch available tables that have non-overlapping booking time and to include end_time in the insert query.
+Updated the GET API /bookings/:date to also include the bookingEnd in the response body.

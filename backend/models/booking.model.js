@@ -17,7 +17,7 @@ class Booking {
     this.accountId = accountId;
   }
 
-  static createBooking(date, time, guests, accountId, next) {
+  static createBooking(date, start_time, guests, accountId, numHours, next) {
 
     return db.query(findBookingByAccountId, [accountId, date], (err, results) => {
       console.log("MySQL Error: " + err);
@@ -38,13 +38,19 @@ class Booking {
           kind: CANNOT_CREATE_KIND
         }, null);
       }
-      const param = [date,  time, guests];
+
+      const start_time_date = new Date(`1970-01-01T${start_time}`);
+
+      start_time_date.setHours(start_time_date.getHours() + numHours);
+      const end_time = start_time_date.toTimeString().slice(0, 8);
+      console.log("end time: " + end_time)
+      const param = [date,  start_time, start_time, start_time, end_time, guests];
 
       db.query(findBooking, param, (err2, find_results) => {
         console.log("MySQL Error: " + err2);
         console.log("MySQL Result:", find_results);
         if (err2) {
-          next(
+          return next(
             {
               status: NOT_FOUND,
               message: "No Available Tables",
@@ -54,8 +60,8 @@ class Booking {
           ); 
         }
 
-        if (find_results.length == 0) {
-          next(
+        if (find_results.length == 0 || find_results == []) {
+          return next(
             {
               status: NOT_FOUND,
               message: "No Available Tables",
@@ -64,10 +70,11 @@ class Booking {
             null
           ); 
         }
+
         let result = JSON.parse(JSON.stringify(find_results)); 
         console.log(result[0])
         let tableId = result[0].tableId;
-        const param2 = [accountId, tableId, date, time, guests];
+        const param2 = [accountId, tableId, date, start_time, end_time, guests];
 
         db.query(createBookingByTableId, param2, (err3, create_results) => {
           console.log("MySQL Error: " + err3);
