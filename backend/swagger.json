@@ -422,19 +422,19 @@
               "type": "object",
               "properties": {
                 "date": {
-                  "example": "any"
+                  "example": "2023-07-24"
                 },
-                "time": {
-                  "example": "any"
-                },
-                "capacity": {
-                  "example": "any"
-                },
-                "accountId": {
-                  "example": "any"
+                "start_time": {
+                  "example": "18:00:00"
                 },
                 "guests": {
-                  "example": "any"
+                  "example": 3
+                },
+                "accountId": {
+                  "example": 3
+                },
+                "numHours": {
+                  "example": 3
                 }
               }
             }
@@ -455,12 +455,83 @@
             "name": "date",
             "in": "path",
             "required": true,
+            "type": "string",
+            "example": "2023-07-23"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/request/create": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "tableId": {
+                  "example": "any"
+                },
+                "type": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/request/": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
             "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/request/complete": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
