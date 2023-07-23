@@ -28,6 +28,7 @@ const {
   updateRequest,
 } = require("../controller/request");
 const multer = require("multer");
+const { createBooking, viewBooking } = require("../controller/booking");
 const upload = multer({ dest: "uploads/" });
 
 /**
@@ -79,7 +80,10 @@ router.get("/orders/tables/:tableid", getOrdersForTableId);
 router.get("/orders/:status", viewOrdersByStatus);
 router.put("/orders/update", updateOrderItemStatus);
 router.put("/orders/pay", updateOrderPayStatus);
+router.post("/bookings/create", createBooking);
+router.get("/bookings/:date", viewBooking)
 router.post("/request/create", createRequest);
 router.get("/request/", getRequest);
 router.put("/request/complete", updateRequest);
+
 module.exports = router;

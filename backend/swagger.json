@@ -14,32 +14,7 @@
     "/register": {
       "post": {
         "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "firstName": {
-                  "example": "any"
-                },
-                "lastName": {
-                  "example": "any"
-                },
-                "email": {
-                  "example": "any"
-                },
-                "password": {
-                  "example": "any"
-                },
-                "role": {
-                  "example": 1
-                }
-              }
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "OK"
@@ -81,42 +56,74 @@
           {
             "name": "search",
             "in": "query",
-            "type": "string",
-            "description": "Search term for menu items"
+            "type": "string"
           },
           {
             "name": "category",
             "in": "query",
-            "type": "string",
-            "description": "Category of menu items"
+            "type": "string"
           },
           {
             "name": "min_price",
             "in": "query",
-            "type": "number",
-            "format": "float",
-            "description": "Minimum price of menu items"
+            "type": "string"
           },
           {
             "name": "max_price",
             "in": "query",
-            "type": "number",
-            "format": "float",
-            "description": "Maximum price of menu items"
+            "type": "string"
           },
           {
             "name": "sort_type",
             "in": "query",
-            "type": "string",
-            "enum": ["price", "name"],
-            "description": "Sorting type for menu items"
+            "type": "string"
           },
           {
             "name": "sort_order",
             "in": "query",
-            "type": "string",
-            "enum": ["ASC", "DESC"],
-            "description": "Sorting order for menu items"
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/menu/edit": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "ingredients",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "categories",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "price",
+            "in": "query",
+            "type": "string"
           }
         ],
         "responses": {
@@ -137,83 +144,22 @@
               "type": "object",
               "properties": {
                 "name": {
-                  "example": "Hot Apple Pie"
+                  "example": "any"
                 },
                 "description": {
-                  "example": "Yummy!"
+                  "example": "any"
                 },
                 "ingredients": {
-                  "example": "Apple, Sugar, Flour, Water"
+                  "example": "any"
                 },
                 "categories": {
-                  "example": ["Breakfast", "Lunch", "Dinner"]
+                  "example": "any"
                 },
                 "price": {
-                  "example": 4.99
-                },
-                "thumb": {
-                  "example": ""
+                  "example": "any"
                 }
               }
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/menu/edit": {
-      "put": {
-        "description": "Edit a menu item",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "type": "integer",
-            "description": "ID of the menu item"
-          },
-          {
-            "name": "name",
-            "in": "query",
-            "type": "string",
-            "description": "Name of the menu item"
-          },
-          {
-            "name": "description",
-            "in": "query",
-            "type": "string",
-            "description": "Description of the menu item"
-          },
-          {
-            "name": "ingredients",
-            "in": "query",
-            "type": "string",
-            "description": "Ingredients of the menu item"
-          },
-          {
-            "name": "categories",
-            "in": "query",
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi",
-            "description": "Categories of the menu item"
-          },
-          {
-            "name": "price",
-            "in": "query",
-            "type": "int",
-            "description": "Price of the menu item"
-          },
-          {
-            "name": "thumbnail",
-            "in": "query",
-            "type": "string",
-            "description": "Path of the image"
           }
         ],
         "responses": {
@@ -234,7 +180,7 @@
               "type": "object",
               "properties": {
                 "id": {
-                  "example": 10
+                  "example": "any"
                 }
               }
             }
@@ -279,20 +225,7 @@
     "/categories/add": {
       "post": {
         "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "example": "Dessert"
-                }
-              }
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "OK"
@@ -303,20 +236,7 @@
     "/categories/remove": {
       "delete": {
         "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "example": 1
-                }
-              }
-            }
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "OK"
@@ -331,12 +251,12 @@
           {
             "name": "accountId",
             "in": "query",
-            "type": "integer"
+            "type": "string"
           },
           {
             "name": "orderId",
             "in": "query",
-            "type": "integer"
+            "type": "string"
           }
         ],
         "responses": {
@@ -357,29 +277,13 @@
               "type": "object",
               "properties": {
                 "accountId": {
-                  "example": 1
+                  "example": "any"
                 },
                 "tableId": {
-                  "example": 1
+                  "example": "any"
                 },
                 "items": {
-                  "example": [
-                    {
-                      "id": 1,
-                      "quantity": 1,
-                      "note": "Fresh..."
-                    },
-                    {
-                      "id": 2,
-                      "quantity": 2,
-                      "note": "Tasty..."
-                    },
-                    {
-                      "id": 3,
-                      "quantity": 3,
-                      "note": "Hot..."
-                    }
-                  ]
+                  "example": "any"
                 }
               }
             }
@@ -420,7 +324,11 @@
       "post": {
         "description": "",
         "parameters": [],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
       }
     },
     "/orders/tables/{tableid}": {
@@ -434,13 +342,46 @@
             "type": "string"
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
       }
     },
-    "/orders/pending": {
+    "/orders/{status}": {
       "get": {
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/orders/update": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "newStatus",
+            "in": "query",
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -450,23 +391,71 @@
     },
     "/orders/pay": {
       "put": {
-        "description": "Update orders pay status",
+        "description": "",
         "parameters": [
           {
             "name": "orderIds",
             "in": "query",
-            "type": "array",
-            "items": {
-              "type": "integer"
-            },
-            "collectionFormat": "multi",
-            "description": "List of Order IDs to update"
+            "type": "string"
           },
           {
             "name": "status",
             "in": "query",
-            "type": "int",
-            "description": "Status to update to"
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/bookings/create": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "date": {
+                  "example": "any"
+                },
+                "time": {
+                  "example": "any"
+                },
+                "capacity": {
+                  "example": "any"
+                },
+                "accountId": {
+                  "example": "any"
+                },
+                "guests": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/bookings/{date}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "path",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
