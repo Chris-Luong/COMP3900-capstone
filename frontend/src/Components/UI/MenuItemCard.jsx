@@ -66,8 +66,8 @@ const MenuItemCard = ({
   return (
     <div>
       <Grid item onClick={toggleModal}>
-      <Card
-          variant='outlined'
+        <Card
+          variant="outlined"
           sx={{
             width: "250px",
             height: "300px",
@@ -75,11 +75,14 @@ const MenuItemCard = ({
             cursor: "pointer",
             transition: "all 0.3s ease-out",
             "box-shadow": "0 14px 26px rgba(0, 0, 0, 0.04)",
+            "&:hover": {
+              transform: "translateY(-5px) scale(1.005) translateZ(0)",
+              "box-shadow": "0 12px 24px rgba(156, 39, 176, 0.5)",
+            },
           }}
-          className='highlight-card-on-hover'
         >
           <CardMedia
-            component='img'
+            component="img"
             sx={{ width: "250px", height: "150px" }}
             image={thumbnail}
             alt={`${name}-image`}
@@ -88,25 +91,17 @@ const MenuItemCard = ({
           <CardContent>
             <Typography>${price}</Typography>
           </CardContent>
-          <style>
-            {`
-              .highlight-card-on-hover:hover {
-                transform: translateY(-5px) scale(1.005) translateZ(0);
-                box-shadow: 0 12px 24px rgba(156, 39, 176, 0.5);
-              }
-            `}
-          </style>
         </Card>
       </Grid>
 
       <Modal
         open={showModal}
         onClose={toggleModal}
-        aria-labelledby='modal-title'
-        aria-describedby='modal-description'
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
       >
         <Box
-          component='form'
+          component="form"
           onSubmit={handleAddToCart}
           sx={{
             position: "absolute",
@@ -119,46 +114,58 @@ const MenuItemCard = ({
             p: 4,
           }}
         >
-          <Typography id='modal-title' variant='h6' component='h2'>
+          <Typography id="modal-title" variant="h6" component="h2">
             {name}
           </Typography>
 
-          <Typography id='modal-description' variant='body1' mt={2}>
+          <Typography id="modal-description" variant="body1" mt={2}>
             {description}
           </Typography>
 
-          <Typography variant='body1' mt={2}>
+          <Typography variant="body1" mt={2}>
             Price: ${price}
           </Typography>
 
           <Typography
-            variant='body1'
-            component='div'
-            id='quantity'
-            name='quantity'
+            variant="body1"
+            component="div"
+            id="quantity"
+            name="quantity"
             mt={2}
           >
             Quantity:
-            <Button onClick={handleDecrementQuantity} color="secondary">-</Button>
+            <Button onClick={handleDecrementQuantity} color="secondary">
+              -
+            </Button>
             {quantity}
-            <Button onClick={handleIncrementQuantity} color="secondary">+</Button>
+            <Button onClick={handleIncrementQuantity} color="secondary">
+              +
+            </Button>
           </Typography>
 
           <TextField
-            margin='normal'
+            margin="normal"
             fullWidth
-            name='note'
+            name="note"
             color="secondary"
-            label='Notes for chef'
-            type='text'
-            id='note'
+            label="Notes for chef"
+            type="text"
+            id="note"
           />
 
-          <Button label='AddItem' type='submit' variant='contained' mt={3} color="secondary">
+          <Button
+            label="AddItem"
+            type="submit"
+            variant="contained"
+            mt={3}
+            color="secondary"
+          >
             Add to Cart
           </Button>
-          <Grid container justifyContent='flex-end'>
-            <Button onClick={toggleModal} color="secondary">Close</Button>
+          <Grid container justifyContent="flex-end">
+            <Button onClick={toggleModal} color="secondary">
+              Close
+            </Button>
           </Grid>
         </Box>
       </Modal>

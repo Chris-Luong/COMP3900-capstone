@@ -63,17 +63,6 @@ CREATE TABLE IF NOT EXISTS tables (
     capacity INT UNSIGNED
 );
 
-CREATE TABLE IF NOT EXISTS bookings (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    user_id BIGINT UNSIGNED NOT NULL,
-    table_id INT UNSIGNED NOT NULL,
-    date DATE NOT NULL,
-    time TIME NOT NULL,
-    duration INT,
-    guests INT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES account(accountId),
-    FOREIGN KEY (table_id) REFERENCES tables(id)
-);
 
 -- guest accounts have password 'temp123'
 INSERT IGNORE INTO account(firstname, lastname, email, password, role) VALUES("guest", "account", "guest1", "$2b$10$4oKl80KpkMLh8kl4uA1ToOU/cX6lzjc3W8UXXCC5KUmnfkk8E6dNW", 1);

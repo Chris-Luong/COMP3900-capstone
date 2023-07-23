@@ -14,6 +14,12 @@ import {
   CircularProgress,
 } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import {
+  PAID_STATUS,
+  Request,
+  createWaiterRequest,
+  updateOrderPayStatus,
+} from "../Helper";
 
 // TODO: Make delete cursor: pointer on hover
 const OrderDrawer = ({
@@ -21,7 +27,7 @@ const OrderDrawer = ({
   onDelete,
   handleSendOrder,
   tableOrders,
-  loading
+  loading,
 }) => {
   const checkIn = useContext(RestaurantContext);
   const navigate = useNavigate();
@@ -42,7 +48,10 @@ const OrderDrawer = ({
 
   const [orderSum, setOrderSum] = useState(0);
   const [tableSum, setTableSum] = useState(0);
-
+  const [hasRequestedBill, setHasRequestedBill] = useState(
+    localStorage.getItem("billRequested")
+  );
+  const [hasPaid, setHasPaid] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const handleRemoveFromCart = (index) => {
@@ -50,12 +59,29 @@ const OrderDrawer = ({
   };
 
   const handleRequestBill = async () => {
-    // add request bill request here
-    alert("Looks like you're done with your order. Logging you out");
+    const orderIdArr = tableOrders.map((tableOrder) => tableOrder.id);
+    let res = await updateOrderPayStatus(orderIdArr, PAID_STATUS.Requesting);
+    alert(`${res.message}. Staff will be with you soon.`);
+    localStorage.setItem("billRequested", true);
+    const tableId = localStorage.getItem("tableId");
+    res = await createWaiterRequest(tableId, Request.Type.Bill);
+    setHasRequestedBill(true);
+  };
+
+  const handleRequestAssistance = async () => {
+    const tableId = localStorage.getItem("tableId");
+    const res = await createWaiterRequest(tableId, Request.Type.Assistance);
+    alert(`${res.message}. We will be with you soon.`);
+  };
+
+  const handleCheckOut = () => {
+    // TODO: delete all table orders before clearing local storage
+    alert("Thank you for dining with us!");
     checkIn.setIsCheckedIn(false);
     localStorage.removeItem("token");
     localStorage.removeItem("checkedIn");
     localStorage.removeItem("tableId");
+    localStorage.removeItem("billRequested");
     navigate("/restaurant");
   };
 
@@ -70,14 +96,32 @@ const OrderDrawer = ({
     }
     let tableTotal = 0;
     if (tableOrders.length > 0) {
-      tableOrders.forEach(tableOrder => {
-        tableTotal += tableOrder.subtotal
+      tableOrders.forEach((tableOrder) => {
+        tableTotal += tableOrder.subtotal;
       });
     }
     setTableSum(tableTotal);
     setOrderSum(+total.toFixed(2));
     setIsLoading(false);
   }, [orderItems, tableOrders]);
+
+  useEffect(() => {
+    const socket = new WebSocket("ws://localhost:8080");
+
+    socket.onopen = () => {
+      console.log("Connection established with websocket");
+    };
+
+    // Event listener for WebSocket events
+    // note that useEffect runs twice due to StrictMode
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === "billPaid") {
+        alert(data.message);
+        setHasPaid(true);
+      }
+    };
+  }, []);
 
   const handleSubmit = () => {
     setIsLoading(true);
@@ -93,58 +137,71 @@ const OrderDrawer = ({
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
+      {hasRequestedBill ? null : (
+        <>
+          <Typography
+            variant="h4"
+            gutterBottom
+            align="center"
+            sx={{ margin: "10px" }}
+          >
+            Current Order
+          </Typography>
+          <List>
+            {orderItems && orderItems.length > 0
+              ? orderItems.map((item, index) => (
+                  <Box key={`pending-order-ctn-${item.id}-${index}`}>
+                    {index !== 0 ? <Divider key={`Divider-${index}`} /> : null}
+                    <ListItem
+                      key={`pending-order-${item}-${index}`}
+                      sx={{ display: "flex", justifyContent: "flex-end" }}
+                    >
+                      <Container>
+                        <ListItemText
+                          primary={item.name}
+                          secondary={"$" + item.price}
+                        />
+                        <ListItemText
+                          primary={`Qty: ${item.quantity}`}
+                          secondary={item.note ? `Notes: ${item.note}` : null}
+                        />
+                      </Container>
+                      <DeleteOutlineIcon
+                        color="warning"
+                        sx={{ cursor: "pointer" }}
+                        onClick={() => handleRemoveFromCart(index)}
+                      />
+                    </ListItem>
+                  </Box>
+                ))
+              : null}
+          </List>
+
+          {/* TODO: useState fn to check hasSentOrder - if has sent then
+      disable this button and enable the req bill button */}
+          <Container sx={{ mt: "0.5rem" }}>
+            <Typography align="center">Order Total: ${orderSum}</Typography>
+            <Button
+              color="secondary"
+              disabled={orderItems.length === 0}
+              onClick={handleSubmit}
+              fullWidth
+            >
+              Submit order
+            </Button>
+          </Container>
+        </>
+      )}
+      <Divider sx={{ borderBottomWidth: 3 }} />
+      {loading && <CircularProgress sx={{ alignSelf: "center", mt: "50%" }} />}
       <Typography
         variant="h4"
         gutterBottom
         align="center"
         sx={{ margin: "10px" }}
       >
-        My Order
+        Order History
       </Typography>
-      <List>
-        {orderItems && orderItems.length > 0
-          ? orderItems.map((item, index) => (
-              <Box key={`pending-order-ctn-${item.id}-${index}`}>
-                {index !== 0 ? <Divider key={`Divider-${index}`} /> : null}
-                <ListItem
-                  key={`pending-order-${item}-${index}`}
-                  sx={{ display: "flex", justifyContent: "flex-end" }}
-                >
-                  <Container>
-                    <ListItemText
-                      primary={item.name}
-                      secondary={"$" + item.price}
-                    />
-                    <ListItemText
-                      primary={`Qty: ${item.quantity}`}
-                      secondary={item.note ? `Notes: ${item.note}` : null}
-                    />
-                  </Container>
-                  <DeleteOutlineIcon
-                    color="warning"
-                    sx={{ cursor: "pointer" }}
-                    onClick={() => handleRemoveFromCart(index)}
-                  />
-                </ListItem>
-              </Box>
-            ))
-          : null}
-      </List>
-      {/* TODO: useState fn to check hasSentOrder - if has sent then
-      disable this button and enable the req bill button */}
-      <Container sx={{ mt: "0.5rem" }}>
-        <Typography align="center">Order Total: ${orderSum}</Typography>
-        <Button
-          color="secondary"
-          disabled={orderItems.length === 0}
-          onClick={handleSubmit}
-          fullWidth
-        >
-          Submit order
-        </Button>
-      </Container>
-      <Divider sx={{ borderBottomWidth: 3 }} />
-      {loading && <CircularProgress sx={{ alignSelf: "center", mt: "50%" }} />}
       {tableOrders.length !== 0 ? (
         <List>
           {tableOrders.map((order) => (
@@ -153,8 +210,6 @@ const OrderDrawer = ({
                 <ListItemText primary={`Order ID: ${order.id}`} />
                 <ListItemText primary={`$${order.subtotal}`} />
               </ListItem>
-              {/* TODO: should show this all the time but isnt
-              refreshing sometimes shows it */}
               {order.menuItems && order.menuItems.length !== 0 && (
                 <List
                   key={`order-item-list-${order.id}`}
@@ -181,13 +236,40 @@ const OrderDrawer = ({
       ) : null}
       <Container sx={{ mt: "0.5rem" }}>
         <Typography align="center">Table Total: ${tableSum}</Typography>
-        <Button
-          color="secondary"
-          disabled={tableOrders.length === 0}
-          onClick={handleRequestBill}
-          fullWidth
-        >
-          Request Bill
+        {hasRequestedBill ? (
+          <>
+            {hasPaid ? (
+              <Button
+                color="secondary"
+                disabled={tableOrders.length === 0}
+                onClick={handleCheckOut}
+                fullWidth
+              >
+                Check Out
+              </Button>
+            ) : (
+              <Typography
+                variant="body1"
+                gutterBottom
+                align="center"
+                sx={{ margin: "10px" }}
+              >
+                Bill has been requested...
+              </Typography>
+            )}
+          </>
+        ) : (
+          <Button
+            color="secondary"
+            disabled={tableOrders.length === 0}
+            onClick={handleRequestBill}
+            fullWidth
+          >
+            Request Bill
+          </Button>
+        )}
+        <Button color="secondary" onClick={handleRequestAssistance} fullWidth>
+          Request Assistance
         </Button>
       </Container>
     </Box>
@@ -200,7 +282,7 @@ const OrderDrawer = ({
           anchor={"right"}
           open={state["right"]}
           onClose={toggleDrawer("right", false)}
-          variant='permanent'
+          variant="permanent"
           sx={{
             width: "400px",
             flexShrink: 0,

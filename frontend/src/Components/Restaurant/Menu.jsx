@@ -143,7 +143,7 @@ const Menu = () => {
       });
       setCategories(categoriesObject);
     };
-    
+
     getMenuData();
     updateTableOrdersData();
     setLoading(false);
@@ -164,37 +164,21 @@ const Menu = () => {
     });
   };
 
-  const demoItems = [
-    {
-      id: "demo1",
-      name: "Demo Item 1",
-      description: "This is a demo item.",
-      price: "9.99",
-      availability: 1,
-      imageUrl: "/path/to/image1.jpg"
-    },
-    {
-      id: "demo2",
-      name: "Demo Item 2",
-      description: "This is another demo item.",
-      price: "14.99",
-      availability: 0,
-      imageUrl: "/path/to/image2.jpg"
-    },
-  ];
-
-  const allItems = [...menuItems, ...demoItems];
-
   return (
     <>
-      <Typography variant="h1" sx={{ ml:0.4 }}> 
+      <Typography variant="h1" sx={{ ml: 0.4 }}>
         Menu
       </Typography>
       {loading && <CircularProgress />}
       {!loading && (
         <Box sx={{ display: "flex" }}>
           <div>
-            <Button variant='contained' color="secondary" sx={{ ml:1.3, mb:1 }} onClick={toggleFilter}>
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={{ ml: 1.3, mb: 1 }}
+              onClick={toggleFilter}
+            >
               Filter
             </Button>
             <Grid container>

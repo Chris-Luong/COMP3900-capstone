@@ -101,37 +101,37 @@ const Manager = () => {
       {!loading && (
         <>
           <Typography
-            component='h1'
-            variant='h2'
-            color='secondary'
+            component="h1"
+            variant="h2"
+            color="secondary"
             gutterBottom
             sx={{ mb: 3 }}
           >
             Manager Dashboard
           </Typography>
-          <Typography component='h2' variant='h5' gutterBottom sx={{ mb: 3 }}>
+          <Typography component="h2" variant="h5" gutterBottom sx={{ mb: 3 }}>
             Manage the menu here
           </Typography>
           <Button
-            variant='outlined'
-            color='secondary'
+            variant="outlined"
+            color="secondary"
             sx={{ margin: "5px 5px 5px 0" }}
             onClick={toggleNewItemModal}
           >
             Add New Menu Item
           </Button>
           <Button
-            variant='outlined'
-            color='secondary'
+            variant="outlined"
+            color="secondary"
             sx={{ margin: "5px 5px 5px 0" }}
             onClick={toggleManageCategoryModal}
           >
             Manage Categories
           </Button>
           <TextField
-            size='small'
-            color='secondary'
-            placeholder='Search by name'
+            size="small"
+            color="secondary"
+            placeholder="Search by name"
             value={searchString}
             onChange={(e) => setSearchString(e.target.value)}
           />

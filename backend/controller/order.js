@@ -82,19 +82,19 @@ createOrder = (req, res) => {
  * This deleteOrder function is for deleting a new order by order id
  * This should typically be called when the customer requests their bill
  * @param {int}           orderId          The id of the order
- * 
+ *
  * @returns {null}
  */
 
 deleteOrder = (req, res) => {
   const { orderId } = req.body;
   Order.deleteOrder(orderId, (err, result) => {
-      if (err) {
-          return res.status(err.status).json({ message: err.message });
-      }
-      return res.status(200).json();
-  })
-}
+    if (err) {
+      return res.status(err.status).json({ message: err.message });
+    }
+    return res.status(200).json();
+  });
+};
 
 /**
  * The callback to return the error or result of this function
@@ -148,13 +148,13 @@ getOrdersForTableId = (req, res) => {
 /**
  * This viewOrdersByStatus function is for kitchen stuff / wait stuff to view all pending orders
  * This should typically be called when opening up the orders interface
- * 
+ *
  *  * @param {string}           status          status of orders to retrieve
  *
  * @returns {List of orderItems with the given status grouped by order id: {orderId, orderTime, itemName, itemId, quantity, status, note}}
-*/
+ */
 
-viewOrdersByStatus = (req, res) => { 
+viewOrdersByStatus = (req, res) => {
   const status = req.params["status"];
   Order.getOrdersByStatus(status, (err, result) => {
     if (err) {
@@ -169,14 +169,14 @@ viewOrdersByStatus = (req, res) => {
 
 /**
  * for staff to update individual order items
- * 
+ *
  *  * @param {string}           id          id from orderItems table
  *  * @param {string}           newStatus          new status
  *
  * @returns {List of orderItems with the given status grouped by order id: {orderId, orderTime, itemName, itemId, quantity, status, note}}
-*/
+ */
 updateOrderItemStatus = (req, res) => {
-  const {id, newStatus} = req.query;
+  const { id, newStatus } = req.query;
   Order.updateOrderItemStatus(id, newStatus, (err, result) => {
     if (err) {
       return res.status(err.status).json({ message: err.message });
@@ -186,22 +186,46 @@ updateOrderItemStatus = (req, res) => {
         .status(NOT_FOUND)
         .json({ message: "Error Updating Order Item Status" });
     }
-    return res.status(200).json({message: `order item with ${id} is now ${newStatus}`});
+    // emit WebSocket event for waiter staff to listen
+    const data = {
+      type: "orderReady",
+      message: "Refresh page. Order is ready to serve!",
+    };
+    if (newStatus === "Ready To Serve") {
+      req.wss.clients.forEach((client) => {
+        client.send(JSON.stringify(data));
+      });
+    }
+    return res
+      .status(200)
+      .json({ message: `order item with ${id} is now ${newStatus}` });
   });
 };
 
 updateOrderPayStatus = (req, res) => {
-  const { orderIds, status} = req.query;
+  const { orderIds, status } = req.query;
   Order.updatePayStatus(orderIds, status, (err, result) => {
     if (err) {
       return res.status(err.status).json({ message: err.message });
     }
     if (!result) {
-      return res.status(NOT_FOUND).json({ message: "Error updating paid statuses on orders" });
+      return res
+        .status(NOT_FOUND)
+        .json({ message: "Error updating paid statuses on orders" });
+    }
+    // emit WebSocket event for waiter staff to listen
+    const data = {
+      type: "billPaid",
+      message: "We've received your payment!",
+    };
+    if (status === "Paid") {
+      req.wss.clients.forEach((client) => {
+        client.send(JSON.stringify(data));
+      });
     }
     return res.status(200).json(result);
   });
-}
+};
 
 module.exports = {
   viewOrders,
@@ -211,5 +235,5 @@ module.exports = {
   deleteOrder,
   viewOrdersByStatus,
   updateOrderItemStatus,
-  updateOrderPayStatus
+  updateOrderPayStatus,
 };

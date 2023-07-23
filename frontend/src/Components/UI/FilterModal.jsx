@@ -97,12 +97,16 @@ const FilterModal = ({
             defaultValue=""
             value={selectedCategory}
           >
-            <FormControlLabel value="" control={<Radio color="secondary"/>} label="All" />
+            <FormControlLabel
+              value=""
+              control={<Radio color="secondary" />}
+              label="All"
+            />
             {Object.keys(categories).map((c) => (
               <FormControlLabel
                 key={c}
                 value={categories[c]}
-                control={<Radio color="secondary"/>}
+                control={<Radio color="secondary" />}
                 label={categories[c]}
               />
             ))}

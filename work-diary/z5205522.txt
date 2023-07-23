@@ -62,4 +62,7 @@ Week8:
 
 I created an endpoint to update status and updated staff components to use this endpoint.
 This means that MN3900-11, MN3900-6, MN3900-49, MN3900-7 and MN3900-50 are completed.
+
+For Sprint 4, I worked on the Notifications epic and added notifications with WebSockets.
+MN3900-8, MN3900-10 and MN3900-4 have progressed.
 ============================================================================================================================================================================================================

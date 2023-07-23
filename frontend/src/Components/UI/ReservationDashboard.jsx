@@ -24,11 +24,9 @@ import {
 
 // TODO: useTimeout or something to poll for new orders every 30 seconds
 
-const OrderDashboard = (props) => {
+const ReservationDashboard = (props) => {
   const status = props.status;
   const newStatus = status === PREPARING_STATUS ? READY_STATUS : SERVED_STATUS;
-  const dashboardHeading =
-    status === PREPARING_STATUS ? "Orders To Prepare" : "Orders Ready To Serve";
 
   const [loading, setLoading] = useState(false);
   const [orders, setOrders] = useState({});
@@ -56,33 +54,32 @@ const OrderDashboard = (props) => {
 
   console.log(orders);
   return (
-    <Paper
-      elevation={6}
-      sx={{
-        p: 2,
-        display: "flex",
-        flexDirection: "column",
-        padding: 5,
-        margin: 5,
-      }}
-    >
-      <Typography
-        component="h2"
-        variant="h5"
-        color="secondary"
-        gutterBottom
-        sx={{ mb: 3 }}
-      >
-        {dashboardHeading}
-      </Typography>
-      {Object.keys(orders).length === 0 ? (
-        <Typography sx={{ mt: "35px" }}>No orders 🥳</Typography>
-      ) : (
-        <Grid container spacing={2}>
-          {loading ? (
-            <CircularProgress />
+    <>
+      {loading && <CircularProgress />}
+      {!loading && (
+        <Paper
+          elevation={6}
+          sx={{
+            p: 2,
+            display: "flex",
+            flexDirection: "column",
+            padding: 5,
+            margin: 5,
+          }}
+        >
+          <Typography
+            component='h2'
+            variant='h5'
+            color='secondary'
+            gutterBottom
+            sx={{ mb: 3 }}
+          >
+            Today's Reservations
+          </Typography>
+          {Object.keys(orders).length === 0 ? (
+            <Typography sx={{ mt: "35px" }}>No orders 🥳</Typography>
           ) : (
-            <>
+            <Grid container spacing={2}>
               {Object.keys(orders).map((orderId) => (
                 <Grid item xs={12} sm={4} md={3} key={orderId}>
                   <Card
@@ -109,9 +106,9 @@ const OrderDashboard = (props) => {
                     <Divider />
                     <CardContent>
                       <List>
-                        {orders[orderId].items.map((item, index) => (
+                        {orders[orderId].items.map((item) => (
                           <ListItem
-                            key={`${orderId}-${item.itemId}-${index}`}
+                            key={`${orderId}-${item.itemId}`}
                             onClick={() => handleStatusUpdate(item.orderItemId)}
                             sx={{
                               "&:hover": {
@@ -143,12 +140,12 @@ const OrderDashboard = (props) => {
                   </Card>
                 </Grid>
               ))}
-            </>
+            </Grid>
           )}
-        </Grid>
+        </Paper>
       )}
-    </Paper>
+    </>
   );
 };
 
-export default OrderDashboard;
+export default ReservationDashboard;
