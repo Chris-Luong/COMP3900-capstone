@@ -82,3 +82,10 @@ WEEK 8:
 Implemented the calculation and display of the table total in the frontend order component.
 Implemented logout button. Implemented a common dashboard for kitchen staff and wait staff.
 Improved the UI for staff and customer views.
+
+WEEK 9:
+
+
+Implemented the frontend for table reservations for customers, allowing them to select the date, time 
+and number of guests through a form. Implemented a dashboard for wait staff to view reservations for 
+the day.

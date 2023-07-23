@@ -54,7 +54,6 @@ const OrderDashboard = (props) => {
     retrieveOrders();
   }, [status, triggerRerender]);
 
-  console.log(orders);
   return (
     <Paper
       elevation={6}
@@ -67,9 +66,9 @@ const OrderDashboard = (props) => {
       }}
     >
       <Typography
-        component="h2"
-        variant="h5"
-        color="secondary"
+        component='h2'
+        variant='h5'
+        color='secondary'
         gutterBottom
         sx={{ mb: 3 }}
       >
