@@ -128,7 +128,10 @@ const OrderDrawer = ({
     // note that useEffect runs twice due to StrictMode
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      if (data.type === "billPaid") {
+      if (
+        data.type === "billPaid" &&
+        data.accountId === localStorage.getItem("accountId")
+      ) {
         alert(data.message);
         setHasPaid(true);
       }

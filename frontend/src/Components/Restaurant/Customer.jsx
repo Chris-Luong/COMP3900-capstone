@@ -28,7 +28,7 @@ import { Formik } from "formik";
 
 const Customer = () => {
   const [datetime, setDatetime] = useState(dayjs());
-  const accountId = 1;
+  const accountId = localStorage.getItem("accountId");
   const MAX_GUESTS = 10;
 
   const handleSubmit = () => {
@@ -52,7 +52,7 @@ const Customer = () => {
 
   const bookingForm = (
     <Box
-      position='flex'
+      position="flex"
       sx={{
         width: 400,
         bgcolor: "background.paper",
@@ -60,7 +60,7 @@ const Customer = () => {
         p: 4,
       }}
     >
-      <Typography variant='h5' color='secondary' gutterBottom>
+      <Typography variant="h5" color="secondary" gutterBottom>
         Make A Reservation
       </Typography>
       <Formik
@@ -69,28 +69,28 @@ const Customer = () => {
       >
         {({ handleSubmit, handleChange, values, errors, touched }) => (
           <form onSubmit={handleSubmit} noValidate>
-            <Stack spacing={3} direction='column' width='100%' mb={3}>
+            <Stack spacing={3} direction="column" width="100%" mb={3}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer
                   components={["DateTimePicker", "DateTimePicker"]}
                 >
                   <DateTimePicker
-                    label='Select a date and time'
+                    label="Select a date and time"
                     value={datetime}
                     onChange={(newValue) => setDatetime(newValue)}
                   />
                 </DemoContainer>
               </LocalizationProvider>
               <TextField
-                label='Number of guests'
-                name='numGuests'
-                type='number'
+                label="Number of guests"
+                name="numGuests"
+                type="number"
                 onChange={handleChange}
                 error={touched.name && errors.name}
                 required
               />
             </Stack>
-            <Button color='success' onClick={handleSubmit}>
+            <Button color="success" onClick={handleSubmit}>
               Submit
             </Button>
           </form>
@@ -120,9 +120,9 @@ const Customer = () => {
         }}
       >
         <Typography
-          component='h2'
-          variant='h5'
-          color='secondary'
+          component="h2"
+          variant="h5"
+          color="secondary"
           gutterBottom
           sx={{ mb: 3 }}
         >
@@ -207,16 +207,16 @@ const Customer = () => {
     <>
       {" "}
       <Typography
-        component='h1'
-        variant='h2'
-        color='secondary'
+        component="h1"
+        variant="h2"
+        color="secondary"
         gutterBottom
         sx={{ mb: 3 }}
       >
         Customer Dashboard
       </Typography>
       <Box
-        display='flex'
+        display="flex"
         sx={{
           flexDirection: "column",
           alignItems: "center",
