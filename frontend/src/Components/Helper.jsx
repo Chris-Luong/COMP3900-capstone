@@ -96,6 +96,17 @@ export const retrieveOrderItems = async (orderId) => {
   }
 };
 
+export const deleteTableOrders = async () => {
+  try {
+    const body = { tableId: localStorage.getItem("tableId") };
+    const res = await sendRequest("/orders/delete", "DELETE", body);
+    return res.message;
+  } catch (err) {
+    alert(err);
+    console.log(err);
+  }
+};
+
 /*
   String constants for status
 */

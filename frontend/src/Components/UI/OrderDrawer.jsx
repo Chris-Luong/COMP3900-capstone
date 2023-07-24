@@ -18,6 +18,7 @@ import {
   PAID_STATUS,
   Request,
   createWaiterRequest,
+  deleteTableOrders,
   updateOrderPayStatus,
 } from "../Helper";
 
@@ -74,8 +75,11 @@ const OrderDrawer = ({
     alert(`${res.message}. We will be with you soon.`);
   };
 
-  const handleCheckOut = () => {
+  const handleCheckOut = async () => {
     // TODO: delete all table orders before clearing local storage
+    // TODO: check if this works after fixing guest check in
+    const res = await deleteTableOrders();
+    console.log(res);
     alert("Thank you for dining with us!");
     checkIn.setIsCheckedIn(false);
     localStorage.removeItem("token");
