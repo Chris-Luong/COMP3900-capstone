@@ -5,7 +5,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import LoginContext from "./Context/login-context";
 import CenterCard from "./UI/CenterCard";
-import sendRequest from "./Utils/Request";
+import { loginUser } from "./Helper";
 import { useNavigate } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 
@@ -28,9 +28,8 @@ const Login = () => {
       role: values.role,
     };
     try {
-      const res = await sendRequest("/login", "POST", body);
+      const res = await loginUser(body);
       login.setIsLoggedIn(true);
-      localStorage.setItem("token", res.token);
       localStorage.setItem("auth", true);
       localStorage.setItem("user-email", values.email);
       let token = jwtDecode(res.token);

@@ -5,6 +5,7 @@
     "jwt-decode": "^3.1.2",
     "multer": "^1.4.5-lts.1",
     "react-responsive-carousel": "^3.2.23",
+    "uuid": "^9.0.0",
     "ws": "^8.13.0"
   }
 }

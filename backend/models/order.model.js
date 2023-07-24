@@ -149,8 +149,8 @@ class Order {
     });
   }
 
-  static setNewTableId(next) {
-    db.query(setNewTableId, (err, results) => {
+  static setNewTableId(capacity, next) {
+    db.query(setNewTableId, capacity, (err, results) => {
       if (err) {
         next(
           {

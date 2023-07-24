@@ -51,7 +51,10 @@ const deleteTableOrders = `
 `;
 
 const setNewTableId = `
-  INSERT INTO tables VALUES (id);
+  INSERT INTO Tables (tableName, capacity) VALUES (
+    CONCAT('table-', (SELECT MAX(id) + 1 FROM (SELECT * from tables) AS t)),
+    ?
+  );
 `;
 
 const getOrdersByStatus = `
