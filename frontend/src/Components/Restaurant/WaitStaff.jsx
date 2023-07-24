@@ -32,36 +32,6 @@ const WaitStaff = () => {
     },
   ];
 
-  const [triggerRerender, setTriggerRerender] = useState(false);
-
-  useEffect(() => {
-    setTriggerRerender(!triggerRerender);
-  }, [triggerRerender]);
-
-  useEffect(() => {
-    const socket = new WebSocket("ws://localhost:8080");
-
-    socket.onopen = () => {
-      console.log("Connection established with websocket");
-    };
-
-    // Event listener for WebSocket events
-    // note that useEffect runs twice due to StrictMode
-    socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.type === "orderReady" || data.type === "newRequest") {
-        alert(data.message);
-      }
-    };
-
-    return () => {
-      // Clean up WebSocket connection when the component is unmounted
-      if (socket.readyState === 1) {
-        socket.close();
-      }
-    };
-  }, []);
-
   return (
     <>
       <Typography
