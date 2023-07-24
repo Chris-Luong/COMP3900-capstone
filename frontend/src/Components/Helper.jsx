@@ -4,6 +4,30 @@ import * as Yup from "yup";
 // contains functions that are used by multiple components
 
 /*
+  account functions
+*/
+export const loginUser = async (body) => {
+  try {
+    const res = await sendRequest("/login", "POST", body);
+    localStorage.setItem("token", res.token);
+    return res;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+};
+
+export const deleteUser = async (id) => {
+  try {
+    const res = await sendRequest("/account/delete", "DELETE", { id });
+    return res.message;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+};
+
+/*
   menu functions
 */
 export const getAllMenuItems = async () => {
@@ -317,6 +341,41 @@ export const getCategoryNamesFromItemId = async (id) => {
   try {
     const res = await sendRequest(`/categories/${id}`, "GET");
     return res.categoryNames;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+};
+
+/*
+  booking functions here
+*/
+export const createBooking = async (body) => {
+  try {
+    const res = await sendRequest(`/bookings/create`, "POST", body);
+    return res;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+};
+
+export const viewBooking = async (date) => {
+  try {
+    const res = await sendRequest(`/bookings/${date}`, "GET");
+    return res;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+};
+
+export const deleteBooking = async (bookingId) => {
+  try {
+    const res = await sendRequest(`/bookings/delete`, "DELETE", {
+      id: bookingId,
+    });
+    return res.message;
   } catch (err) {
     console.log(err);
     return null;

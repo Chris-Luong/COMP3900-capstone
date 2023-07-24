@@ -7,31 +7,60 @@ import Paper from "@mui/material/Paper";
 import sendRequest from "../Utils/Request";
 import RestaurantContext from "../Context/restaurant-context";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
+import LoginContext from "../Context/login-context";
+import jwtDecode from "jwt-decode";
+import { loginUser } from "../Helper";
 
 const RestaurantCheckIn = () => {
   const [bookingNumber, setBookingNumber] = useState("");
   const checkIn = useContext(RestaurantContext);
+  const login = useContext(LoginContext);
   const navigate = useNavigate();
 
-  async function guestCheckIn() {
-    const body = {
-      email: "guest1",
-      password: "temp123",
+  const guestCheckIn = async () => {
+    const uuid = uuidv4();
+    const password = "guest123";
+    const registerBody = {
+      email: uuid,
+      password: password,
+      firstName: uuid,
+      lastName: uuid,
+      role: 1,
     };
     try {
-      const tableRes = await sendRequest("/tables/create", "POST");
-      localStorage.setItem("tableId", tableRes.tableId);
-      // TODO: replace with more appropriate endpoint, e.g. /guest-checkin
-      const res = await sendRequest("/login", "POST", body);
-      localStorage.setItem("token", res.token);
+      // generate and login a new guest account
+      const registerRes = await sendRequest("/register", "POST", registerBody);
+      const loginRes = await loginUser({
+        email: uuid,
+        password: password,
+      });
+      console.log(registerRes);
+      login.setIsLoggedIn(true);
+      console.log(loginRes);
+      localStorage.setItem("token", loginRes.token);
+      const token = jwtDecode(loginRes.token);
       localStorage.setItem("checkedIn", true);
+      localStorage.setItem("accountId", token.accountId);
+      localStorage.setItem("isGuest", true);
+      // TODO: generate a new booking for 1 hour
+      // TODO: login with that booking? not sure how it exactly works
+      // TODO: this is only for guest check-in, actual booking check in is not done
+      // TODO: set bookingId in local storage
+
+      // currently creates a new table and gives it to this guest
+      const capacity = 10;
+      const tableRes = await sendRequest("/tables/create", "POST", {
+        capacity,
+      });
+      localStorage.setItem("tableId", tableRes.tableId);
       checkIn.setIsCheckedIn(true);
       navigate("/restaurant");
     } catch (err) {
       alert(err);
       console.log(err);
     }
-  }
+  };
 
   return (
     <CenterCard>
@@ -59,7 +88,7 @@ const RestaurantCheckIn = () => {
             variant="outlined"
             type="button"
             color="secondary"
-            onClick={() => guestCheckIn()}
+            onClick={guestCheckIn}
           >
             Check In as Guest
           </Button>
