@@ -69,8 +69,13 @@ const RequestDashboard = () => {
     // if request is for a bill, update the paid status of all its orders
     if (type === Request.Type.Bill) {
       const orders = await retrieveOrdersWithTableId(tableId);
+      const accountId = orders[0].accountId;
       const orderIdArr = orders.map((order) => order.id);
-      const res = await updateOrderPayStatus(orderIdArr, PAID_STATUS.Paid);
+      const res = await updateOrderPayStatus(
+        orderIdArr,
+        PAID_STATUS.Paid,
+        accountId
+      );
       console.log(res);
     }
     await completeWaiterRequest(requestId);
