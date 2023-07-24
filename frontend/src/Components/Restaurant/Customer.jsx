@@ -31,11 +31,9 @@ const Customer = () => {
   const accountId = 1;
   const MAX_GUESTS = 12;
 
-  // NOTE: UAC for booking:
-  // Users can choose the specific date and time they want to book
-  // users input the number of guests
-  // the system displays the available date and time in a dropdown box
-  // numHours is integer
+  // TODO: handleSubmit fn when user presses submit, gets info from form and
+  // does calculation for numHours. Then sends POST request
+  // Similar to manager new item form
 
   const setDuration = (numGuests) => {
     if (numGuests <= 4) return 1;
