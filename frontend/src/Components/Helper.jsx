@@ -382,6 +382,20 @@ export const deleteBooking = async (bookingId) => {
   }
 };
 
+/**
+ * Booking functions
+ */
+
+export const getReservations = async (date) => {
+  try {
+    const res = await sendRequest(`/bookings/${date}`, "GET");
+    return res;
+  } catch (err) {
+    alert(err);
+    console.log(err);
+  }
+};
+
 /*
   style objects
 */
