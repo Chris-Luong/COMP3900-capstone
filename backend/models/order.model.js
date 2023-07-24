@@ -4,14 +4,14 @@ const {
   getMenuItemsByOrder,
   createOrder,
   addMenuItemsToOrder,
-  deleteOrderById,
-  deleteOrderItemsById,
   getItemPrice,
   setNewTableId,
   getOrdersForTableId,
   getOrdersByStatus,
   updateOrderItemStatus,
   updateOrderPayStatus,
+  deleteTableOrderItems,
+  deleteTableOrders,
 } = require("../db/queries/order.queries");
 
 const NOT_FOUND = 401;
@@ -185,13 +185,13 @@ class Order {
     });
   }
 
-  static deleteOrder(orderId, next) {
-    db.query(deleteOrderItemsById, [orderId], (err, results) => {
+  static deleteTableOrders(tableId, next) {
+    db.query(deleteTableOrderItems, tableId, (err, results) => {
       if (err) {
         next(
           {
             status: CANNOT_DELETE,
-            message: "Error deleting orderItems",
+            message: "Error deleting order items",
             kind: CANNOT_DELETE_KIND,
           },
           null
@@ -211,7 +211,7 @@ class Order {
         return;
       }
 
-      db.query(deleteOrderById, [orderId], (err, results) => {
+      db.query(deleteTableOrders, tableId, (err, results) => {
         if (err) {
           next(
             {
@@ -235,9 +235,9 @@ class Order {
           );
           return;
         }
-      });
 
-      next(null, { deleted: results.affectedRows });
+        next(null, { message: "Successfully deleted orders" });
+      });
     });
   }
 
@@ -297,7 +297,7 @@ class Order {
     let new_orderIds = Array.isArray(orderIds) ? orderIds : [orderIds];
 
     new_orderIds.forEach((orderId) => {
-      const values = [status, orderId]
+      const values = [status, orderId];
       db.query(updateOrderPayStatus, values, (err, results) => {
         if (err) {
           cb(
@@ -313,7 +313,7 @@ class Order {
       });
     });
 
-    cb(null, {message: "Successfully updated pay status on orders"});
+    cb(null, { message: "Successfully updated pay status on orders" });
   }
 }
 module.exports = { Order, NOT_FOUND, EXISTS, CANNOT_CREATE };
