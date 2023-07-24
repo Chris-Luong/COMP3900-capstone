@@ -29,14 +29,13 @@ const Login = () => {
     };
     try {
       const res = await sendRequest("/login", "POST", body);
-      console.log(res.token);
-      console.log(res.message);
       login.setIsLoggedIn(true);
       localStorage.setItem("token", res.token);
       localStorage.setItem("auth", true);
       localStorage.setItem("user-email", values.email);
       let token = jwtDecode(res.token);
       localStorage.setItem("role", token.role);
+      localStorage.setItem("accountId", token.accountId);
       navigate("/home");
     } catch (err) {
       alert(err);
@@ -58,16 +57,16 @@ const Login = () => {
       {({ handleSubmit, handleChange, values, errors, touched }) => (
         <form onSubmit={handleSubmit} noValidate>
           <CenterCard>
-            <Stack spacing={2} direction='column' width='100%'>
-              <Typography align='center' variant='h3'>
+            <Stack spacing={2} direction="column" width="100%">
+              <Typography align="center" variant="h3">
                 Welcome Back
               </Typography>
               <TextField
-                type='email'
-                variant='outlined'
-                color='secondary'
-                label='Email'
-                name='email'
+                type="email"
+                variant="outlined"
+                color="secondary"
+                label="Email"
+                name="email"
                 onChange={handleChange}
                 value={values.email}
                 error={touched.email && errors.email}
@@ -75,23 +74,23 @@ const Login = () => {
                 required
               />
               <TextField
-                type='password'
-                variant='outlined'
-                color='secondary'
-                label='Password'
-                name='password'
+                type="password"
+                variant="outlined"
+                color="secondary"
+                label="Password"
+                name="password"
                 onChange={handleChange}
                 value={values.password}
                 error={touched.password && errors.password}
                 helperText={touched.password && errors.password}
                 required
               />
-              <Button variant='outlined' color='secondary' type='submit'>
+              <Button variant="outlined" color="secondary" type="submit">
                 Login
               </Button>
-              <Typography align='center' variant='overline'>
+              <Typography align="center" variant="overline">
                 Don't have an account?{" "}
-                <Link to='../register'>Register here</Link>
+                <Link to="../register">Register here</Link>
               </Typography>
             </Stack>
           </CenterCard>
