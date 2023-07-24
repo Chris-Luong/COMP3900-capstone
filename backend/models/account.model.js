@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const {
   createNewAccount,
   findAccountByEmail,
+  deleteAccountById,
 } = require("../db/queries/accounts.queries");
 
 const NOT_FOUND = 401;
@@ -91,6 +92,17 @@ class Account {
           null
         );
       }
+    });
+  }
+
+  static deleteAccountById(id, next) {
+    return db.query(deleteAccountById, id, (err, results) => {
+      if (err) {
+        console.error(err);
+        return next(err, null);
+      }
+      let result = JSON.parse(JSON.stringify(results));
+      return next(null, result);
     });
   }
 }
