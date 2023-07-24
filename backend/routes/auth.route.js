@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const register = require("../controller/register");
-const login = require("../controller/login");
+const { register, login, deleteAccount } = require("../controller/account");
 const {
   menu,
   addItem,
@@ -28,7 +27,11 @@ const {
   updateRequest,
 } = require("../controller/request");
 const multer = require("multer");
-const { createBooking, viewBooking } = require("../controller/booking");
+const {
+  createBooking,
+  viewBooking,
+  deleteBooking,
+} = require("../controller/booking");
 const upload = multer({ dest: "uploads/" });
 
 /**
@@ -64,6 +67,7 @@ const upload = multer({ dest: "uploads/" });
 
 router.post("/register", register);
 router.post("/login", login);
+router.delete("/account/delete", deleteAccount);
 router.get("/menu", menu);
 router.put("/menu/edit", upload.single("thumbnail"), editItem);
 router.post("/menu/add", upload.single("thumbnail"), addItem);
@@ -82,6 +86,7 @@ router.put("/orders/update", updateOrderItemStatus);
 router.put("/orders/pay", updateOrderPayStatus);
 router.post("/bookings/create", createBooking);
 router.get("/bookings/:date", viewBooking);
+router.delete("/bookings/delete", deleteBooking);
 router.post("/request/create", createRequest);
 router.get("/request/", getRequest);
 router.put("/request/complete", updateRequest);

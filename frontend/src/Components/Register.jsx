@@ -29,14 +29,12 @@ const Register = () => {
       lastName: values.lastName,
       email: values.email,
       password: values.password,
-      role: 1
+      role: 1,
     };
     try {
       const res = await sendRequest("/register", "POST", body);
-      console.log(res.token);
-      console.log(res.message);
       alert(res.message);
-      navigate('/login');
+      navigate("/login");
     } catch (err) {
       alert(err);
       console.log(err);

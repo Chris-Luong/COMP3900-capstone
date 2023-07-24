@@ -18,7 +18,9 @@ import {
   PAID_STATUS,
   Request,
   createWaiterRequest,
+  deleteBooking,
   deleteTableOrders,
+  deleteUser,
   updateOrderPayStatus,
 } from "../Helper";
 
@@ -77,9 +79,15 @@ const OrderDrawer = ({
 
   const handleCheckOut = async () => {
     // TODO: delete all table orders before clearing local storage
-    // TODO: check if this works after fixing guest check in
     const res = await deleteTableOrders();
     console.log(res);
+    // if guest check in, then delete that account and all bookings associated
+    if (localStorage.getItem("isGuest")) {
+      const guestRes = await deleteUser(localStorage.getItem("accountId"));
+      console.log(guestRes);
+    }
+    // TODO: delete bookings here, bookingId should be in local storage
+    // await deleteBooking(bookingId);
     alert("Thank you for dining with us!");
     checkIn.setIsCheckedIn(false);
     localStorage.removeItem("token");

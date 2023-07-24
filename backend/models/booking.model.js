@@ -4,6 +4,7 @@ const {
   findBookingByAccountId,
   createBookingByTableId,
   viewBookingsByDate,
+  deleteBooking,
 } = require("../db/queries/booking.queries");
 
 const NOT_FOUND = 401;
@@ -150,6 +151,22 @@ class Booking {
 
       let result = JSON.parse(JSON.stringify(results));
       next(null, result);
+    });
+  }
+
+  static deleteBooking(id, next) {
+    return db.query(deleteBooking, id, (err, results) => {
+      if (err) {
+        return next(
+          {
+            status: NOT_FOUND,
+            message: "Cannot delete booking",
+            kind: NOT_FOUND_KIND,
+          },
+          null
+        );
+      }
+      next(null, { message: `Deleted booking id ${id}` });
     });
   }
 }

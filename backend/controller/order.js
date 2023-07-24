@@ -108,7 +108,8 @@ deleteTableOrders = (req, res) => {
  * @returns {tableId: tableId}
  */
 setNewTable = (req, res) => {
-  Order.setNewTableId((err, result) => {
+  const capacity = req.body["capacity"];
+  Order.setNewTableId(capacity, (err, result) => {
     if (err) {
       return res.status(err.status).json({ message: err.message });
     }
