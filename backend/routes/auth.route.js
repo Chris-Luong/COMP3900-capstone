@@ -15,12 +15,12 @@ const {
 const {
   viewOrders,
   createOrder,
-  deleteOrder,
   setNewTable,
   getOrdersForTableId,
   viewOrdersByStatus,
   updateOrderItemStatus,
   updateOrderPayStatus,
+  deleteTableOrders,
 } = require("../controller/order");
 const {
   createRequest,
@@ -74,14 +74,14 @@ router.post("/categories/add", addCategory);
 router.delete("/categories/remove", removeCategory);
 router.get("/orders", viewOrders);
 router.post("/orders/create", createOrder);
-router.delete("/orders/delete", deleteOrder);
+router.delete("/orders/delete", deleteTableOrders);
 router.post("/tables/create", setNewTable);
 router.get("/orders/tables/:tableid", getOrdersForTableId);
 router.get("/orders/:status", viewOrdersByStatus);
 router.put("/orders/update", updateOrderItemStatus);
 router.put("/orders/pay", updateOrderPayStatus);
 router.post("/bookings/create", createBooking);
-router.get("/bookings/:date", viewBooking)
+router.get("/bookings/:date", viewBooking);
 router.post("/request/create", createRequest);
 router.get("/request/", getRequest);
 router.put("/request/complete", updateRequest);

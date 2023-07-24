@@ -34,14 +34,20 @@ const createOrder = `
 const getItemPrice = `
   SELECT menuitems.price FROM menuItems
   WHERE menuitems.id = ?
-`
-
-const deleteOrderById = `
-  DELETE FROM orders where id = ?
 `;
 
-const deleteOrderItemsById = `
-  DELETE FROM orderitems where orderId = ?
+const deleteTableOrderItems = `
+  DELETE FROM orderItems
+  WHERE orderId IN (
+    SELECT id
+    FROM orders
+    WHERE tableId = ?
+  );
+`;
+
+const deleteTableOrders = `
+  DELETE FROM orders
+  WHERE tableId = ?
 `;
 
 const setNewTableId = `
@@ -55,13 +61,13 @@ const getOrdersByStatus = `
     join menuItems MI on MI.id = OI.itemId 
   WHERE OI.status = ?
   order by O.orderTime, O.id
-`
+`;
 
 const updateOrderItemStatus = `
   UPDATE orderItems
   SET status = ?
   WHERE id = ?
-`
+`;
 
 const getOrdersForTableId = `
   SELECT * FROM orders WHERE tableId = ?
@@ -71,15 +77,15 @@ const updateOrderPayStatus = `
   UPDATE orders
   SET paid = ?
   WHERE orders.id = ?
-`
+`;
 
 module.exports = {
   getMenuItemsByAccount,
   getMenuItemsByOrder,
   createOrder,
   addMenuItemsToOrder,
-  deleteOrderById,
-  deleteOrderItemsById,
+  deleteTableOrderItems,
+  deleteTableOrders,
   getItemPrice,
   setNewTableId,
   getOrdersForTableId,

@@ -79,20 +79,19 @@ createOrder = (req, res) => {
 };
 
 /**
- * This deleteOrder function is for deleting a new order by order id
+ * deletes all orders for a given tableId
  * This should typically be called when the customer requests their bill
- * @param {int}           orderId          The id of the order
+ * @param {int}           tableId          The id of the table
  *
  * @returns {null}
  */
-
-deleteOrder = (req, res) => {
-  const { orderId } = req.body;
-  Order.deleteOrder(orderId, (err, result) => {
+deleteTableOrders = (req, res) => {
+  const { tableId } = req.body;
+  Order.deleteTableOrders(tableId, (err, result) => {
     if (err) {
       return res.status(err.status).json({ message: err.message });
     }
-    return res.status(200).json();
+    return res.status(200).json(result);
   });
 };
 
@@ -232,7 +231,7 @@ module.exports = {
   createOrder,
   setNewTable,
   getOrdersForTableId,
-  deleteOrder,
+  deleteTableOrders,
   viewOrdersByStatus,
   updateOrderItemStatus,
   updateOrderPayStatus,
