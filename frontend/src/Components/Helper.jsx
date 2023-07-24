@@ -360,7 +360,7 @@ export const createBooking = async (body) => {
   }
 };
 
-export const viewBooking = async (date) => {
+export const getReservations = async (date) => {
   try {
     const res = await sendRequest(`/bookings/${date}`, "GET");
     return res;
@@ -379,20 +379,6 @@ export const deleteBooking = async (bookingId) => {
   } catch (err) {
     console.log(err);
     return null;
-  }
-};
-
-/**
- * Booking functions
- */
-
-export const getReservations = async (date) => {
-  try {
-    const res = await sendRequest(`/bookings/${date}`, "GET");
-    return res;
-  } catch (err) {
-    alert(err);
-    console.log(err);
   }
 };
 
