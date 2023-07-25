@@ -59,7 +59,6 @@ const Customer = () => {
   // Returns bookingId
 
   const handleSubmit = async (values) => {
-    console.log("Hello Customer");
     console.log(`datetime: ${datetime}`);
     console.log(`guests: ${values.guests}`);
     const body = {
@@ -94,6 +93,7 @@ const Customer = () => {
         {({ handleSubmit, handleChange, values, errors, touched }) => (
           <form onSubmit={handleSubmit} noValidate>
             <Stack spacing={3} direction='column' width='100%' mb={3}>
+              {/* TODO: form validation */}
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer
                   components={["DateTimePicker", "DateTimePicker"]}
