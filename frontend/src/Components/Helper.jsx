@@ -359,7 +359,7 @@ export const createBooking = async (body) => {
   }
 };
 
-export const viewBooking = async (date) => {
+export const getReservations = async (date) => {
   try {
     const res = await sendRequest(`/bookings/${date}`, "GET");
     return res;
@@ -422,4 +422,8 @@ export const editMenuItemSchema = Yup.object().shape({
 
 export const newCategorySchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
+});
+
+export const createBookingSchema = Yup.object().shape({
+  guests: Yup.string().required("Number of guests is required"),
 });
