@@ -203,7 +203,7 @@ updateOrderItemStatus = (req, res) => {
 };
 
 updateOrderPayStatus = (req, res) => {
-  const { orderIds, status } = req.query;
+  const { orderIds, accountId, status } = req.query;
   Order.updatePayStatus(orderIds, status, (err, result) => {
     if (err) {
       return res.status(err.status).json({ message: err.message });
@@ -216,6 +216,7 @@ updateOrderPayStatus = (req, res) => {
     // emit WebSocket event for waiter staff to listen
     const data = {
       type: "billPaid",
+      accountId: accountId,
       message: "We've received your payment!",
     };
     if (status === "Paid") {

@@ -27,6 +27,7 @@ const ReservationDashboard = () => {
   useEffect(() => {
     setLoading(true);
     const retrieveReservations = async () => {
+      // NOTE: if returnds object, could use JSON.stringify from chatGPT suggestion
       const bookingData = await getReservations(date);
       console.log(bookingData);
       setBookings(bookingData);

@@ -88,4 +88,6 @@ WEEK 9:
 
 Implemented the frontend for table reservations for customers, allowing them to select the date, time 
 and number of guests through a form. Implemented a dashboard for wait staff to view reservations for 
-the day.
+the day. Put a placeholder for viewing reservations for the customer to prepare for the next sprint.
+Communicated with Grace to design the backend for the booking features to be implemented similar to 
+the rest of the backend to improve developer experience.

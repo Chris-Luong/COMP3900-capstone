@@ -1,6 +1,9 @@
 import { useState } from "react";
 
 import dayjs from "dayjs";
+// might need to npm install the below
+// import utc from "dayjs/plugins/utc";
+// import timezone from "dayjs/plugins/timezone";
 
 import {
   Box,
@@ -25,11 +28,16 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { Formik } from "formik";
+import { createBooking, createBookingSchema } from "../Helper";
+
+// dayjs.extend(utc);
+// dayjs.extend(timezone);
+// use dayjs.utc() to once the above work
 
 const Customer = () => {
-  const [datetime, setDatetime] = useState(dayjs());
-  const accountId = 1;
-  const MAX_GUESTS = 12;
+  const [datetime, setDatetime] = useState(dayjs);
+  const accountId = localStorage.getItem("accountId");
+  const MAX_GUESTS = 10;
 
   // TODO: handleSubmit fn when user presses submit, gets info from form and
   // does calculation for numHours. Then sends POST request
@@ -43,15 +51,26 @@ const Customer = () => {
 
   const data = {
     date: "",
-    time: "",
-    accountId: accountId,
+    start_time: "",
     guests: 1,
+    accountId: accountId,
     numHours: setDuration(MAX_GUESTS),
   };
   // Returns bookingId
 
-  const handleSubmit = () => {
+  const handleSubmit = async (values) => {
     console.log("Hello Customer");
+    console.log(`datetime: ${datetime}`);
+    console.log(`guests: ${values.guests}`);
+    const body = {
+      date: "",
+      start_time: "",
+      guests: values.guests,
+      accountId: accountId,
+      numHours: setDuration(values.guests),
+    };
+    // const bookingId = await createBooking(body);
+    // console.log(bookingId);
   };
 
   const bookingForm = (
@@ -68,8 +87,9 @@ const Customer = () => {
         Make A Reservation
       </Typography>
       <Formik
-        // validationSchema={createMenuItemSchema}
+        validationSchema={createBookingSchema}
         onSubmit={(values) => handleSubmit(values)}
+        initialValues={{ datetime: "", guests: 1 }}
       >
         {({ handleSubmit, handleChange, values, errors, touched }) => (
           <form onSubmit={handleSubmit} noValidate>
@@ -80,6 +100,8 @@ const Customer = () => {
                 >
                   <DateTimePicker
                     label='Select a date and time'
+                    name='datetime'
+                    // timezone='Australia/Sydney'
                     value={datetime}
                     onChange={(newValue) => setDatetime(newValue)}
                   />
@@ -87,14 +109,14 @@ const Customer = () => {
               </LocalizationProvider>
               <TextField
                 label='Number of guests'
-                name='numGuests'
+                name='guests'
                 type='number'
                 onChange={handleChange}
-                error={touched.name && errors.name}
+                error={touched.guests && errors.guests}
                 required
               />
             </Stack>
-            <Button color='success' onClick={handleSubmit}>
+            <Button color='success' type='submit'>
               Submit
             </Button>
           </form>
@@ -105,6 +127,8 @@ const Customer = () => {
 
   const dashboard = () => {
     const retrieveOrders = async () => {
+      // TODO: get bookings with account id. Make past bookings a greyed out colour
+
       // const orderData = await retrieveOrdersByStatus(status);
       const orderData = {};
       console.log(orderData);
@@ -209,7 +233,6 @@ const Customer = () => {
 
   return (
     <>
-      {" "}
       <Typography
         component='h1'
         variant='h2'

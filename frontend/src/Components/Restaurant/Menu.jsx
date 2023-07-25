@@ -49,7 +49,7 @@ const Menu = () => {
   const [orderItems, setOrderItems] = useState([]);
   const [tableId, setTableId] = useState();
 
-  const accountId = 1; // Need to get actual account id
+  const accountId = localStorage.getItem("accountId"); // Need to get actual account id
 
   const toggleFilter = () => {
     setShowFilter(!showFilter);

@@ -228,15 +228,14 @@ export const updateOrderItemStatus = async (id, status) => {
   }
 };
 
-export const updateOrderPayStatus = async (orderArr, status) => {
+export const updateOrderPayStatus = async (orderArr, status, accountId) => {
   let params = "";
   orderArr.forEach((orderId) => {
     params += `orderIds=${orderId}&`;
   });
-  console.log(`/orders/pay?${params}status=${status}`);
   try {
     const res = await sendRequest(
-      `/orders/pay?${params}status=${status}`,
+      `/orders/pay?${params}accountId=${accountId}&status=${status}`,
       "PUT"
     );
     return res;
@@ -423,4 +422,8 @@ export const editMenuItemSchema = Yup.object().shape({
 
 export const newCategorySchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
+});
+
+export const createBookingSchema = Yup.object().shape({
+  guests: Yup.string().required("Number of guests is required"),
 });
