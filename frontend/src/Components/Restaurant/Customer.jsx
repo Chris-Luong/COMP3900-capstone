@@ -39,8 +39,8 @@ const Customer = () => {
   const accountId = localStorage.getItem("accountId");
 
   const setDuration = (numGuests) => {
-    if (numGuests <= 4) return 1;
-    if (numGuests <= 8) return 2;
+    if (numGuests <= 3) return 1;
+    if (numGuests <= 6) return 2;
     return 3;
   };
 

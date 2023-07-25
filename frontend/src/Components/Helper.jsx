@@ -359,9 +359,14 @@ export const createBooking = async (body) => {
   }
 };
 
-export const getReservations = async (date) => {
+// May need to see how getOrders works, or get grace to comment out changes for now
+export const getReservations = async (account, date) => {
   try {
-    const res = await sendRequest(`/bookings/${date}`, "GET");
+    let url = "/bookings?";
+    url += account ? `&account=${account}` : "";
+    url += date ? `&date=${date}` : "";
+
+    const res = await sendRequest(url, "GET");
     return res;
   } catch (err) {
     console.log(err);

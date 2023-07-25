@@ -15,54 +15,58 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
+import dayjs from "dayjs";
 
 // TODO: useTimeout or something to poll for new orders every 30 seconds
+const CURRENT_DAY = dayjs().format("YYYY-MM-DD");
 
 const ReservationDashboard = () => {
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [bookings, setBookings] = useState({});
-  // TODO: use dayjs to get current date and convert to below format
   const date = "2023-07-22";
+  console.log(`date is ${date}`);
 
+  // TODO: this doesn't seem to run
   useEffect(() => {
-    setLoading(true);
+    // setLoading(true);
     const retrieveReservations = async () => {
       // NOTE: if returnds object, could use JSON.stringify from chatGPT suggestion
       const bookingData = await getReservations(date);
-      console.log(bookingData);
+      console.log(`bookingdata is ${bookingData}`);
       setBookings(bookingData);
-      setLoading(false);
+      // setLoading(false);
     };
     retrieveReservations();
-  });
-
+  }, []);
+  // JSON.stringify(bookings, null, 2)
+  // bookings.map((booking) => console.log(`bookings is ${booking}`));
   console.log(bookings);
   return (
-    <>
-      {loading && <CircularProgress />}
-      {!loading && (
-        <Paper
-          elevation={6}
-          sx={{
-            p: 2,
-            display: "flex",
-            flexDirection: "column",
-            padding: 5,
-            margin: 5,
-          }}
-        >
-          <Typography
-            component='h2'
-            variant='h5'
-            color='secondary'
-            gutterBottom
-            sx={{ mb: 3 }}
-          >
-            Today's Reservations
-          </Typography>
-        </Paper>
-      )}
-    </>
+    // <>
+    //   {loading && <CircularProgress />}
+    //   {!loading && (
+    <Paper
+      elevation={6}
+      sx={{
+        p: 2,
+        display: "flex",
+        flexDirection: "column",
+        padding: 5,
+        margin: 5,
+      }}
+    >
+      <Typography
+        component='h2'
+        variant='h5'
+        color='secondary'
+        gutterBottom
+        sx={{ mb: 3 }}
+      >
+        Today's Reservations
+      </Typography>
+    </Paper>
+    //   )}
+    // </>
   );
 };
 
