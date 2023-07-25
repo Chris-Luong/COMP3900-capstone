@@ -32,16 +32,11 @@ import { createBooking, createBookingSchema } from "../Helper";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
-const MAX_GUESTS = 10;
 const TIMEZONE_SYDNEY = "Australia/Sydney";
 
 const Customer = () => {
   const [datetime, setDatetime] = useState(dayjs.utc());
   const accountId = localStorage.getItem("accountId");
-
-  // TODO: handleSubmit fn when user presses submit, gets info from form and
-  // does calculation for numHours. Then sends POST request
-  // Similar to manager new item form
 
   const setDuration = (numGuests) => {
     if (numGuests <= 4) return 1;
@@ -49,32 +44,30 @@ const Customer = () => {
     return 3;
   };
 
-  const data = {
-    date: "",
-    start_time: "",
-    guests: 1,
-    accountId: accountId,
-    numHours: setDuration(MAX_GUESTS),
-  };
-  // Returns bookingId
+  // const data = {
+  //   date: "",
+  //   start_time: "",
+  //   guests: 1,
+  //   accountId: accountId,
+  //   numHours: setDuration(MAX_GUESTS),
+  // };
+  // // Returns bookingId
 
   const handleSubmit = async (values) => {
-    console.log(`datetime: ${datetime}`);
-    console.log(`guests: ${values.guests}`);
-    // TODO: put into Syd timezone
-    const dateTimeObj = dayjs(datetime);
+    const dateTimeObj = dayjs(datetime).tz(TIMEZONE_SYDNEY);
     const formattedDate = dateTimeObj.format("YYYY-MM-DD");
-    const formattedTime = dateTimeObj.format("HH:mm:ss");
-    console.log(`date is ${formattedDate} and time is ${formattedTime}`);
+    const formattedTime = dateTimeObj.format("HH:mm:00");
+
     const body = {
-      date: "",
-      start_time: "",
+      date: formattedDate,
+      start_time: formattedTime,
       guests: values.guests,
       accountId: accountId,
       numHours: setDuration(values.guests),
     };
-    // const bookingId = await createBooking(body);
-    // console.log(bookingId);
+    // console.log(body);
+    const res = await createBooking(body);
+    console.log(`bookingId is ${res.bookingId}`);
   };
 
   const bookingForm = (
@@ -108,6 +101,7 @@ const Customer = () => {
                     label='Select a date and time'
                     name='datetime'
                     value={datetime}
+                    timezone={TIMEZONE_SYDNEY}
                     onChange={(newValue) => setDatetime(newValue)}
                   />
                 </DemoContainer>
@@ -136,7 +130,7 @@ const Customer = () => {
 
       // const orderData = await retrieveOrdersByStatus(status);
       const orderData = {};
-      console.log(orderData);
+      // console.log(orderData);
       return orderData;
     };
     const bookings = retrieveOrders();
