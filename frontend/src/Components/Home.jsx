@@ -35,7 +35,7 @@ const Home = () => {
       </div>
       <Button
         sx={{
-          position: "fixed",
+          position: "absolute",
           right: 30,
           top: 15,
         }}
