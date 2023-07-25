@@ -85,7 +85,7 @@ router.get("/orders/:status", viewOrdersByStatus);
 router.put("/orders/update", updateOrderItemStatus);
 router.put("/orders/pay", updateOrderPayStatus);
 router.post("/bookings/create", createBooking);
-router.get("/bookings/:date", viewBooking);
+router.get("/bookings", viewBooking);
 router.delete("/bookings/delete", deleteBooking);
 router.post("/request/create", createRequest);
 router.get("/request/", getRequest);

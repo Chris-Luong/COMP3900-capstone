@@ -10,6 +10,15 @@ SELECT * from bookings
 WHERE user_id = ? AND date = ?
 `;
 
+const viewBookingsByAccountId = `
+SELECT b.id as bookId, a.lastname AS userName, t.id as tableId, t.capacity as tableCapacity, b.start_time as bookingStart, b.end_time as bookingEnd, b.guests as guests
+FROM bookings b
+JOIN account a ON b.user_id = a.accountId
+JOIN tables t ON b.table_id = t.id
+WHERE b.user_id = ?
+ORDER BY b.start_time ASC;
+`;
+
 const createBookingByTableId = `INSERT INTO bookings(user_id, table_id, date, start_time, end_time, guests)
 VALUES (?, ?, ?, ?, ?, ?);`;
 
@@ -30,6 +39,7 @@ module.exports = {
   findBooking,
   createBookingByTableId,
   findBookingByAccountId,
+  viewBookingsByAccountId,
   viewBookingsByDate,
   deleteBooking,
 };

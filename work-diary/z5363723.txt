@@ -73,3 +73,5 @@ Week9:
 Monday: Added the bookingEnd for "bookings" table to accomodate users' needs to book more than 1 hours. Updated the POST API /bookings/create
 to fetch available tables that have non-overlapping booking time and to include end_time in the insert query.
 Updated the GET API /bookings/:date to also include the bookingEnd in the response body.
+Tuesday: Chris requested GET API to include date and accountId parameter, so I udpated the /bookings route. Also discussed with the team about
+the table booking for guest check in and we agreed to create a guest account and book available table for 1 hour. 

@@ -25,18 +25,32 @@ createBooking = (req, res) => {
 };
 
 viewBooking = (req, res) => {
-  const date = req.params["date"];
-  Booking.viewBooking(date, (err, result) => {
-    if (err) {
-      return res.status(err.status).json({ message: err.message });
-    }
-    if (!result) {
-      return res
-        .status(NOT_FOUND)
-        .json({ message: "Cannot Fetch Reservations" });
-    }
-    return res.status(200).json(result);
-  });
+  if (req.query.accountId) {
+    Booking.viewBookingsByAccountId(req.query.accountId, (err, result) => {
+      if (err) {
+        return res.status(err.status).json({ message: err.message });
+      }
+      if (!result) {
+        return res
+          .status(NOT_FOUND)
+          .json({ message: "Cannot Fetch Reservations" });
+      }
+      return res.status(200).json(result);
+    });
+  } else if (req.query.date) {
+    Booking.viewBooking(req.query.date, (err, result) => {
+      if (err) {
+        return res.status(err.status).json({ message: err.message });
+      }
+      if (!result) {
+        return res
+          .status(NOT_FOUND)
+          .json({ message: "Cannot Fetch Reservations" });
+      }
+      return res.status(200).json(result);
+    });
+  }
+
 };
 
 deleteBooking = (req, res) => {

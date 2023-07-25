@@ -2,6 +2,7 @@ const db = require("../db/db");
 const {
   findBooking,
   findBookingByAccountId,
+  viewBookingsByAccountId,
   createBookingByTableId,
   viewBookingsByDate,
   deleteBooking,
@@ -143,6 +144,27 @@ class Booking {
           {
             status: NOT_FOUND,
             message: "Cannot fetch reservations",
+            kind: NOT_FOUND_KIND,
+          },
+          null
+        );
+      }
+
+      let result = JSON.parse(JSON.stringify(results));
+      next(null, result);
+    });
+  }
+
+  static viewBookingsByAccountId(accountId, next) {
+    return db.query(viewBookingsByAccountId, [accountId], (err, results) => {
+      console.log("MySQL Error: " + err);
+      console.log("MySQL Result:", results);
+
+      if (err) {
+        return next(
+          {
+            status: NOT_FOUND,
+            message: "Cannot fetch bookings",
             kind: NOT_FOUND_KIND,
           },
           null

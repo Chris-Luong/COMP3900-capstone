@@ -49,6 +49,30 @@
         }
       }
     },
+    "/account/delete": {
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/menu": {
       "get": {
         "description": "",
@@ -306,7 +330,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "orderId": {
+                "tableId": {
                   "example": "any"
                 }
               }
@@ -399,6 +423,11 @@
             "type": "string"
           },
           {
+            "name": "accountId",
+            "in": "query",
+            "type": "string"
+          },
+          {
             "name": "status",
             "in": "query",
             "type": "string"
@@ -422,19 +451,19 @@
               "type": "object",
               "properties": {
                 "date": {
-                  "example": "2023-07-24"
+                  "example": "any"
                 },
                 "start_time": {
-                  "example": "18:00:00"
+                  "example": "any"
                 },
                 "guests": {
-                  "example": 3
+                  "example": "any"
                 },
                 "accountId": {
-                  "example": 3
+                  "example": "any"
                 },
                 "numHours": {
-                  "example": 3
+                  "example": "any"
                 }
               }
             }
@@ -447,16 +476,43 @@
         }
       }
     },
-    "/bookings/{date}": {
+    "/bookings": {
       "get": {
         "description": "",
         "parameters": [
           {
+            "name": "accountId",
+            "in": "query",
+            "type": "string"
+          },
+          {
             "name": "date",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "example": "2023-07-23"
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/bookings/delete": {
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "example": "any"
+                }
+              }
+            }
           }
         ],
         "responses": {
