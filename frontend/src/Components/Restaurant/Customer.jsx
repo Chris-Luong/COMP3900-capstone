@@ -2,8 +2,8 @@ import { useState } from "react";
 
 import dayjs from "dayjs";
 // might need to npm install the below
-// import utc from "dayjs/plugins/utc";
-// import timezone from "dayjs/plugins/timezone";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 
 import {
   Box,
@@ -30,14 +30,14 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { Formik } from "formik";
 import { createBooking, createBookingSchema } from "../Helper";
 
-// dayjs.extend(utc);
-// dayjs.extend(timezone);
-// use dayjs.utc() to once the above work
+dayjs.extend(utc);
+dayjs.extend(timezone);
+const MAX_GUESTS = 10;
+const TIMEZONE_SYDNEY = "Australia/Sydney";
 
 const Customer = () => {
-  const [datetime, setDatetime] = useState(dayjs);
+  const [datetime, setDatetime] = useState(dayjs.utc());
   const accountId = localStorage.getItem("accountId");
-  const MAX_GUESTS = 10;
 
   // TODO: handleSubmit fn when user presses submit, gets info from form and
   // does calculation for numHours. Then sends POST request
@@ -61,6 +61,11 @@ const Customer = () => {
   const handleSubmit = async (values) => {
     console.log(`datetime: ${datetime}`);
     console.log(`guests: ${values.guests}`);
+    // TODO: put into Syd timezone
+    const dateTimeObj = dayjs(datetime);
+    const formattedDate = dateTimeObj.format("YYYY-MM-DD");
+    const formattedTime = dateTimeObj.format("HH:mm:ss");
+    console.log(`date is ${formattedDate} and time is ${formattedTime}`);
     const body = {
       date: "",
       start_time: "",
@@ -93,7 +98,8 @@ const Customer = () => {
         {({ handleSubmit, handleChange, values, errors, touched }) => (
           <form onSubmit={handleSubmit} noValidate>
             <Stack spacing={3} direction='column' width='100%' mb={3}>
-              {/* TODO: form validation */}
+              {/* TODO: form validation 
+              https://mui.com/x/react-date-pickers/validation/*/}
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer
                   components={["DateTimePicker", "DateTimePicker"]}
@@ -101,7 +107,6 @@ const Customer = () => {
                   <DateTimePicker
                     label='Select a date and time'
                     name='datetime'
-                    // timezone='Australia/Sydney'
                     value={datetime}
                     onChange={(newValue) => setDatetime(newValue)}
                   />
