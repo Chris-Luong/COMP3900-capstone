@@ -69,7 +69,7 @@ const Customer = () => {
     // console.log(body);
     const res = await createBooking(body);
     // NOTE: Not showing yet
-    setTemp(res.bookgingId);
+    setTemp(res.bookingId);
     console.log(`bookingId is ${res.bookingId}`);
     alert(`bookingId is ${res.bookingId}`);
   };
@@ -98,6 +98,8 @@ const Customer = () => {
               {/* TODO: ====================================================== 
                ==================FORM VALIDATION=========================== 
               ===================================================================
+            <Stack spacing={3} direction="column" width="100%" mb={3}>
+              {/* TODO: form validation 
               https://mui.com/x/react-date-pickers/validation/*/}
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer

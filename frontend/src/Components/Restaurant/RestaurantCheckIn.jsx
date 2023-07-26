@@ -10,15 +10,26 @@ import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import LoginContext from "../Context/login-context";
 import jwtDecode from "jwt-decode";
-import { loginUser } from "../Helper";
+import { createBooking, loginUser } from "../Helper";
+import CheckInModal from "../UI/CheckInModal";
+// TODO: export duplicate code from Customer.jsx into helper function
+import dayjs from "dayjs";
+// might need to npm install the below
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(utc);
+dayjs.extend(timezone);
+const TIMEZONE_SYDNEY = "Australia/Sydney";
 
 const RestaurantCheckIn = () => {
   const [bookingNumber, setBookingNumber] = useState("");
   const checkIn = useContext(RestaurantContext);
   const login = useContext(LoginContext);
   const navigate = useNavigate();
+  const [showCheckInModal, setShowCheckInModal] = useState(false);
+  const [guestNumber, setGuestNumber] = useState(1);
 
-  const guestCheckIn = async () => {
+  const guestCheckInHandler = async () => {
     const uuid = uuidv4();
     const password = "guest123";
     const registerBody = {
@@ -29,6 +40,7 @@ const RestaurantCheckIn = () => {
       role: 1,
     };
     try {
+      // TODO: see if we can share some code with enter booking number field submission
       // generate and login a new guest account
       const registerRes = await sendRequest("/register", "POST", registerBody);
       const loginRes = await loginUser({
@@ -44,9 +56,21 @@ const RestaurantCheckIn = () => {
       localStorage.setItem("accountId", token.accountId);
       localStorage.setItem("isGuest", true);
       // TODO: generate a new booking for 1 hour
+
+      const currentDateTime = dayjs.utc();
+      const dateTimeObj = dayjs(currentDateTime).tz(TIMEZONE_SYDNEY);
+      console.log(dateTimeObj);
+      const bookingBody = {
+        date: dateTimeObj.format("YYYY-MM-DD"),
+        start_time: dateTimeObj.format("HH:mm:00"),
+        guests: guestNumber,
+        accountId: token.accountId,
+        numHours: 1,
+      };
+      const bookingRes = await createBooking(bookingBody);
+      localStorage.setItem("bookingId", bookingRes.bookingId);
       // TODO: login with that booking? not sure how it exactly works
       // TODO: this is only for guest check-in, actual booking check in is not done
-      // TODO: set bookingId in local storage
 
       // currently creates a new table and gives it to this guest
       const capacity = 10;
@@ -60,6 +84,14 @@ const RestaurantCheckIn = () => {
       alert(err);
       console.log(err);
     }
+  };
+
+  const toggleCheckInModal = () => {
+    setShowCheckInModal(!showCheckInModal);
+  };
+
+  const changeGuestNumberHandler = (event) => {
+    setGuestNumber(event.target.value);
   };
 
   return (
@@ -88,11 +120,18 @@ const RestaurantCheckIn = () => {
             variant="outlined"
             type="button"
             color="secondary"
-            onClick={guestCheckIn}
+            onClick={toggleCheckInModal}
           >
             Check In as Guest
           </Button>
         </Typography>
+        <CheckInModal
+          showCheckInModal={showCheckInModal}
+          toggleCheckInModal={toggleCheckInModal}
+          guestNumber={guestNumber}
+          handleGuestNumberChange={changeGuestNumberHandler}
+          handleCheckIn={guestCheckInHandler}
+        />
       </Stack>
     </CenterCard>
   );
