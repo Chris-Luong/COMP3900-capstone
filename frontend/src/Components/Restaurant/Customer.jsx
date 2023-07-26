@@ -95,7 +95,9 @@ const Customer = () => {
         {({ handleSubmit, handleChange, values, errors, touched }) => (
           <form onSubmit={handleSubmit} noValidate>
             <Stack spacing={3} direction='column' width='100%' mb={3}>
-              {/* TODO: form validation 
+              {/* TODO: ====================================================== 
+               ==================FORM VALIDATION=========================== 
+              ===================================================================
               https://mui.com/x/react-date-pickers/validation/*/}
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer
@@ -131,6 +133,7 @@ const Customer = () => {
   const dashboard = () => {
     const retrieveOrders = async () => {
       // TODO: get bookings with account id. Make past bookings a greyed out colour
+      // could use reservation dashboard from waitstaff
 
       // const orderData = await retrieveOrdersByStatus(status);
       const orderData = {};
@@ -254,7 +257,7 @@ const Customer = () => {
         }}
       >
         {bookingForm}
-        {/* TODO: make a separate dashboard for customer */}
+        {/* TODO: make a separate dashboard for customer, or tweak reservation dashboard */}
         {/* Maybe map each dashboard to an order and clean up dashboard UI */}
       </Box>
       {dashboard()}
