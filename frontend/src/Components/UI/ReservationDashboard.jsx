@@ -31,16 +31,18 @@ const ReservationDashboard = () => {
     // setLoading(true);
     const retrieveReservations = async () => {
       // NOTE: if returnds object, could use JSON.stringify from chatGPT suggestion
-      const bookingData = await getReservations(date);
-      console.log(`bookingdata is ${bookingData}`);
+      const bookingData = await getReservations("", date);
+      console.log(`bookingdata is ${JSON.stringify(bookingData)}`);
       setBookings(bookingData);
       // setLoading(false);
     };
     retrieveReservations();
   }, []);
-  // JSON.stringify(bookings, null, 2)
-  // bookings.map((booking) => console.log(`bookings is ${booking}`));
-  console.log(bookings);
+
+  console.log(`bookings is ${JSON.stringify(bookings)}`);
+  bookings.map((booking) =>
+    console.log(`each booking Id is ${booking.bookId}`)
+  );
   return (
     // <>
     //   {loading && <CircularProgress />}

@@ -47,7 +47,6 @@ const OrderDashboard = (props) => {
     setLoading(true);
     const retrieveOrders = async () => {
       const orderData = await retrieveOrdersByStatus(status);
-      console.log(orderData);
       setOrders(orderData);
       setLoading(false);
     };
@@ -93,11 +92,11 @@ const OrderDashboard = (props) => {
                       border: 1,
                       borderColor: "rgba(216, 206, 222, 0.8)",
                       transition: "all 0.3s ease-out",
-                      "box-shadow": "0 14px 26px rgba(0, 0, 0, 0.04)",
+                      boxShadow: "0 14px 26px rgba(0, 0, 0, 0.04)",
                       "&:hover": {
                         transform:
                           "translateY(-5px) scale(1.005) translateZ(0)",
-                        "box-shadow": "0 12px 24px rgba(156, 39, 176, 0.5)",
+                        boxShadow: "0 12px 24px rgba(156, 39, 176, 0.5)",
                       },
                     }}
                   >

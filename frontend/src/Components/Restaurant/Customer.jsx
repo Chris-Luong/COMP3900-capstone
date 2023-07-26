@@ -37,6 +37,7 @@ const TIMEZONE_SYDNEY = "Australia/Sydney";
 const Customer = () => {
   const [datetime, setDatetime] = useState(dayjs.utc());
   const accountId = localStorage.getItem("accountId");
+  const [temp, setTemp] = useState();
 
   const setDuration = (numGuests) => {
     if (numGuests <= 3) return 1;
@@ -67,7 +68,10 @@ const Customer = () => {
     };
     // console.log(body);
     const res = await createBooking(body);
+    // NOTE: Not showing yet
+    setTemp(res.bookgingId);
     console.log(`bookingId is ${res.bookingId}`);
+    alert(`bookingId is ${res.bookingId}`);
   };
 
   const bookingForm = (
@@ -155,77 +159,77 @@ const Customer = () => {
         >
           Your Reservations
         </Typography>
-        {Object.keys(bookings).length === 0 ? (
+        <Typography>{temp}</Typography>
+        {/* {Object.keys(bookings).length === 0 ? (
           <Typography sx={{ mt: "35px" }}>
             No existing reservations. Make one today!
           </Typography>
         ) : (
           <></>
-          // <Grid container spacing={2}>
-          //     <>
-          //       {Object.keys(bookings).map((orderId) => (
-          //         <Grid item xs={12} sm={4} md={3} key={orderId}>
-          //           <Card
-          //             sx={{
-          //               width: "100%",
-          //               height: "100%",
-          //               margin: "10px",
-          //               cursor: "pointer",
-          //               border: 1,
-          //               borderColor: "rgba(216, 206, 222, 0.8)",
-          //               transition: "all 0.3s ease-out",
-          //               "box-shadow": "0 14px 26px rgba(0, 0, 0, 0.04)",
-          //               "&:hover": {
-          //                 transform:
-          //                   "translateY(-5px) scale(1.005) translateZ(0)",
-          //                 "box-shadow": "0 12px 24px rgba(156, 39, 176, 0.5)",
-          //               },
-          //             }}
-          //           >
-          //             <CardHeader
-          //               title={`Order ${orderId} Table ${orders[orderId].tableId}`}
-          //               subheader={orders[orderId].orderTime}
-          //             />
-          //             <Divider />
-          //             <CardContent>
-          //               <List>
-          //                 {orders[orderId].items.map((item, index) => (
-          //                   <ListItem
-          //                     key={`${orderId}-${item.itemId}-${index}`}
-          //                     onClick={() => handleStatusUpdate(item.orderItemId)}
-          //                     sx={{
-          //                       "&:hover": {
-          //                         backgroundColor: "rgba(125, 50, 168)",
-          //                         color: "white",
-          //                         cursor: "pointer",
-          //                       },
-          //                       borderRadius: "5px",
-          //                     }}
-          //                   >
-          //                     <ListItemText
-          //                       disableTypography
-          //                       primary={
-          //                         <Typography>
-          //                           {item.quantity} {item.itemName}
-          //                         </Typography>
-          //                       }
-          //                       secondary={
-          //                         <Typography>
-          //                           {item.note ? `Note: ${item.note}` : null}
-          //                         </Typography>
-          //                       }
-          //                     />
-          //                     {/* <Typography align='right'>{item.amount}</Typography> */}
-          //                   </ListItem>
-          //                 ))}
-          //               </List>
-          //             </CardContent>
-          //           </Card>
-          //         </Grid>
-          //       ))}
-          //     </>
-          // </Grid>
-        )}
+          <Grid container spacing={2}>
+              <>
+                {Object.keys(bookings).map((orderId) => (
+                  <Grid item xs={12} sm={4} md={3} key={orderId}>
+                    <Card
+                      sx={{
+                        width: "100%",
+                        height: "100%",
+                        margin: "10px",
+                        cursor: "pointer",
+                        border: 1,
+                        borderColor: "rgba(216, 206, 222, 0.8)",
+                        transition: "all 0.3s ease-out",
+                        "box-shadow": "0 14px 26px rgba(0, 0, 0, 0.04)",
+                        "&:hover": {
+                          transform:
+                            "translateY(-5px) scale(1.005) translateZ(0)",
+                          "box-shadow": "0 12px 24px rgba(156, 39, 176, 0.5)",
+                        },
+                      }}
+                    >
+                      <CardHeader
+                        title={`Order ${orderId} Table ${orders[orderId].tableId}`}
+                        subheader={orders[orderId].orderTime}
+                      />
+                      <Divider />
+                      <CardContent>
+                        <List>
+                          {orders[orderId].items.map((item, index) => (
+                            <ListItem
+                              key={`${orderId}-${item.itemId}-${index}`}
+                              onClick={() => handleStatusUpdate(item.orderItemId)}
+                              sx={{
+                                "&:hover": {
+                                  backgroundColor: "rgba(125, 50, 168)",
+                                  color: "white",
+                                  cursor: "pointer",
+                                },
+                                borderRadius: "5px",
+                              }}
+                            >
+                              <ListItemText
+                                disableTypography
+                                primary={
+                                  <Typography>
+                                    {item.quantity} {item.itemName}
+                                  </Typography>
+                                }
+                                secondary={
+                                  <Typography>
+                                    {item.note ? `Note: ${item.note}` : null}
+                                  </Typography>
+                                }
+                              />
+                            </ListItem>
+                          ))}
+                        </List>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+              </>
+          </Grid>
+        )} */}
       </Paper>
     );
   };

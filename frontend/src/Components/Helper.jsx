@@ -359,13 +359,12 @@ export const createBooking = async (body) => {
   }
 };
 
-// May need to see how getOrders works, or get grace to comment out changes for now
+// If using date, add an empty string before i.e. ("", {date})
 export const getReservations = async (account, date) => {
   try {
     let url = "/bookings?";
     url += account ? `&account=${account}` : "";
     url += date ? `&date=${date}` : "";
-
     const res = await sendRequest(url, "GET");
     return res;
   } catch (err) {
