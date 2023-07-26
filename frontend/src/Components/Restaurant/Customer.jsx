@@ -69,14 +69,14 @@ const Customer = () => {
     // console.log(body);
     const res = await createBooking(body);
     // NOTE: Not showing yet
-    setTemp(res.bookgingId);
+    setTemp(res.bookingId);
     console.log(`bookingId is ${res.bookingId}`);
     alert(`bookingId is ${res.bookingId}`);
   };
 
   const bookingForm = (
     <Box
-      position='flex'
+      position="flex"
       sx={{
         width: 400,
         bgcolor: "background.paper",
@@ -84,7 +84,7 @@ const Customer = () => {
         p: 4,
       }}
     >
-      <Typography variant='h5' color='secondary' gutterBottom>
+      <Typography variant="h5" color="secondary" gutterBottom>
         Make A Reservation
       </Typography>
       <Formik
@@ -94,7 +94,7 @@ const Customer = () => {
       >
         {({ handleSubmit, handleChange, values, errors, touched }) => (
           <form onSubmit={handleSubmit} noValidate>
-            <Stack spacing={3} direction='column' width='100%' mb={3}>
+            <Stack spacing={3} direction="column" width="100%" mb={3}>
               {/* TODO: form validation 
               https://mui.com/x/react-date-pickers/validation/*/}
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -102,8 +102,8 @@ const Customer = () => {
                   components={["DateTimePicker", "DateTimePicker"]}
                 >
                   <DateTimePicker
-                    label='Select a date and time'
-                    name='datetime'
+                    label="Select a date and time"
+                    name="datetime"
                     value={datetime}
                     timezone={TIMEZONE_SYDNEY}
                     onChange={(newValue) => setDatetime(newValue)}
@@ -111,15 +111,15 @@ const Customer = () => {
                 </DemoContainer>
               </LocalizationProvider>
               <TextField
-                label='Number of guests'
-                name='guests'
-                type='number'
+                label="Number of guests"
+                name="guests"
+                type="number"
                 onChange={handleChange}
                 error={touched.guests && errors.guests}
                 required
               />
             </Stack>
-            <Button color='success' type='submit'>
+            <Button color="success" type="submit">
               Submit
             </Button>
           </form>
@@ -151,9 +151,9 @@ const Customer = () => {
         }}
       >
         <Typography
-          component='h2'
-          variant='h5'
-          color='secondary'
+          component="h2"
+          variant="h5"
+          color="secondary"
           gutterBottom
           sx={{ mb: 3 }}
         >
@@ -237,16 +237,16 @@ const Customer = () => {
   return (
     <>
       <Typography
-        component='h1'
-        variant='h2'
-        color='secondary'
+        component="h1"
+        variant="h2"
+        color="secondary"
         gutterBottom
         sx={{ mb: 3 }}
       >
         Customer Dashboard
       </Typography>
       <Box
-        display='flex'
+        display="flex"
         sx={{
           flexDirection: "column",
           alignItems: "center",
