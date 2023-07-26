@@ -76,7 +76,7 @@ const Customer = () => {
 
   const bookingForm = (
     <Box
-      position="flex"
+      position='flex'
       sx={{
         width: 400,
         bgcolor: "background.paper",
@@ -84,7 +84,7 @@ const Customer = () => {
         p: 4,
       }}
     >
-      <Typography variant="h5" color="secondary" gutterBottom>
+      <Typography variant='h5' color='secondary' gutterBottom>
         Make A Reservation
       </Typography>
       <Formik
@@ -94,6 +94,10 @@ const Customer = () => {
       >
         {({ handleSubmit, handleChange, values, errors, touched }) => (
           <form onSubmit={handleSubmit} noValidate>
+            <Stack spacing={3} direction='column' width='100%' mb={3}>
+              {/* TODO: ====================================================== 
+               ==================FORM VALIDATION=========================== 
+              ===================================================================
             <Stack spacing={3} direction="column" width="100%" mb={3}>
               {/* TODO: form validation 
               https://mui.com/x/react-date-pickers/validation/*/}
@@ -102,8 +106,8 @@ const Customer = () => {
                   components={["DateTimePicker", "DateTimePicker"]}
                 >
                   <DateTimePicker
-                    label="Select a date and time"
-                    name="datetime"
+                    label='Select a date and time'
+                    name='datetime'
                     value={datetime}
                     timezone={TIMEZONE_SYDNEY}
                     onChange={(newValue) => setDatetime(newValue)}
@@ -111,15 +115,15 @@ const Customer = () => {
                 </DemoContainer>
               </LocalizationProvider>
               <TextField
-                label="Number of guests"
-                name="guests"
-                type="number"
+                label='Number of guests'
+                name='guests'
+                type='number'
                 onChange={handleChange}
                 error={touched.guests && errors.guests}
                 required
               />
             </Stack>
-            <Button color="success" type="submit">
+            <Button color='success' type='submit'>
               Submit
             </Button>
           </form>
@@ -131,6 +135,7 @@ const Customer = () => {
   const dashboard = () => {
     const retrieveOrders = async () => {
       // TODO: get bookings with account id. Make past bookings a greyed out colour
+      // could use reservation dashboard from waitstaff
 
       // const orderData = await retrieveOrdersByStatus(status);
       const orderData = {};
@@ -151,9 +156,9 @@ const Customer = () => {
         }}
       >
         <Typography
-          component="h2"
-          variant="h5"
-          color="secondary"
+          component='h2'
+          variant='h5'
+          color='secondary'
           gutterBottom
           sx={{ mb: 3 }}
         >
@@ -237,16 +242,16 @@ const Customer = () => {
   return (
     <>
       <Typography
-        component="h1"
-        variant="h2"
-        color="secondary"
+        component='h1'
+        variant='h2'
+        color='secondary'
         gutterBottom
         sx={{ mb: 3 }}
       >
         Customer Dashboard
       </Typography>
       <Box
-        display="flex"
+        display='flex'
         sx={{
           flexDirection: "column",
           alignItems: "center",
@@ -254,7 +259,7 @@ const Customer = () => {
         }}
       >
         {bookingForm}
-        {/* TODO: make a separate dashboard for customer */}
+        {/* TODO: make a separate dashboard for customer, or tweak reservation dashboard */}
         {/* Maybe map each dashboard to an order and clean up dashboard UI */}
       </Box>
       {dashboard()}
