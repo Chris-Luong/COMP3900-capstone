@@ -22,7 +22,7 @@ const CURRENT_DAY = dayjs().format("YYYY-MM-DD");
 
 const ReservationDashboard = () => {
   // const [loading, setLoading] = useState(false);
-  const [bookings, setBookings] = useState({});
+  const [bookings, setBookings] = useState([]);
   const date = "2023-07-22";
   console.log(`date is ${date}`);
 
@@ -39,7 +39,7 @@ const ReservationDashboard = () => {
     retrieveReservations();
   }, []);
 
-  console.log(`bookings is ${JSON.stringify(bookings)}`);
+  console.log(bookings);
   bookings.map((booking) =>
     console.log(`each booking Id is ${booking.bookId}`)
   );
@@ -58,9 +58,9 @@ const ReservationDashboard = () => {
       }}
     >
       <Typography
-        component='h2'
-        variant='h5'
-        color='secondary'
+        component="h2"
+        variant="h5"
+        color="secondary"
         gutterBottom
         sx={{ mb: 3 }}
       >
