@@ -90,9 +90,8 @@ const OrderDrawer = ({
       await deleteUser(localStorage.getItem("accountId"));
     } else {
       await deleteBooking(localStorage.getItem("bookingId"));
+      // TODO: update loyalty points here
     }
-    // TODO: delete bookings here, bookingId should be in local storage
-    // await deleteBooking(bookingId);
     alert("Thank you for dining with us!");
     checkIn.setIsCheckedIn(false);
     localStorage.removeItem("token");
