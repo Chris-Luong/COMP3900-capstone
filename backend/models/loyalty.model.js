@@ -16,23 +16,6 @@ const EXISTS_KIND = "exists";
 // method so that they can be used asynchronously
 class Loyalty {
   static addCustomerToLoyalty(accountId, next) {
-    // db.query(addCustomertoLoyalty, accountId, (err, results) => {
-    //   if (err) {
-    //     next(
-    //       {
-    //         status: EXISTS,
-    //         message: "Error adding customer to loyalty program",
-    //         kind: EXISTS_KIND,
-    //       },
-    //       null
-    //     );
-    //     return;
-    //   }
-    //   next(null, {
-    //     message: `Successfully added customer with id ${accountId} to the loyalty program!`,
-    //   });
-    // });
-
     return new Promise((resolve, reject) => {
       db.query(addCustomertoLoyalty, accountId, (err, results) => {
         if (err) {
