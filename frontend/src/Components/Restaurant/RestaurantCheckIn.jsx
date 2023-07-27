@@ -8,13 +8,11 @@ import sendRequest from "../Utils/Request";
 import RestaurantContext from "../Context/restaurant-context";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import LoginContext from "../Context/login-context";
 import jwtDecode from "jwt-decode";
-import { createBooking, loginUser } from "../Helper";
+import { createBooking, getBookingById, loginUser } from "../Helper";
 import CheckInModal from "../UI/CheckInModal";
 // TODO: export duplicate code from Customer.jsx into helper function
 import dayjs from "dayjs";
-// might need to npm install the below
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 dayjs.extend(utc);
@@ -24,7 +22,6 @@ const TIMEZONE_SYDNEY = "Australia/Sydney";
 const RestaurantCheckIn = () => {
   const [bookingNumber, setBookingNumber] = useState("");
   const checkIn = useContext(RestaurantContext);
-  const login = useContext(LoginContext);
   const navigate = useNavigate();
   const [showCheckInModal, setShowCheckInModal] = useState(false);
   const [guestNumber, setGuestNumber] = useState(1);
@@ -41,25 +38,15 @@ const RestaurantCheckIn = () => {
     };
     try {
       // TODO: see if we can share some code with enter booking number field submission
-      // generate and login a new guest account
-      const registerRes = await sendRequest("/register", "POST", registerBody);
+      // generate a new guest account
+      await sendRequest("/register", "POST", registerBody);
       const loginRes = await loginUser({
         email: uuid,
         password: password,
       });
-      console.log(registerRes);
-      login.setIsLoggedIn(true);
-      console.log(loginRes);
-      localStorage.setItem("token", loginRes.token);
       const token = jwtDecode(loginRes.token);
-      localStorage.setItem("checkedIn", true);
-      localStorage.setItem("accountId", token.accountId);
-      localStorage.setItem("isGuest", true);
-      // TODO: generate a new booking for 1 hour
-
       const currentDateTime = dayjs.utc();
       const dateTimeObj = dayjs(currentDateTime).tz(TIMEZONE_SYDNEY);
-      console.log(dateTimeObj);
       const bookingBody = {
         date: dateTimeObj.format("YYYY-MM-DD"),
         start_time: dateTimeObj.format("HH:mm:00"),
@@ -68,18 +55,32 @@ const RestaurantCheckIn = () => {
         numHours: 1,
       };
       const bookingRes = await createBooking(bookingBody);
-      localStorage.setItem("bookingId", bookingRes.bookingId);
-      // TODO: login with that booking? not sure how it exactly works
-      // TODO: this is only for guest check-in, actual booking check in is not done
+      if (bookingRes) {
+        localStorage.setItem("checkedIn", true);
+        localStorage.setItem("accountId", token.accountId);
+        localStorage.setItem("isGuest", true);
+        localStorage.setItem("bookingId", bookingRes.bookingId);
+        localStorage.setItem("tableId", bookingRes.tableId);
+        checkIn.setIsCheckedIn(true);
+        navigate("/restaurant");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-      // currently creates a new table and gives it to this guest
-      const capacity = 10;
-      const tableRes = await sendRequest("/tables/create", "POST", {
-        capacity,
-      });
-      localStorage.setItem("tableId", tableRes.tableId);
-      checkIn.setIsCheckedIn(true);
-      navigate("/restaurant");
+  const bookingCheckInHandler = async () => {
+    try {
+      const bookingRes = await getBookingById(bookingNumber);
+      if (bookingRes) {
+        localStorage.setItem("accountId", bookingRes.user_id);
+        localStorage.setItem("isGuest", true);
+        localStorage.setItem("bookingId", bookingRes.id);
+        localStorage.setItem("tableId", bookingRes.table_id);
+        localStorage.setItem("checkedIn", true);
+        checkIn.setIsCheckedIn(true);
+        navigate("/restaurant");
+      }
     } catch (err) {
       alert(err);
       console.log(err);
@@ -108,7 +109,7 @@ const RestaurantCheckIn = () => {
             onChange={(e) => setBookingNumber(e.target.value)}
             value={bookingNumber}
           />
-          <IconButton onClick={(e) => console.log("submitting booking number")}>
+          <IconButton onClick={bookingCheckInHandler}>
             <ArrowForwardIcon />
           </IconButton>
         </Paper>

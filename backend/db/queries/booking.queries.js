@@ -19,6 +19,11 @@ WHERE b.user_id = ?
 ORDER BY b.start_time ASC;
 `;
 
+const getBooking = `
+SELECT * from bookings
+WHERE id = ?
+`;
+
 const createBookingByTableId = `INSERT INTO bookings(user_id, table_id, date, start_time, end_time, guests)
 VALUES (?, ?, ?, ?, ?, ?);`;
 
@@ -35,6 +40,10 @@ const deleteBooking = `
 DELETE FROM bookings WHERE id = ?
 `;
 
+const deleteBookingByAccount = `
+DELETE FROM bookings where user_id = ?
+`;
+
 module.exports = {
   findBooking,
   createBookingByTableId,
@@ -42,4 +51,6 @@ module.exports = {
   viewBookingsByAccountId,
   viewBookingsByDate,
   deleteBooking,
+  deleteBookingByAccount,
+  getBooking,
 };

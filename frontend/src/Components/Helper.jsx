@@ -341,7 +341,6 @@ export const getCategoryNamesFromItemId = async (id) => {
     const res = await sendRequest(`/categories/${id}`, "GET");
     return res.categoryNames;
   } catch (err) {
-    console.log(err);
     return null;
   }
 };
@@ -354,13 +353,12 @@ export const createBooking = async (body) => {
     const res = await sendRequest(`/bookings/create`, "POST", body);
     return res;
   } catch (err) {
-    console.log(err);
     return null;
   }
 };
 
 // If using date, add an empty string before i.e. ("", {date})
-export const getReservations = async (account, date) => {
+export const getBookings = async (account, date) => {
   try {
     let url = "/bookings?";
     url += account ? `&account=${account}` : "";
@@ -368,7 +366,6 @@ export const getReservations = async (account, date) => {
     const res = await sendRequest(url, "GET");
     return res;
   } catch (err) {
-    console.log(err);
     return null;
   }
 };
@@ -380,7 +377,29 @@ export const deleteBooking = async (bookingId) => {
     });
     return res.message;
   } catch (err) {
-    console.log(err);
+    alert(err);
+    return null;
+  }
+};
+
+export const deleteBookingByAccount = async (accountId) => {
+  try {
+    const res = await sendRequest(`/bookings/deleteAccount`, "DELETE", {
+      id: accountId,
+    });
+    return res.message;
+  } catch (err) {
+    alert(err);
+    return null;
+  }
+};
+
+export const getBookingById = async (bookingId) => {
+  try {
+    const res = await sendRequest(`/bookings/${bookingId}`, "GET");
+    return res[0];
+  } catch (err) {
+    alert(err);
     return null;
   }
 };
