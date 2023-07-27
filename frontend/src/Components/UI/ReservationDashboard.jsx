@@ -73,23 +73,23 @@ const ReservationDashboard = () => {
           }}
         >
           <CardHeader
-            title={booking.userName}
+            title={`Booking ${booking.bookId}: ${booking.userName}`}
             subheader={`${dates[idx][0]} - ${dates[idx][1]}`}
           />
           <Divider />
           <CardContent>
-            <Typography variant="body2" color="textSecondary">
+            <Typography variant='body2' color='textSecondary'>
               Table: {booking.tableId}
             </Typography>
-            <Typography variant="body2" color="textSecondary">
+            <Typography variant='body2' color='textSecondary'>
               Party Size: {booking.guests}
             </Typography>
-            <Typography variant="body2" color="textSecondary" gutterBottom>
+            <Typography variant='body2' color='textSecondary' gutterBottom>
               Table capacity: {booking.tableCapacity}
             </Typography>
             <Button
-              variant="contained"
-              color="secondary"
+              variant='contained'
+              color='secondary'
               onClick={() => handleStatusUpdate(booking.bookId)}
             >
               Confirm Customer Arrival
@@ -112,9 +112,9 @@ const ReservationDashboard = () => {
       }}
     >
       <Typography
-        component="h2"
-        variant="h5"
-        color="secondary"
+        component='h2'
+        variant='h5'
+        color='secondary'
         gutterBottom
         sx={{ mb: 3 }}
       >
