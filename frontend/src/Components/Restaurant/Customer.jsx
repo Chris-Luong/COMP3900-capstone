@@ -45,15 +45,6 @@ const Customer = () => {
     return 3;
   };
 
-  // const data = {
-  //   date: "",
-  //   start_time: "",
-  //   guests: 1,
-  //   accountId: accountId,
-  //   numHours: setDuration(MAX_GUESTS),
-  // };
-  // // Returns bookingId
-
   const handleSubmit = async (values) => {
     const dateTimeObj = dayjs(datetime).tz(TIMEZONE_SYDNEY);
     const formattedDate = dateTimeObj.format("YYYY-MM-DD");

@@ -18,7 +18,6 @@ import {
 } from "@mui/material";
 import dayjs from "dayjs";
 
-// TODO: useTimeout or something to poll for new orders every 30 seconds
 const CURRENT_DAY = dayjs().format("YYYY-MM-DD");
 
 const ReservationDashboard = () => {
@@ -44,8 +43,6 @@ const ReservationDashboard = () => {
     // TODO: put req to update status, may not need to have a setStatus if
     // backend handles the update
   };
-
-  // TODO: get formmatted dates to be correct, then display
   // TODO: implement notification banner instead of alerts
   const bookingCards = () => {
     const dates = bookings.map((booking) => {
@@ -104,9 +101,6 @@ const ReservationDashboard = () => {
   };
 
   return (
-    // <>
-    //   {loading && <CircularProgress />}
-    //   {!loading && (
     <Paper
       elevation={6}
       sx={{
@@ -130,8 +124,6 @@ const ReservationDashboard = () => {
         {bookingCards()}
       </Grid>
     </Paper>
-    //   )}
-    // </>
   );
 };
 
