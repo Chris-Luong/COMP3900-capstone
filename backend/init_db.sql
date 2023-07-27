@@ -88,6 +88,7 @@ CREATE TABLE IF NOT EXISTS tiers (
     tierName ENUM('Tier 1', 'Tier 2', 'Tier 3') NOT NULL DEFAULT 'Tier 3',
     discountPercentage INT NOT NULL,
     pointsThreshold INT NOT NULL
+    -- pointsToNextTier INT
 );
 
 CREATE TABLE IF NOT EXISTS accountLoyaltyTier (
@@ -101,10 +102,10 @@ CREATE TABLE IF NOT EXISTS accountLoyaltyTier (
 
 -- loyalty program tiers
 INSERT IGNORE INTO tiers(id, tierName, discountPercentage, pointsThreshold) VALUES
-(1, 'Tier 1', 15, 200);
+(1, 'Tier 1', 15, 5000);
 
 INSERT IGNORE INTO tiers(id, tierName, discountPercentage, pointsThreshold) VALUES
-(2, 'Tier 2', 10, 100);
+(2, 'Tier 2', 10, 2500);
 
 INSERT IGNORE INTO tiers(id, tierName, discountPercentage, pointsThreshold) VALUES
 (3, 'Tier 3', 0, 0);
