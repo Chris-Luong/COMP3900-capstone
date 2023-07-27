@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import dayjs from "dayjs";
 // might need to npm install the below
@@ -35,9 +35,19 @@ dayjs.extend(timezone);
 const TIMEZONE_SYDNEY = "Australia/Sydney";
 
 const Customer = () => {
-  const [datetime, setDatetime] = useState(dayjs.utc());
+  const [datetime, setDatetime] = useState(dayjs().add(1, "day").utc());
   const accountId = localStorage.getItem("accountId");
   const [temp, setTemp] = useState();
+  const [numGuests, setNumGuests] = useState(1);
+  const [valid, setValid] = useState(true);
+
+  useEffect(() => {
+    if (numGuests < 1) {
+      setValid(false);
+    } else {
+      setValid(true);
+    }
+  }, [numGuests]);
 
   const setDuration = (numGuests) => {
     if (numGuests <= 3) return 1;
@@ -45,7 +55,11 @@ const Customer = () => {
     return 3;
   };
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async () => {
+    if (!valid) {
+      alert("The number of guests must be at least 1.");
+      return;
+    }
     const dateTimeObj = dayjs(datetime).tz(TIMEZONE_SYDNEY);
     const formattedDate = dateTimeObj.format("YYYY-MM-DD");
     const formattedTime = dateTimeObj.format("HH:mm:00");
@@ -53,13 +67,14 @@ const Customer = () => {
     const body = {
       date: formattedDate,
       start_time: formattedTime,
-      guests: values.guests,
+      guests: numGuests,
       accountId: accountId,
-      numHours: setDuration(values.guests),
+      numHours: setDuration(numGuests),
     };
     // console.log(body);
     const res = await createBooking(body);
-    // NOTE: Not showing yet
+
+    // Temp var for dashboard
     setTemp(res.bookingId);
     console.log(`bookingId is ${res.bookingId}`);
     alert(`bookingId is ${res.bookingId}`);
@@ -78,20 +93,24 @@ const Customer = () => {
       <Typography variant='h5' color='secondary' gutterBottom>
         Make A Reservation
       </Typography>
+      <Typography
+        m={2}
+        p={1}
+        gutterBottom
+        boxShadow={3}
+        backgroundColor='rgba(223, 199, 242, 0.2)'
+      >
+        Please note that our policy only allows customers to have one
+        reservation per day 😊
+      </Typography>
       <Formik
         validationSchema={createBookingSchema}
         onSubmit={(values) => handleSubmit(values)}
         initialValues={{ datetime: "", guests: 1 }}
       >
-        {({ handleSubmit, handleChange, values, errors, touched }) => (
+        {({ handleSubmit, errors, touched }) => (
           <form onSubmit={handleSubmit} noValidate>
             <Stack spacing={3} direction='column' width='100%' mb={3}>
-              {/* TODO: ====================================================== 
-               ==================FORM VALIDATION=========================== 
-              ===================================================================
-            <Stack spacing={3} direction="column" width="100%" mb={3}>
-              {/* TODO: form validation 
-              https://mui.com/x/react-date-pickers/validation/*/}
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer
                   components={["DateTimePicker", "DateTimePicker"]}
@@ -101,6 +120,12 @@ const Customer = () => {
                     name='datetime'
                     value={datetime}
                     timezone={TIMEZONE_SYDNEY}
+                    disablePast
+                    slotProps={{
+                      textField: {
+                        helperText: "NOTE: Valid reservation hours are 9AM-8PM",
+                      },
+                    }}
                     onChange={(newValue) => setDatetime(newValue)}
                   />
                 </DemoContainer>
@@ -109,8 +134,13 @@ const Customer = () => {
                 label='Number of guests'
                 name='guests'
                 type='number'
-                onChange={handleChange}
-                error={touched.guests && errors.guests}
+                value={numGuests}
+                helperText='Please ensure there is at least 1 guest'
+                onChange={(e) => {
+                  setNumGuests(e.target.value);
+                  console.log(numGuests);
+                }}
+                error={numGuests < 1}
                 required
               />
             </Stack>
@@ -155,7 +185,7 @@ const Customer = () => {
         >
           Your Reservations
         </Typography>
-        <Typography>{temp}</Typography>
+        <Typography>{temp ? `Booking ID: ${temp}` : temp}</Typography>
         {/* {Object.keys(bookings).length === 0 ? (
           <Typography sx={{ mt: "35px" }}>
             No existing reservations. Make one today!
