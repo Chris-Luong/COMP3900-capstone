@@ -3,19 +3,15 @@ const {
   addCustomertoLoyalty,
   checkLoyaltyStatus,
   updatePoints,
-  getNextTierPoints,
   getTotalPoints,
   updateTier,
   findMaxTierUpgrade,
 } = require("../db/queries/loyalty.queries");
 
-const EXISTS = 409;
-const EXISTS_KIND = "exists";
-
 // changed Loyalty class to return promises instead doing the usual callback
 // method so that they can be used asynchronously
 class Loyalty {
-  static addCustomerToLoyalty(accountId, next) {
+  static addCustomerToLoyalty(accountId) {
     return new Promise((resolve, reject) => {
       db.query(addCustomertoLoyalty, accountId, (err, results) => {
         if (err) {
@@ -55,18 +51,6 @@ class Loyalty {
   static getAccountPoints(accountId) {
     return new Promise((resolve, reject) => {
       db.query(getTotalPoints, accountId, (err, results) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(results);
-        }
-      });
-    });
-  }
-
-  static getNextTierPoints(accountId) {
-    return new Promise((resolve, reject) => {
-      db.query(getNextTierPoints, accountId, (err, results) => {
         if (err) {
           reject(err);
         } else {

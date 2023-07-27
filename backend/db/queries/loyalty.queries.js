@@ -3,7 +3,8 @@ const addCustomertoLoyalty = `
 `;
 
 const checkLoyaltyStatus = `
-  SELECT * from accountLoyaltyTier 
+  SELECT * FROM accountLoyaltyTier AS a 
+  JOIN tiers t ON a.tierId = t.id
   WHERE accountId = ?
 `;
 
@@ -16,12 +17,6 @@ const updatePoints = `
 const getTotalPoints = `
   SELECT points, tierId FROM accountLoyaltyTier
   WHERE accountId = ?
-`;
-
-const getNextTierPoints = `
-  SELECT t.pointsThreshold FROM tiers t 
-  JOIN accountloyaltytier a ON t.id = a.tierid
-  WHERE a.accountid = ?;
 `;
 
 const updateTier = `
@@ -42,7 +37,6 @@ module.exports = {
   checkLoyaltyStatus,
   updatePoints,
   getTotalPoints,
-  getNextTierPoints,
   updateTier,
   findMaxTierUpgrade,
 };
