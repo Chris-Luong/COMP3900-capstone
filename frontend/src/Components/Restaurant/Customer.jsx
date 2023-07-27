@@ -33,9 +33,11 @@ import { createBooking, createBookingSchema } from "../Helper";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 const TIMEZONE_SYDNEY = "Australia/Sydney";
+const MIN = dayjs().set("hour", 9).startOf("hour");
+const END = dayjs().set("hour", 20).startOf("hour");
 
 const Customer = () => {
-  const [datetime, setDatetime] = useState(dayjs.utc());
+  const [datetime, setDatetime] = useState(dayjs().add(1, "day").utc());
   const accountId = localStorage.getItem("accountId");
   const [temp, setTemp] = useState();
 
@@ -86,21 +88,20 @@ const Customer = () => {
         {({ handleSubmit, handleChange, values, errors, touched }) => (
           <form onSubmit={handleSubmit} noValidate>
             <Stack spacing={3} direction='column' width='100%' mb={3}>
-              {/* TODO: ====================================================== 
-               ==================FORM VALIDATION=========================== 
-              ===================================================================
-            <Stack spacing={3} direction="column" width="100%" mb={3}>
-              {/* TODO: form validation 
-              https://mui.com/x/react-date-pickers/validation/*/}
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer
                   components={["DateTimePicker", "DateTimePicker"]}
                 >
+                  {/* TODO: can't find time boundaries
+                  https://mui.com/x/react-date-pickers/validation/#set-time-boundaries */}
                   <DateTimePicker
                     label='Select a date and time'
                     name='datetime'
                     value={datetime}
                     timezone={TIMEZONE_SYDNEY}
+                    disablePast
+                    minDateTime={MIN}
+                    // maxTime={END}
                     onChange={(newValue) => setDatetime(newValue)}
                   />
                 </DemoContainer>
