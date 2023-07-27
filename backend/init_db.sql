@@ -87,8 +87,8 @@ CREATE TABLE IF NOT EXISTS tiers (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     tierName ENUM('Tier 1', 'Tier 2', 'Tier 3') NOT NULL DEFAULT 'Tier 3',
     discountPercentage INT NOT NULL,
-    pointsThreshold INT NOT NULL
-    -- pointsToNextTier INT
+    pointsThreshold INT NOT NULL,
+    pointsToNextTier INT
 );
 
 CREATE TABLE IF NOT EXISTS accountLoyaltyTier (
@@ -104,11 +104,11 @@ CREATE TABLE IF NOT EXISTS accountLoyaltyTier (
 INSERT IGNORE INTO tiers(id, tierName, discountPercentage, pointsThreshold) VALUES
 (1, 'Tier 1', 15, 5000);
 
-INSERT IGNORE INTO tiers(id, tierName, discountPercentage, pointsThreshold) VALUES
-(2, 'Tier 2', 10, 2500);
+INSERT IGNORE INTO tiers(id, tierName, discountPercentage, pointsThreshold, pointsToNextTier) VALUES
+(2, 'Tier 2', 10, 2500, 5000);
 
-INSERT IGNORE INTO tiers(id, tierName, discountPercentage, pointsThreshold) VALUES
-(3, 'Tier 3', 0, 0);
+INSERT IGNORE INTO tiers(id, tierName, discountPercentage, pointsThreshold, pointsToNextTier) VALUES
+(3, 'Tier 3', 0, 0, 2500);
 
 -- guest accounts have password 'temp123'
 INSERT IGNORE INTO account(firstname, lastname, email, password, role) VALUES("guest", "account", "guest1", "$2b$10$4oKl80KpkMLh8kl4uA1ToOU/cX6lzjc3W8UXXCC5KUmnfkk8E6dNW", 1);
