@@ -83,6 +83,32 @@ CREATE TABLE IF NOT EXISTS bookings (
     FOREIGN KEY (table_id) REFERENCES tables(id)
 );
 
+CREATE TABLE IF NOT EXISTS tiers (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    tierName ENUM('Tier 1', 'Tier 2', 'Tier 3') NOT NULL DEFAULT 'Tier 3',
+    discountPercentage INT NOT NULL,
+    pointsThreshold INT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS accountLoyaltyTier (
+    accountId BIGINT UNSIGNED,
+    tierId INT UNSIGNED DEFAULT 3,
+    points INT UNSIGNED DEFAULT 0,
+    PRIMARY KEY (accountId), -- 1-1 relationship
+    FOREIGN KEY (accountId) REFERENCES account(accountId),
+    FOREIGN KEY (tierId) REFERENCES tiers(id)
+);
+
+-- loyalty program tiers
+INSERT IGNORE INTO tiers(id, tierName, discountPercentage, pointsThreshold) VALUES
+(1, 'Tier 1', 15, 200);
+
+INSERT IGNORE INTO tiers(id, tierName, discountPercentage, pointsThreshold) VALUES
+(2, 'Tier 2', 10, 100);
+
+INSERT IGNORE INTO tiers(id, tierName, discountPercentage, pointsThreshold) VALUES
+(3, 'Tier 3', 0, 0);
+
 -- guest accounts have password 'temp123'
 INSERT IGNORE INTO account(firstname, lastname, email, password, role) VALUES("guest", "account", "guest1", "$2b$10$4oKl80KpkMLh8kl4uA1ToOU/cX6lzjc3W8UXXCC5KUmnfkk8E6dNW", 1);
 

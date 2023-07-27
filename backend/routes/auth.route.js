@@ -34,6 +34,7 @@ const {
   deleteBookingByAccountId,
   getBooking,
 } = require("../controller/booking");
+const { joinLoyalty } = require("../controller/loyalty");
 const upload = multer({ dest: "uploads/" });
 
 /**
@@ -94,5 +95,6 @@ router.delete("/bookings/deleteAccount", deleteBookingByAccountId);
 router.post("/request/create", createRequest);
 router.get("/request/", getRequest);
 router.put("/request/complete", updateRequest);
+router.post("/loyalty/join", joinLoyalty);
 
 module.exports = router;
