@@ -32,27 +32,31 @@ const RequestCard = ({ request, onCompleted }) => {
   return (
     <Card sx={{ minWidth: 275, marginBottom: 4 }}>
       <CardContent>
-        <Typography variant="h6" component="div">
+        <Typography variant='h6' component='div'>
           Request ID: {id}
         </Typography>
-        <Typography variant="body1" color="text.secondary" gutterBottom>
+        <Typography variant='body1' color='text.secondary' gutterBottom>
           Table ID: {tableId}
         </Typography>
-        <Typography variant="body2" color="text.secondary" gutterBottom>
+        <Typography variant='body2' color='text.secondary' gutterBottom>
           Timestamp: {timestamp}
         </Typography>
-        <Typography variant="body2" color="text.secondary" gutterBottom>
+        <Typography variant='body2' color='text.secondary' gutterBottom>
           Type: {type}
         </Typography>
         <Typography
-          variant="body2"
+          variant='body2'
           color={completed ? "text.secondary" : "error"}
           gutterBottom
         >
           Status: {completed ? "Completed" : "Waiting"}
         </Typography>
         {!completed && (
-          <Button variant="contained" onClick={handleCompleted}>
+          <Button
+            variant='contained'
+            color='secondary'
+            onClick={handleCompleted}
+          >
             Mark as Completed
           </Button>
         )}
@@ -139,7 +143,7 @@ const RequestDashboard = () => {
               },
             }}
           >
-            <Typography component="h2" variant="h5" color="primary">
+            <Typography component='h2' variant='h5' color='secondary'>
               Requests
             </Typography>
           </AccordionSummary>

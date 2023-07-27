@@ -22,31 +22,43 @@ import dayjs from "dayjs";
 const CURRENT_DAY = dayjs().format("YYYY-MM-DD");
 
 const ReservationDashboard = () => {
-  // const [loading, setLoading] = useState(false);
   const [bookings, setBookings] = useState([]);
+  // const [status, setStatus] = useState(false);
   const date = "2023-07-22";
-  console.log(`date is ${date}`);
 
   useEffect(() => {
     // setLoading(true);
     const retrieveReservations = async () => {
       const bookingData = await getReservations("", date);
-      // console.log(`bookingdata is ${JSON.stringify(bookingData)}`);
+      console.log(`bookingdata is ${JSON.stringify(bookingData)}`);
       setBookings(bookingData);
       // setLoading(false);
     };
     retrieveReservations();
   }, []);
 
+  const handleStatusUpdate = async (bookId) => {
+    console.log("clicked confirm customer");
+    // infinite loop render issue if this is put in - might have to be in useEffect
+    // setStatus(true);
+    // TODO: put req to update status, may not need to have a setStatus if
+    // backend handles the update
+  };
+
   // TODO: get formmatted dates to be correct, then display
   // TODO: implement notification banner instead of alerts
   const bookingCards = () => {
     const dates = bookings.map((booking) => {
-      const formattedStart = dayjs(booking.bookingStart).format("h:mm A");
-      const formattedEnd = dayjs(booking.bookingEnd).format("h:mm A");
-      console.log(formattedStart, formattedEnd);
+      const formattedStart = dayjs(booking.bookingStart, "HH:mm:ss").format(
+        "h:mm A"
+      );
+      const formattedEnd = dayjs(booking.bookingEnd, "HH:mm:ss").format(
+        "h:mm A"
+      );
+      return [formattedStart, formattedEnd];
     });
-    return bookings.map((booking) => (
+
+    return bookings.map((booking, idx) => (
       <Grid item xs={12} sm={4} md={3} key={booking.bookId}>
         <Card
           sx={{
@@ -65,7 +77,7 @@ const ReservationDashboard = () => {
         >
           <CardHeader
             title={booking.userName}
-            subheader={`${booking.bookingStart} - ${booking.bookingEnd}`}
+            subheader={`${dates[idx][0]} - ${dates[idx][1]}`}
           />
           <Divider />
           <CardContent>
@@ -75,11 +87,17 @@ const ReservationDashboard = () => {
             <Typography variant='body2' color='textSecondary'>
               Party Size: {booking.guests}
             </Typography>
-            <Typography variant='body2' color='textSecondary'>
+            <Typography variant='body2' color='textSecondary' gutterBottom>
               Table capacity: {booking.tableCapacity}
             </Typography>
+            <Button
+              variant='contained'
+              color='secondary'
+              onClick={() => handleStatusUpdate(booking.bookId)}
+            >
+              Confirm Customer Arrival
+            </Button>
           </CardContent>
-          <Button>Confirm Customer Arrival</Button>
         </Card>
       </Grid>
     ));
