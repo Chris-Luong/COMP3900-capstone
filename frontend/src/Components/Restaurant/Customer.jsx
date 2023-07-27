@@ -33,6 +33,9 @@ import { createBooking, createBookingSchema } from "../Helper";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 const TIMEZONE_SYDNEY = "Australia/Sydney";
+const TODAY = dayjs().format("YYYY-MM-DD");
+const START = dayjs().set("hour", 9).startOf("hour").format("HH:mm");
+const END = dayjs().set("hour", 20).startOf("hour").format("HH:mm");
 
 const Customer = () => {
   const [datetime, setDatetime] = useState(dayjs().add(1, "day").utc());
@@ -44,10 +47,28 @@ const Customer = () => {
   useEffect(() => {
     if (numGuests < 1) {
       setValid(false);
-    } else {
-      setValid(true);
+      return;
     }
-  }, [numGuests]);
+    const dateTimeObj = dayjs(datetime).tz(TIMEZONE_SYDNEY);
+    const formattedDate = dateTimeObj.format("YYYY-MM-DD");
+    const formattedTime = dateTimeObj.format("HH:mm");
+
+    // console.log(`formattedDate: ${formattedDate}
+    // TODAY: ${TODAY}
+    // formattedTime: ${formattedTime}
+    // START: ${START}
+    // END: ${END}
+    // ${formattedDate < TODAY}
+    // ${!(START <= formattedTime && formattedTime <= END)}`);
+    if (
+      formattedDate < TODAY ||
+      !(START <= formattedTime && formattedTime <= END)
+    ) {
+      setValid(false);
+      return;
+    }
+    setValid(true);
+  }, [numGuests, datetime]);
 
   const setDuration = (numGuests) => {
     if (numGuests <= 3) return 1;
@@ -57,7 +78,9 @@ const Customer = () => {
 
   const handleSubmit = async () => {
     if (!valid) {
-      alert("The number of guests must be at least 1.");
+      alert(
+        "The number of guests must be at least 1. Please also check if your booking times are valid."
+      );
       return;
     }
     const dateTimeObj = dayjs(datetime).tz(TIMEZONE_SYDNEY);
@@ -119,6 +142,7 @@ const Customer = () => {
                     label='Select a date and time'
                     name='datetime'
                     value={datetime}
+                    onError={() => setValid(false)}
                     timezone={TIMEZONE_SYDNEY}
                     disablePast
                     slotProps={{
@@ -136,10 +160,7 @@ const Customer = () => {
                 type='number'
                 value={numGuests}
                 helperText='Please ensure there is at least 1 guest'
-                onChange={(e) => {
-                  setNumGuests(e.target.value);
-                  console.log(numGuests);
-                }}
+                onChange={(e) => setNumGuests(e.target.value)}
                 error={numGuests < 1}
                 required
               />
