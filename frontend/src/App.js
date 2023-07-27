@@ -35,35 +35,35 @@ function App() {
       >
         <BrowserRouter>
           <Routes>
-            <Route path='/'>
+            <Route path="/">
               {/* Routes for customer and staff accounts here */}
               <Route index element={<Landing />} />
-              <Route element={<AuthRoute redirectPath='/home' />}>
-                <Route path='login' element={<Login />} />
-                <Route path='register' element={<Register />} />
+              <Route element={<AuthRoute redirectPath="/home" />}>
+                <Route path="login" element={<Login />} />
+                <Route path="register" element={<Register />} />
               </Route>
               <Route
                 element={
-                  <AuthRoute redirectPath='/login' requireLogin={true} />
+                  <AuthRoute redirectPath="/login" requireLogin={true} />
                 }
               >
-                <Route path='home' element={<Home />} />
+                <Route path="home" element={<Home />} />
               </Route>
               {/* Routes for restaurant menu and ordering here */}
               <Route
-                element={<MenuAuthRoute redirectPath='/restaurant/menu' />}
+                element={<MenuAuthRoute redirectPath="/restaurant/menu" />}
               >
-                <Route path='restaurant' element={<RestaurantCheckIn />} />
+                <Route path="restaurant" element={<RestaurantCheckIn />} />
               </Route>
               <Route
                 element={
                   <MenuAuthRoute
-                    redirectPath='/restaurant'
+                    redirectPath="/restaurant"
                     requireCheckIn={true}
                   />
                 }
               >
-                <Route path='restaurant/menu' element={<Menu />} />
+                <Route path="restaurant/menu" element={<Menu />} />
               </Route>
             </Route>
           </Routes>

@@ -19,6 +19,7 @@ import {
   Request,
   createWaiterRequest,
   deleteBooking,
+  deleteBookingByAccount,
   deleteTableOrders,
   deleteUser,
   updateOrderPayStatus,
@@ -79,12 +80,16 @@ const OrderDrawer = ({
 
   const handleCheckOut = async () => {
     // TODO: delete all table orders before clearing local storage
-    const res = await deleteTableOrders();
-    console.log(res);
-    // if guest check in, then delete that account and all bookings associated
+    await deleteTableOrders();
+
+    // if guest check in, delete that account and all bookings associated
+    // otherwise, for a regular customer who may have other bookings, just delete
+    // their current booking
     if (localStorage.getItem("isGuest")) {
-      const guestRes = await deleteUser(localStorage.getItem("accountId"));
-      console.log(guestRes);
+      await deleteBookingByAccount(localStorage.getItem("accountId"));
+      await deleteUser(localStorage.getItem("accountId"));
+    } else {
+      await deleteBooking(localStorage.getItem("bookingId"));
     }
     // TODO: delete bookings here, bookingId should be in local storage
     // await deleteBooking(bookingId);
@@ -92,6 +97,8 @@ const OrderDrawer = ({
     checkIn.setIsCheckedIn(false);
     localStorage.removeItem("token");
     localStorage.removeItem("checkedIn");
+    localStorage.removeItem("bookingId");
+    localStorage.removeItem("isGuest");
     localStorage.removeItem("tableId");
     localStorage.removeItem("billRequested");
     navigate("/restaurant");

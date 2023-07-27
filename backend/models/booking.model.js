@@ -6,6 +6,8 @@ const {
   createBookingByTableId,
   viewBookingsByDate,
   deleteBooking,
+  deleteBookingByAccount,
+  getBooking,
 } = require("../db/queries/booking.queries");
 
 const NOT_FOUND = 401;
@@ -127,7 +129,10 @@ class Booking {
                 null
               );
             }
-            next(null, create_results.insertId);
+            next(null, {
+              bookingId: create_results.insertId,
+              tableId: tableId,
+            });
           });
         });
       }
@@ -189,6 +194,39 @@ class Booking {
         );
       }
       next(null, { message: `Deleted booking id ${id}` });
+    });
+  }
+
+  static deleteBookingByAccountId(id, next) {
+    return db.query(deleteBookingByAccount, id, (err, results) => {
+      if (err) {
+        return next(
+          {
+            status: NOT_FOUND,
+            message: "Cannot delete booking for account",
+            kind: NOT_FOUND_KIND,
+          },
+          null
+        );
+      }
+      next(null, { message: `Deleted all bookings for account ${id}` });
+    });
+  }
+
+  static getBooking(id, next) {
+    return db.query(getBooking, id, (err, results) => {
+      if (err || results.length === 0) {
+        return next(
+          {
+            status: NOT_FOUND,
+            message: `Booking with id ${id} was not found`,
+            kind: NOT_FOUND_KIND,
+          },
+          null
+        );
+      }
+      console.log(results);
+      next(null, JSON.parse(JSON.stringify(results)));
     });
   }
 }

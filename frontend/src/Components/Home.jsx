@@ -19,6 +19,7 @@ const Home = () => {
     const items = { ...localStorage };
     console.log(items);
     checkIn.setIsCheckedIn(false);
+    localStorage.removeItem("checkedIn");
     login.setIsLoggedIn(false);
     localStorage.clear();
     console.log(items);
@@ -26,7 +27,7 @@ const Home = () => {
   };
 
   return (
-    <Container maxWidth='xl'>
+    <Container maxWidth="xl">
       <div>
         {role === "Customer" && <Customer />}
         {role === "Wait Staff" && <WaitStaff />}
@@ -40,7 +41,7 @@ const Home = () => {
           top: 15,
         }}
         onClick={handleLogout}
-        color='secondary'
+        color="secondary"
       >
         Logout
       </Button>

@@ -52,6 +52,8 @@ const CheckInModal = ({
             type="number"
             value={guestNumber}
             onChange={handleGuestNumberChange}
+            inputProps={{ min: 1, max: 15 }}
+            fullWidth
           />
         </DialogContent>
         <DialogActions sx={{ padding: "10px" }}>
