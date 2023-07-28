@@ -1,5 +1,5 @@
 import * as React from "react";
-import { getBookings } from "../Helper";
+import { getBookings, updateBooking } from "../Helper";
 import { useState, useEffect } from "react";
 
 import {
@@ -23,7 +23,7 @@ const CURRENT_DAY = dayjs().format("YYYY-MM-DD");
 const ReservationDashboard = () => {
   const [bookings, setBookings] = useState([]);
   // const [status, setStatus] = useState(false);
-  const date = "2023-07-22";
+  const date = "2023-07-29";
 
   useEffect(() => {
     // setLoading(true);
@@ -38,6 +38,9 @@ const ReservationDashboard = () => {
 
   const handleStatusUpdate = async (bookId) => {
     console.log("clicked confirm customer");
+
+    // updateBooking(bookId);
+
     // infinite loop render issue if this is put in - might have to be in useEffect
     // setStatus(true);
     // TODO: put req to update status, may not need to have a setStatus if
