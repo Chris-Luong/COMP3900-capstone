@@ -46,12 +46,17 @@ DELETE FROM bookings where user_id = ?
 
 const updateBookingToSeated = `
 UPDATE bookings SET status = 'seated' where id = ?
-`
+`;
 
 const verifyBookingByAccount = `
 SELECT id FROM bookings 
 WHERE user_id = ? AND status = 'pending' AND date = ? AND start_time + INTERVAL 15 MINUTE >= ? AND start_time - INTERVAL 15 MINUTE <= ?;
-`
+`;
+
+const verifyBookingById = `
+SELECT * FROM bookings 
+WHERE id = ? AND status = 'pending' AND date = ? AND start_time + INTERVAL 15 MINUTE >= ? AND start_time - INTERVAL 15 MINUTE <= ?;
+`;
 
 module.exports = {
   findBooking,
@@ -63,5 +68,6 @@ module.exports = {
   deleteBookingByAccount,
   getBooking,
   updateBookingToSeated,
-  verifyBookingByAccount
+  verifyBookingByAccount,
+  verifyBookingById,
 };
