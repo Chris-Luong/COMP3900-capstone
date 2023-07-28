@@ -565,7 +565,7 @@
       }
     },
     "/bookings/update": {
-      "post": {
+      "put": {
         "description": "",
         "parameters": [
           {
@@ -588,12 +588,12 @@
         }
       }
     },
-    "/booking/verify/{accountId}": {
+    "/bookings/verify/{bookingId}": {
       "get": {
         "description": "",
         "parameters": [
           {
-            "name": "accountId",
+            "name": "bookingId",
             "in": "path",
             "required": true,
             "type": "string"
