@@ -36,6 +36,8 @@ const TIMEZONE_SYDNEY = "Australia/Sydney";
 const TODAY = dayjs().format("YYYY-MM-DD");
 const START = dayjs().set("hour", 9).startOf("hour").format("HH:mm");
 const END = dayjs().set("hour", 20).startOf("hour").format("HH:mm");
+const FORM_VALIDATION_MESSAGE =
+  "The number of guests must be at least 1. Please also check if your booking times are valid.";
 
 const Customer = () => {
   const [datetime, setDatetime] = useState(dayjs().add(1, "day").utc());
@@ -43,6 +45,8 @@ const Customer = () => {
   const [temp, setTemp] = useState();
   const [numGuests, setNumGuests] = useState(1);
   const [valid, setValid] = useState(true);
+  // TODO: get bookings from current date onwards, sort earliest (current - future)
+  const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
     if (numGuests < 1) {
@@ -78,9 +82,7 @@ const Customer = () => {
 
   const handleSubmit = async () => {
     if (!valid) {
-      alert(
-        "The number of guests must be at least 1. Please also check if your booking times are valid."
-      );
+      alert(FORM_VALIDATION_MESSAGE);
       return;
     }
     const dateTimeObj = dayjs(datetime).tz(TIMEZONE_SYDNEY);
@@ -301,8 +303,6 @@ const Customer = () => {
         }}
       >
         {bookingForm}
-        {/* TODO: make a separate dashboard for customer, or tweak reservation dashboard */}
-        {/* Maybe map each dashboard to an order and clean up dashboard UI */}
       </Box>
       {dashboard()}
     </>
