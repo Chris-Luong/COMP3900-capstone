@@ -91,10 +91,38 @@ getBooking = (req, res) => {
   });
 };
 
+updateBooking = (req, res) => {
+  const bookingId = req.body.bookingId;
+  Booking.updateBooking(bookingId, (err, result) => {
+    if (err) {
+      return res.status(err.status).json({ message: err.message });
+    }
+    if (!result) {
+      return res
+        .status(NOT_FOUND)
+        .json({ message: "Cannot update the booking" });
+    }
+    return res.status(200).json(result);
+  });
+};
+
+verifyBooking = (req, res) => {
+  const bookingId = req.params["bookingId"];
+
+  Booking.verifyBooking(bookingId, (err, result) => {
+    if (err) {
+      return res.status(err.status).json({ message: err.message });
+    }
+    return res.status(200).json(result);
+  });
+};
+
 module.exports = {
   createBooking,
   viewBooking,
   deleteBooking,
   deleteBookingByAccountId,
   getBooking,
+  updateBooking,
+  verifyBooking,
 };

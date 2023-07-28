@@ -9,7 +9,7 @@ import RestaurantContext from "../Context/restaurant-context";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import jwtDecode from "jwt-decode";
-import { createBooking, getBookingById, loginUser } from "../Helper";
+import { createBooking, loginUser, verifyBookingId } from "../Helper";
 import CheckInModal from "../UI/CheckInModal";
 // TODO: export duplicate code from Customer.jsx into helper function
 import dayjs from "dayjs";
@@ -71,13 +71,12 @@ const RestaurantCheckIn = () => {
 
   const bookingCheckInHandler = async () => {
     try {
-      const bookingRes = await getBookingById(bookingNumber);
+      const bookingRes = await verifyBookingId(bookingNumber);
       if (bookingRes) {
+        localStorage.setItem("checkedIn", true);
         localStorage.setItem("accountId", bookingRes.user_id);
-        localStorage.setItem("isGuest", true);
         localStorage.setItem("bookingId", bookingRes.id);
         localStorage.setItem("tableId", bookingRes.table_id);
-        localStorage.setItem("checkedIn", true);
         checkIn.setIsCheckedIn(true);
         navigate("/restaurant");
       }

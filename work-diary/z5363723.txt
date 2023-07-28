@@ -75,3 +75,6 @@ to fetch available tables that have non-overlapping booking time and to include 
 Updated the GET API /bookings/:date to also include the bookingEnd in the response body.
 Tuesday: Chris requested GET API to include date and accountId parameter, so I udpated the /bookings route. Also discussed with the team about
 the table booking for guest check in and we agreed to create a guest account and book available table for 1 hour. 
+Wednesday: We discussed about what we need to do for the report, I am assigned the work to finish backend for table bookings including verifyBookingByAccount,
+getBookingsByStatus and updateBookingToSeated. I am also going to review my code and add comments where necessary.
+Friday: Worked on and tested the endpoints: /bookings/update, /bookings/verify and also updated bookings tables to include field status.
