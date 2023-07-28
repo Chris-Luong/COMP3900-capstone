@@ -73,11 +73,10 @@ const RestaurantCheckIn = () => {
     try {
       const bookingRes = await verifyBookingId(bookingNumber);
       if (bookingRes) {
+        localStorage.setItem("checkedIn", true);
         localStorage.setItem("accountId", bookingRes.user_id);
-        localStorage.setItem("isGuest", true);
         localStorage.setItem("bookingId", bookingRes.id);
         localStorage.setItem("tableId", bookingRes.table_id);
-        localStorage.setItem("checkedIn", true);
         checkIn.setIsCheckedIn(true);
         navigate("/restaurant");
       }
