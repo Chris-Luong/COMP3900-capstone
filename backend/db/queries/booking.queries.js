@@ -50,7 +50,7 @@ UPDATE bookings SET status = 'seated' where id = ?
 
 const verifyBookingByAccount = `
 SELECT id FROM bookings 
-WHERE user_id = ? AND status = 'pending' AND date = ? AND start_time <= ? AND start_time + INTERVAL 15 MINUTE >= ?;
+WHERE user_id = ? AND status = 'pending' AND date = ? AND start_time + INTERVAL 15 MINUTE >= ? AND start_time - INTERVAL 15 MINUTE <= ?;
 `
 
 module.exports = {

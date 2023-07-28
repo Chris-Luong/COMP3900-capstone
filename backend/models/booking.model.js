@@ -236,8 +236,6 @@ class Booking {
 
   static updateBooking(bookingId, next) {
     return db.query(updateBookingToSeated, bookingId, (err, results) => {
-      console.log("Error" + err)
-      console.log("Results " + results)
       if (err || results.length === 0) {
         return next(
           {
@@ -272,11 +270,9 @@ class Booking {
     const m = today.getMinutes();
     const s = today.getSeconds();
     const start_time = `${h}:${m}:${s}`
-    console.log("date " + date + " start: " + start_time)
   
     return db.query(verifyBookingByAccount, [bookingId, date, start_time, start_time], (err, results) => {
-      console.log("Error" + err)
-      console.log("Results " + results)
+
       if (err || results.length === 0) {
         return next(
           {
@@ -286,10 +282,10 @@ class Booking {
           },
           null
         );
-      } 
-      result = JSON.parse(JSON.stringify(results));
+      }
+      const result = JSON.parse(JSON.stringify(results));
       console.log(result)
-      next(null, {verified: "true", bookingId: result.id});
+      next(null, {bookingId: result[0].id});
     });
   }
 }
