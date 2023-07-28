@@ -74,6 +74,14 @@ createOrder = (req, res) => {
     if (!result) {
       return res.status(NOT_FOUND).json({ message: "Cannot Create Order" });
     }
+    // emit WebSocket event for kitchen staff to listen
+    const data = {
+      type: "newOrder",
+      message: "Refresh page. New order is available!",
+    };
+    req.wss.clients.forEach((client) => {
+      client.send(JSON.stringify(data));
+    });
     return res.status(200).json(result);
   });
 };
