@@ -32,20 +32,20 @@ const RequestCard = ({ request, onCompleted }) => {
   return (
     <Card sx={{ minWidth: 275, marginBottom: 4 }}>
       <CardContent>
-        <Typography variant='h6' component='div'>
+        <Typography variant="h6" component="div">
           Request ID: {id}
         </Typography>
-        <Typography variant='body1' color='text.secondary' gutterBottom>
+        <Typography variant="body1" color="text.secondary" gutterBottom>
           Table ID: {tableId}
         </Typography>
-        <Typography variant='body2' color='text.secondary' gutterBottom>
+        <Typography variant="body2" color="text.secondary" gutterBottom>
           Timestamp: {timestamp}
         </Typography>
-        <Typography variant='body2' color='text.secondary' gutterBottom>
+        <Typography variant="body2" color="text.secondary" gutterBottom>
           Type: {type}
         </Typography>
         <Typography
-          variant='body2'
+          variant="body2"
           color={completed ? "text.secondary" : "error"}
           gutterBottom
         >
@@ -53,8 +53,8 @@ const RequestCard = ({ request, onCompleted }) => {
         </Typography>
         {!completed && (
           <Button
-            variant='contained'
-            color='secondary'
+            variant="contained"
+            color="secondary"
             onClick={handleCompleted}
           >
             Mark as Completed
@@ -86,21 +86,6 @@ const RequestDashboard = () => {
   };
 
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:8080");
-
-    socket.onopen = () => {
-      console.log("Connection established with websocket");
-    };
-
-    // Event listener for WebSocket events
-    // note that useEffect runs twice due to StrictMode
-    socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.type === "orderReady" || data.type === "newRequest") {
-        alert(data.message);
-      }
-    };
-
     setIsLoading(true);
     const getRequests = async () => {
       let res = await getWaiterRequests();
@@ -109,12 +94,6 @@ const RequestDashboard = () => {
     };
     getRequests();
     setIsLoading(false);
-    return () => {
-      // Clean up WebSocket connection when the component is unmounted
-      if (socket.readyState === 1) {
-        socket.close();
-      }
-    };
   }, []);
 
   return (
@@ -143,7 +122,7 @@ const RequestDashboard = () => {
               },
             }}
           >
-            <Typography component='h2' variant='h5' color='secondary'>
+            <Typography component="h2" variant="h5" color="secondary">
               Requests
             </Typography>
           </AccordionSummary>
