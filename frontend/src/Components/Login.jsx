@@ -34,7 +34,7 @@ const Login = () => {
       localStorage.setItem("user-email", values.email);
       let token = jwtDecode(res.token);
       localStorage.setItem("role", token.role);
-      localStorage.setItem("accountId", token.accountId);
+      localStorage.setItem("login-accountId", token.accountId);
       navigate("/home");
     } catch (err) {
       alert(err);
