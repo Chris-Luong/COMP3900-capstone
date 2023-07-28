@@ -142,6 +142,13 @@ const OrderDrawer = ({
         setHasPaid(true);
       }
     };
+
+    return () => {
+      // Clean up WebSocket connection when the component is unmounted/rerendered
+      if (socket.readyState === 1) {
+        socket.close();
+      }
+    };
   }, []);
 
   const handleSubmit = () => {
