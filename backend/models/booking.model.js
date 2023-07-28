@@ -8,6 +8,8 @@ const {
   deleteBooking,
   deleteBookingByAccount,
   getBooking,
+  updateBookingToSeated,
+  verifyBookingByAccount
 } = require("../db/queries/booking.queries");
 
 const NOT_FOUND = 401;
@@ -15,6 +17,8 @@ const NOT_FOUND_KIND = "not_found";
 const EXISTS = 409;
 const EXISTS_KIND = "exists";
 const CANNOT_CREATE = 400;
+const CANNOT_UPDATE = 401
+const CANNOT_UPDATE_KIND = "cannot_update";
 const CANNOT_CREATE_KIND = "cannot_create";
 
 class Booking {
@@ -227,6 +231,65 @@ class Booking {
       }
       console.log(results);
       next(null, JSON.parse(JSON.stringify(results)));
+    });
+  }
+
+  static updateBooking(bookingId, next) {
+    return db.query(updateBookingToSeated, bookingId, (err, results) => {
+      console.log("Error" + err)
+      console.log("Results " + results)
+      if (err || results.length === 0) {
+        return next(
+          {
+            status: CANNOT_UPDATE,
+            message: `Failed to updated booking ${bookingId}`,
+            kind: CANNOT_UPDATE,
+          },
+          null
+        );
+      }
+      if (results.affectedRows == 0) {
+        return next(
+          {
+            status: CANNOT_UPDATE,
+            message: `Failed to updated booking ${bookingId}`,
+            kind: CANNOT_UPDATE,
+          },
+          null
+        );
+      }
+      next(null, {success: 'true'});
+    });
+  }
+
+  static verifyBooking(bookingId, next) {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1; 
+    const day = today.getDate();
+    const date = `${year}-${month}-${day}`;
+    const h = today.getHours();
+    const m = today.getMinutes();
+    const s = today.getSeconds();
+    const start_time = `${h}:${m}:${s}`
+    console.log("date " + date + " start: " + start_time)
+  
+    return db.query(verifyBookingByAccount, [bookingId, date, start_time, start_time], (err, results) => {
+      console.log("Error" + err)
+      console.log("Results " + results)
+      if (err || results.length === 0) {
+        return next(
+          {
+            status: EXISTS,
+            message: `No Pending Bookings Found`,
+            kind: EXISTS_KIND,
+          },
+          null
+        );
+      } 
+      result = JSON.parse(JSON.stringify(results));
+      console.log(result)
+      next(null, {verified: "true", bookingId: result.id});
     });
   }
 }

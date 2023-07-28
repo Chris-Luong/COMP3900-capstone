@@ -79,6 +79,7 @@ CREATE TABLE IF NOT EXISTS bookings (
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
     guests INT NOT NULL,
+    status ENUM('pending', 'seated') NOT NULL DEFAULT "pending",
     FOREIGN KEY (user_id) REFERENCES account(accountId),
     FOREIGN KEY (table_id) REFERENCES tables(id)
 );
@@ -204,9 +205,12 @@ INSERT INTO tables(tableName, capacity) VALUES
 ("table7", 8)
 ;
 
-INSERT INTO bookings(user_id, table_id, date, start_time, end_time, guests) VALUES
-(1, 1, "2023-07-22", "18:00:00", "20:00:00", 2),
-(2, 2, "2023-07-23", "10:00:00", "12:00:00", 2),
-(3, 3, "2023-07-22", "10:00:00", "13:00:00", 2),
-(4, 4, "2023-07-22", "14:00:00", "15:00:00", 4)
+INSERT INTO bookings(user_id, table_id, date, start_time, end_time, guests, status) VALUES
+(1, 1, "2023-07-28", "18:00:00", "20:00:00", 2, 'pending'),
+(2, 2, "2023-07-29", "10:00:00", "12:00:00", 2, 'pending'),
+(3, 3, "2023-07-29", "10:00:00", "13:00:00", 2, 'pending'),
+(4, 4, "2023-07-28", "14:00:00", "15:00:00", 4, 'pending'),
+(5, 6, "2023-07-29", "16:30:00", "17:30:00", 6, 'seated'),
+(3, 2, "2023-07-28", "14:20:00", "15:20:00", 2, "pending"),
+(2, 3, "2023-07-28", "14:20:00", "15:20:00", 2, "seated")
 ;

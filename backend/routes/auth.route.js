@@ -33,12 +33,14 @@ const {
   deleteBooking,
   deleteBookingByAccountId,
   getBooking,
+  updateBooking,
+  verifyBooking
 } = require("../controller/booking");
 const {
   joinLoyalty,
   getLoyaltyStatus,
   updateLoyalty,
-} = require("../controller/loyalty");
+} = require("../controller/loyalty"); 
 const upload = multer({ dest: "uploads/" });
 
 /**
@@ -100,6 +102,8 @@ router.get("/bookings", viewBooking);
 router.get("/bookings/:bookingId", getBooking);
 router.delete("/bookings/delete", deleteBooking);
 router.delete("/bookings/deleteAccount", deleteBookingByAccountId);
+router.post("/bookings/update", updateBooking);
+router.get("/booking/verify/:accountId", verifyBooking);
 // notifications endpoints
 router.post("/request/create", createRequest);
 router.get("/request/", getRequest);
