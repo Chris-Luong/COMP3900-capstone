@@ -9,7 +9,8 @@ const {
   deleteBookingByAccount,
   getBooking,
   updateBookingToSeated,
-  verifyBookingByAccount
+  verifyBookingByAccount,
+  verifyBookingById,
 } = require("../db/queries/booking.queries");
 
 const NOT_FOUND = 401;
@@ -17,7 +18,7 @@ const NOT_FOUND_KIND = "not_found";
 const EXISTS = 409;
 const EXISTS_KIND = "exists";
 const CANNOT_CREATE = 400;
-const CANNOT_UPDATE = 401
+const CANNOT_UPDATE = 401;
 const CANNOT_UPDATE_KIND = "cannot_update";
 const CANNOT_CREATE_KIND = "cannot_create";
 
@@ -256,37 +257,39 @@ class Booking {
           null
         );
       }
-      next(null, {success: 'true'});
+      next(null, { success: "true" });
     });
   }
 
   static verifyBooking(bookingId, next) {
     const today = new Date();
     const year = today.getFullYear();
-    const month = today.getMonth() + 1; 
+    const month = today.getMonth() + 1;
     const day = today.getDate();
     const date = `${year}-${month}-${day}`;
     const h = today.getHours();
     const m = today.getMinutes();
     const s = today.getSeconds();
-    const start_time = `${h}:${m}:${s}`
-  
-    return db.query(verifyBookingByAccount, [bookingId, date, start_time, start_time], (err, results) => {
+    const start_time = `${h}:${m}:${s}`;
 
-      if (err || results.length === 0) {
-        return next(
-          {
-            status: EXISTS,
-            message: `No Pending Bookings Found`,
-            kind: EXISTS_KIND,
-          },
-          null
-        );
+    return db.query(
+      verifyBookingById,
+      [bookingId, date, start_time, start_time],
+      (err, results) => {
+        if (err || results.length === 0) {
+          return next(
+            {
+              status: EXISTS,
+              message: `Given booking is not valid at this time`,
+              kind: EXISTS_KIND,
+            },
+            null
+          );
+        }
+        const result = JSON.parse(JSON.stringify(results));
+        next(null, result[0]);
       }
-      const result = JSON.parse(JSON.stringify(results));
-      console.log(result)
-      next(null, {bookingId: result[0].id});
-    });
+    );
   }
 }
 

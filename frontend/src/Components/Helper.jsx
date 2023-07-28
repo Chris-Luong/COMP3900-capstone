@@ -404,6 +404,16 @@ export const getBookingById = async (bookingId) => {
   }
 };
 
+export const verifyBookingId = async (bookingId) => {
+  try {
+    const res = await sendRequest(`/bookings/verify/${bookingId}`, "GET");
+    return res;
+  } catch (err) {
+    alert(err);
+    return null;
+  }
+};
+
 /*
   style objects
 */
