@@ -36,6 +36,8 @@ const TIMEZONE_SYDNEY = "Australia/Sydney";
 const TODAY = dayjs().format("YYYY-MM-DD");
 const START = dayjs().set("hour", 9).startOf("hour").format("HH:mm");
 const END = dayjs().set("hour", 20).startOf("hour").format("HH:mm");
+const FORM_VALIDATION_MESSAGE =
+  "The number of guests must be at least 1. Please also check if your booking times are valid.";
 
 const Customer = () => {
   const [datetime, setDatetime] = useState(dayjs().add(1, "day").utc());
@@ -43,6 +45,8 @@ const Customer = () => {
   const [temp, setTemp] = useState();
   const [numGuests, setNumGuests] = useState(1);
   const [valid, setValid] = useState(true);
+  // TODO: get bookings from current date onwards, sort earliest (current - future)
+  const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
     if (numGuests < 1) {
@@ -78,9 +82,7 @@ const Customer = () => {
 
   const handleSubmit = async () => {
     if (!valid) {
-      alert(
-        "The number of guests must be at least 1. Please also check if your booking times are valid."
-      );
+      alert(FORM_VALIDATION_MESSAGE);
       return;
     }
     const dateTimeObj = dayjs(datetime).tz(TIMEZONE_SYDNEY);
@@ -105,7 +107,7 @@ const Customer = () => {
 
   const bookingForm = (
     <Box
-      position="flex"
+      position='flex'
       sx={{
         width: 400,
         bgcolor: "background.paper",
@@ -113,7 +115,7 @@ const Customer = () => {
         p: 4,
       }}
     >
-      <Typography variant="h5" color="secondary" gutterBottom>
+      <Typography variant='h5' color='secondary' gutterBottom>
         Make A Reservation
       </Typography>
       <Typography
@@ -121,7 +123,7 @@ const Customer = () => {
         p={1}
         gutterBottom
         boxShadow={3}
-        backgroundColor="rgba(223, 199, 242, 0.2)"
+        backgroundColor='rgba(223, 199, 242, 0.2)'
       >
         Please note that our policy only allows customers to have one
         reservation per day 😊
@@ -133,14 +135,14 @@ const Customer = () => {
       >
         {({ handleSubmit, errors, touched }) => (
           <form onSubmit={handleSubmit} noValidate>
-            <Stack spacing={3} direction="column" width="100%" mb={3}>
+            <Stack spacing={3} direction='column' width='100%' mb={3}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer
                   components={["DateTimePicker", "DateTimePicker"]}
                 >
                   <DateTimePicker
-                    label="Select a date and time"
-                    name="datetime"
+                    label='Select a date and time'
+                    name='datetime'
                     value={datetime}
                     onError={() => setValid(false)}
                     timezone={TIMEZONE_SYDNEY}
@@ -155,17 +157,17 @@ const Customer = () => {
                 </DemoContainer>
               </LocalizationProvider>
               <TextField
-                label="Number of guests"
-                name="guests"
-                type="number"
+                label='Number of guests'
+                name='guests'
+                type='number'
                 value={numGuests}
-                helperText="Please ensure there is at least 1 guest"
+                helperText='Please ensure there is at least 1 guest'
                 onChange={(e) => setNumGuests(e.target.value)}
                 error={numGuests < 1}
                 required
               />
             </Stack>
-            <Button color="success" type="submit">
+            <Button color='success' type='submit'>
               Submit
             </Button>
           </form>
@@ -198,9 +200,9 @@ const Customer = () => {
         }}
       >
         <Typography
-          component="h2"
-          variant="h5"
-          color="secondary"
+          component='h2'
+          variant='h5'
+          color='secondary'
           gutterBottom
           sx={{ mb: 3 }}
         >
@@ -284,16 +286,16 @@ const Customer = () => {
   return (
     <>
       <Typography
-        component="h1"
-        variant="h2"
-        color="secondary"
+        component='h1'
+        variant='h2'
+        color='secondary'
         gutterBottom
         sx={{ mb: 3 }}
       >
         Customer Dashboard
       </Typography>
       <Box
-        display="flex"
+        display='flex'
         sx={{
           flexDirection: "column",
           alignItems: "center",
@@ -301,8 +303,6 @@ const Customer = () => {
         }}
       >
         {bookingForm}
-        {/* TODO: make a separate dashboard for customer, or tweak reservation dashboard */}
-        {/* Maybe map each dashboard to an order and clean up dashboard UI */}
       </Box>
       {dashboard()}
     </>

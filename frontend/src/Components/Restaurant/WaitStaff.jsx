@@ -32,9 +32,9 @@ const WaitStaff = () => {
   return (
     <>
       <Typography
-        component="h1"
-        variant="h2"
-        color="secondary"
+        component='h1'
+        variant='h2'
+        color='secondary'
         gutterBottom
         sx={{ mb: 3 }}
       >
@@ -42,7 +42,7 @@ const WaitStaff = () => {
       </Typography>
       <RequestDashboard />
       <OrderDashboard status={READY_STATUS} />
-      <ReservationDashboard status={PREPARING_STATUS} />
+      <ReservationDashboard />
     </>
   );
 };
