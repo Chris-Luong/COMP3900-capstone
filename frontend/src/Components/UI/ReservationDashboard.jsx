@@ -25,7 +25,6 @@ const ReservationDashboard = (props) => {
 
   useEffect(() => {
     const retrieveReservations = async () => {
-      console.log("insied usersdeftc");
       let bookingData = null;
       if (!accountId && !date) {
         bookingData = await getBookings("", CURRENT_DAY);
@@ -35,9 +34,7 @@ const ReservationDashboard = (props) => {
           : await getBookings("", date);
       }
 
-      console.log("dddddddddddddddddddf");
       console.log(`bookingdata is ${JSON.stringify(bookingData)}`);
-      console.log("dskfhjskldjf");
       setBookings(bookingData);
     };
     console.log("out");
@@ -45,9 +42,15 @@ const ReservationDashboard = (props) => {
   }, [triggerRerender, accountId, date]);
 
   // putting date as title for customers instead of their email
-  // const title = (booking) => {
-  //   return accountId ? booking.date : `Booking ${booking.bookId}: ${booking.email}`
-  // }
+  const title = (booking) => {
+    if (accountId) {
+      // formate date then return string
+      const date = dayjs(booking.date).format("dddd, MMMM D, YYYY");
+      return date;
+    } else {
+      return `Booking ${booking.bookId}: ${booking.email}`;
+    }
+  };
 
   const handleStatusUpdate = async (bookId) => {
     const body = { bookingId: bookId };
@@ -55,6 +58,7 @@ const ReservationDashboard = (props) => {
     console.log(res);
     setTriggerRerender(!triggerRerender);
   };
+  console.log(title);
 
   // TODO: implement notification banner instead of alerts
   const bookingCards = () => {
@@ -87,7 +91,7 @@ const ReservationDashboard = (props) => {
             }}
           >
             <CardHeader
-              title={`Booking ${booking.bookId}: ${booking.email}`}
+              title={title(booking)}
               subheader={`${dates[idx][0]} - ${dates[idx][1]}`}
             />
             <Divider />
