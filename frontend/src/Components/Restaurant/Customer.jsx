@@ -1,24 +1,14 @@
 import { useEffect, useState } from "react";
 
 import dayjs from "dayjs";
-// might need to npm install the below
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 
 import {
   Box,
   Button,
-  Card,
-  CardContent,
-  CardHeader,
   CircularProgress,
-  Divider,
   Grid,
-  List,
-  ListItem,
-  ListItemText,
-  Modal,
-  Paper,
   Stack,
   TextField,
   Typography,
@@ -28,7 +18,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { Formik } from "formik";
-import { createBooking, createBookingSchema, getBookings } from "../Helper";
+import { createBooking, createBookingSchema } from "../Helper";
 import ReservationDashboard from "../UI/ReservationDashboard";
 import sendRequest from "../Utils/Request";
 
@@ -57,21 +47,21 @@ const LoyaltyContainer = ({ loyaltyStatus, handleJoinLoyalty }) => {
       {loyaltyStatus ? (
         // if member, show points, tier id, benefits and points to next tier
         <>
-          <Typography variant="h5" color="secondary" gutterBottom>
+          <Typography variant='h5' color='secondary' gutterBottom>
             Loyalty Status
           </Typography>
           {/* show accountId */}
-          <Typography variant="subtitle1" color="text.secondary">
+          <Typography variant='subtitle1' color='text.secondary'>
             Account ID: {loyaltyStatus.accountId}
           </Typography>
-          <Typography variant="subtitle1" color="text.secondary">
+          <Typography variant='subtitle1' color='text.secondary'>
             Points: {loyaltyStatus.points}
           </Typography>
-          <Typography variant="subtitle1" color="text.secondary">
+          <Typography variant='subtitle1' color='text.secondary'>
             Tier {loyaltyStatus.tierId}
           </Typography>
           {loyaltyStatus.pointsToNextTier ? (
-            <Typography variant="subtitle1" color="text.secondary">
+            <Typography variant='subtitle1' color='text.secondary'>
               To Next Tier: {loyaltyStatus.pointsToNextTier}
             </Typography>
           ) : null}
@@ -80,22 +70,22 @@ const LoyaltyContainer = ({ loyaltyStatus, handleJoinLoyalty }) => {
         // if not a member, show button to join loyalty program
         <>
           <Typography
-            variant="h5"
-            color="secondary"
+            variant='h5'
+            color='secondary'
             gutterBottom
             sx={{ mt: 3, mb: 3, textAlign: "center" }}
           >
             It doesn't seem like you're a member.
           </Typography>
-          <Button variant="contained" onClick={handleJoinLoyalty} fullWidth>
+          <Button variant='contained' onClick={handleJoinLoyalty} fullWidth>
             Join Loyalty
           </Button>
         </>
       )}
-      <Typography variant="body1" color="text.secondary" sx={{ mt: 3 }}>
+      <Typography variant='body1' color='text.secondary' sx={{ mt: 3 }}>
         Tier 2 members receive a small discount.
       </Typography>
-      <Typography variant="body1" color="text.secondary">
+      <Typography variant='body1' color='text.secondary'>
         Tier 1 members receive a larger discount and a priority queue.
       </Typography>
     </Box>
@@ -109,7 +99,6 @@ const Customer = () => {
   const [loyaltyStatus, setLoyaltyStatus] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [valid, setValid] = useState(true);
-  // TODO: get bookings from current date onwards, sort earliest (current - future)
 
   useEffect(() => {
     // get loyalty status
@@ -146,13 +135,6 @@ const Customer = () => {
     const formattedDate = dateTimeObj.format("YYYY-MM-DD");
     const formattedTime = dateTimeObj.format("HH:mm");
 
-    // console.log(`formattedDate: ${formattedDate}
-    // TODAY: ${TODAY}
-    // formattedTime: ${formattedTime}
-    // START: ${START}
-    // END: ${END}
-    // ${formattedDate < TODAY}
-    // ${!(START <= formattedTime && formattedTime <= END)}`);
     if (
       formattedDate < TODAY ||
       !(START <= formattedTime && formattedTime <= END)
@@ -216,7 +198,7 @@ const Customer = () => {
 
   const bookingForm = (
     <Box
-      position="flex"
+      position='flex'
       sx={{
         width: 400,
         height: "380px",
@@ -225,7 +207,7 @@ const Customer = () => {
         p: 4,
       }}
     >
-      <Typography variant="h5" color="secondary" gutterBottom>
+      <Typography variant='h5' color='secondary' gutterBottom>
         Make A Reservation
       </Typography>
       <Typography
@@ -233,7 +215,7 @@ const Customer = () => {
         p={1}
         gutterBottom
         boxShadow={3}
-        backgroundColor="rgba(223, 199, 242, 0.2)"
+        backgroundColor='rgba(223, 199, 242, 0.2)'
       >
         Please note that our policy only allows customers to have one
         reservation per day 😊
@@ -245,14 +227,14 @@ const Customer = () => {
       >
         {({ handleSubmit, errors, touched }) => (
           <form onSubmit={handleSubmit} noValidate>
-            <Stack spacing={3} direction="column" width="100%" mb={3}>
+            <Stack spacing={3} direction='column' width='100%' mb={3}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer
                   components={["DateTimePicker", "DateTimePicker"]}
                 >
                   <DateTimePicker
-                    label="Select a date and time"
-                    name="datetime"
+                    label='Select a date and time'
+                    name='datetime'
                     value={datetime}
                     onError={() => setValid(false)}
                     timezone={TIMEZONE_SYDNEY}
@@ -267,17 +249,17 @@ const Customer = () => {
                 </DemoContainer>
               </LocalizationProvider>
               <TextField
-                label="Number of guests"
-                name="guests"
-                type="number"
+                label='Number of guests'
+                name='guests'
+                type='number'
                 value={numGuests}
-                helperText="Please ensure there is at least 1 guest"
+                helperText='Please ensure there is at least 1 guest'
                 onChange={(e) => setNumGuests(e.target.value)}
                 error={numGuests < 1}
                 required
               />
             </Stack>
-            <Button color="success" type="submit">
+            <Button color='success' type='submit'>
               Submit
             </Button>
           </form>
@@ -293,9 +275,9 @@ const Customer = () => {
       ) : (
         <>
           <Typography
-            component="h1"
-            variant="h2"
-            color="secondary"
+            component='h1'
+            variant='h2'
+            color='secondary'
             gutterBottom
             sx={{ mb: 3, textAlign: "center" }}
           >
@@ -303,8 +285,8 @@ const Customer = () => {
           </Typography>
           <Grid
             container
-            justifyContent="center"
-            alignItems="center"
+            justifyContent='center'
+            alignItems='center'
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}
             rowSpacing={3}
           >
