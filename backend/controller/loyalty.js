@@ -9,6 +9,7 @@ const { Order } = require("../models/order.model");
  */
 joinLoyalty = async (req, res) => {
   const accountId = req.body.accountId;
+  console.log(accountId);
   try {
     const result = await Loyalty.addCustomerToLoyalty(accountId);
     return res.status(200).json({ message: "Joined loyalty!" });
@@ -16,6 +17,7 @@ joinLoyalty = async (req, res) => {
     if (e.code === "ER_DUP_ENTRY") {
       return res.status(200).json({ message: "Already joined loyalty!" });
     }
+    console.log(e);
     return res.status(500).json({ error: e.message });
   }
 };
@@ -27,10 +29,17 @@ joinLoyalty = async (req, res) => {
  * @returns {Object}      object contains information, otherwise empty
  */
 getLoyaltyStatus = async (req, res) => {
-  const accountId = req.body.accountId;
+  const accountId = req.params.accountId;
   try {
     const statusRes = await Loyalty.checkLoyaltyStatus(accountId);
-    return res.status(200).json(JSON.parse(JSON.stringify(statusRes[0])));
+    if (statusRes.length === 0) {
+      return res
+        .status(200)
+        .json({ message: "Not a member!", isMember: false });
+    } else {
+      const result = { ...statusRes[0], isMember: true };
+      return res.status(200).json(JSON.parse(JSON.stringify(result)));
+    }
   } catch (err) {
     return res.status(500).json({ error: "Cannot get loyalty status" });
   }

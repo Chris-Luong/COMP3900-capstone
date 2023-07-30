@@ -29,7 +29,6 @@ class Loyalty {
         if (err) {
           reject(err);
         } else {
-          console.log(results);
           resolve(results);
         }
       });

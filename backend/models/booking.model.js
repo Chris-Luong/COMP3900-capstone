@@ -277,6 +277,10 @@ class Booking {
       [bookingId, date, start_time, start_time],
       (err, results) => {
         if (err || results.length === 0) {
+          console.log(err);
+          console.log(results.length);
+          console.log(date);
+          console.log(start_time);
           return next(
             {
               status: EXISTS,

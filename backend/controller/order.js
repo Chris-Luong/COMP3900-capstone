@@ -1,3 +1,4 @@
+const { Loyalty } = require("../models/loyalty.model");
 const { Order, NOT_FOUND, CANNOT_CREATE } = require("../models/order.model");
 
 /**
@@ -65,25 +66,39 @@ viewOrders = (req, res) => {
  *
  * @returns {orderId: orderId}
  */
-createOrder = (req, res) => {
+createOrder = async (req, res) => {
   const { accountId, tableId, items } = req.body;
-  Order.createOrder(accountId, tableId, items, (err, result) => {
-    if (err) {
-      return res.status(err.status).json({ message: err.message });
+  const loyaltyRes = await Loyalty.checkLoyaltyStatus(accountId);
+  // if not a member or isn't in a tier with priority, order does not have priority
+  const isPriorityOrder = loyaltyRes[0]
+    ? loyaltyRes[0].isPriority
+      ? true
+      : false
+    : false;
+  console.log(isPriorityOrder);
+  Order.createOrder(
+    accountId,
+    tableId,
+    items,
+    isPriorityOrder,
+    (err, result) => {
+      if (err) {
+        return res.status(err.status).json({ message: err.message });
+      }
+      if (!result) {
+        return res.status(NOT_FOUND).json({ message: "Cannot Create Order" });
+      }
+      // emit WebSocket event for kitchen staff to listen
+      const data = {
+        type: "newOrder",
+        message: "Refresh page. New order is available!",
+      };
+      req.wss.clients.forEach((client) => {
+        client.send(JSON.stringify(data));
+      });
+      return res.status(200).json(result);
     }
-    if (!result) {
-      return res.status(NOT_FOUND).json({ message: "Cannot Create Order" });
-    }
-    // emit WebSocket event for kitchen staff to listen
-    const data = {
-      type: "newOrder",
-      message: "Refresh page. New order is available!",
-    };
-    req.wss.clients.forEach((client) => {
-      client.send(JSON.stringify(data));
-    });
-    return res.status(200).json(result);
-  });
+  );
 };
 
 /**

@@ -60,7 +60,7 @@ class Order {
     });
   }
 
-  static createOrder(accountId, tableId, items, next) {
+  static createOrder(accountId, tableId, items, isPriority, next) {
     let subtotal = 0;
     let itemCount = 0;
 
@@ -86,7 +86,7 @@ class Order {
     };
 
     const processOrder = () => {
-      let values = [accountId, tableId, subtotal];
+      let values = [accountId, tableId, subtotal, isPriority];
       db.query(createOrder, values, (err, results) => {
         if (err) {
           next(
@@ -255,6 +255,8 @@ class Order {
         return;
       }
 
+      console.log("printing getOrdersByStatus results:");
+      console.log(results);
       const orders = {};
       results.forEach((item) => {
         if (!orders[item.orderId]) {
@@ -265,11 +267,33 @@ class Order {
           orders[item.orderId] = {};
           orders[item.orderId].tableId = item.tableId;
           orders[item.orderId].orderTime = time;
+          orders[item.orderId].isPriority = item.isPriority;
           orders[item.orderId].items = [];
         }
         orders[item.orderId].items.push(item);
       });
-      let result = JSON.parse(JSON.stringify(orders));
+      // sort by priority then orderTime
+      const ordersArray = Object.entries(orders).map(
+        ([orderNumber, orderData]) => ({
+          orderNumber,
+          ...orderData,
+        })
+      );
+      ordersArray.sort((a, b) => {
+        // First, sort based on isPriority (1 comes before 0)
+        if (a.isPriority !== b.isPriority) {
+          return b.isPriority - a.isPriority; // For descending order
+        }
+
+        // If isPriority is the same, sort based on orderTime
+        const timeA = new Date(`2000-01-01 ${a.orderTime}`);
+        const timeB = new Date(`2000-01-01 ${b.orderTime}`);
+        return timeA - timeB; // For ascending order (earlier time comes first)
+      });
+      console.log("printing ordersArray");
+      console.log(ordersArray);
+
+      let result = JSON.parse(JSON.stringify(ordersArray));
       next(null, result);
     });
   }
