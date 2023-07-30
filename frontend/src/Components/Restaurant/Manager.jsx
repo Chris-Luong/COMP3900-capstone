@@ -1,17 +1,26 @@
 import { useState, useEffect } from "react";
 import { getAllMenuItems, getAllCategories, addItem } from "../Helper";
-import { Button, CircularProgress, Grid, Typography } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Grid,
+  Typography,
+  TextField,
+} from "@mui/material";
 import sendRequest from "../Utils/Request";
 import { fileToDataUrl } from "../Helper";
 import NewItemModal from "../UI/NewItemModal";
 import ManageMenuItemCard from "../UI/ManageMenuItemCard";
+import ManageCategoryModal from "../UI/ManageCategoryModal";
 
 const Manager = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showNewItemModal, setShowNewItemModal] = useState(false);
-  const [categories, setCategories] = useState([]);
+  const [showManageCategoryModal, setShowManageCategoryModal] = useState(false);
+  const [categories, setCategories] = useState({});
   const [triggerRerender, setTriggerRerender] = useState(false);
+  const [searchString, setSearchString] = useState("");
 
   const toggleNewItemModal = () => {
     setShowNewItemModal(!showNewItemModal);
@@ -43,17 +52,44 @@ const Manager = () => {
     }
   };
 
+  const toggleManageCategoryModal = () => {
+    setShowManageCategoryModal(!showManageCategoryModal);
+  };
+
+  const handleDeleteCategory = async (e) => {
+    try {
+      const res = await sendRequest("/categories/remove", "DELETE", {
+        id: e.target.value,
+      });
+      alert(res.message);
+      toggleManageCategoryModal();
+      setTriggerRerender(!triggerRerender);
+    } catch (err) {
+      alert(err);
+      console.log(err);
+    }
+  };
+
+  const handleNewCategorySubmit = async (values) => {
+    const name = values.name.charAt(0).toUpperCase() + values.name.slice(1);
+    try {
+      const res = await sendRequest("/categories/add", "POST", { name });
+      alert(`Created new category with id ${res}`);
+      toggleManageCategoryModal();
+      setTriggerRerender(!triggerRerender);
+    } catch (err) {
+      alert(err);
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
     const getMenuData = async () => {
       let itemsData = await getAllMenuItems();
       setMenuItems(itemsData);
       let categoriesData = await getAllCategories();
-      let categoriesArr = [];
-      categoriesData.forEach((c) => {
-        categoriesArr.push(c.name);
-      });
-      setCategories(categoriesArr);
+      setCategories(categoriesData);
       setLoading(false);
     };
     getMenuData();
@@ -64,31 +100,63 @@ const Manager = () => {
       {loading && <CircularProgress />}
       {!loading && (
         <>
-          <Typography variant="h3">Hi Manager</Typography>
-          <Typography variant="h5">Manage the menu here</Typography>
+          <Typography
+            component="h1"
+            variant="h2"
+            color="secondary"
+            gutterBottom
+            sx={{ mb: 3 }}
+          >
+            Manager Dashboard
+          </Typography>
+          <Typography component="h2" variant="h5" gutterBottom sx={{ mb: 3 }}>
+            Manage the menu here
+          </Typography>
           <Button
             variant="outlined"
-            sx={{ mb: 1, mt: 1 }}
+            color="secondary"
+            sx={{ margin: "5px 5px 5px 0" }}
             onClick={toggleNewItemModal}
           >
             Add New Menu Item
           </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            sx={{ margin: "5px 5px 5px 0" }}
+            onClick={toggleManageCategoryModal}
+          >
+            Manage Categories
+          </Button>
+          <TextField
+            size="small"
+            color="secondary"
+            placeholder="Search by name"
+            value={searchString}
+            onChange={(e) => setSearchString(e.target.value)}
+          />
           <Grid container spacing={2} sx={{ display: "flex" }}>
-            {menuItems.map((item) => (
-              <ManageMenuItemCard
-                key={item.id}
-                id={item.id}
-                name={item.name}
-                description={item.description}
-                ingredients={item.ingredients}
-                price={item.price}
-                thumbnail={item.thumbnail}
-                handleItemDelete={handleItemDelete}
-                categories={categories}
-                triggerRerender={triggerRerender}
-                setTriggerRerender={setTriggerRerender}
-              />
-            ))}
+            {menuItems
+              .filter((item) =>
+                searchString
+                  ? item.name.toLowerCase().includes(searchString.toLowerCase())
+                  : true
+              )
+              .map((item) => (
+                <ManageMenuItemCard
+                  key={item.id}
+                  id={item.id}
+                  name={item.name}
+                  description={item.description}
+                  ingredients={item.ingredients}
+                  price={item.price}
+                  thumbnail={item.thumbnail}
+                  handleItemDelete={handleItemDelete}
+                  categories={categories}
+                  triggerRerender={triggerRerender}
+                  setTriggerRerender={setTriggerRerender}
+                />
+              ))}
           </Grid>
           {showNewItemModal && (
             <NewItemModal
@@ -96,6 +164,15 @@ const Manager = () => {
               toggleModal={toggleNewItemModal}
               categories={categories}
               handleSubmit={handleNewItemSubmit}
+            />
+          )}
+          {showManageCategoryModal && (
+            <ManageCategoryModal
+              showModal={showManageCategoryModal}
+              toggleModal={toggleManageCategoryModal}
+              categories={categories}
+              handleDelete={handleDeleteCategory}
+              handleSubmit={handleNewCategorySubmit}
             />
           )}
         </>

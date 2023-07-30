@@ -1,19 +1,40 @@
-import { Fragment, useState } from "react";
-import { Avatar, Button, ListItemAvatar, Typography } from "@mui/material";
-import { sendOrder } from "../Helper";
-
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
+import { Fragment, useEffect, useState, useContext } from "react";
+import RestaurantContext from "../Context/restaurant-context";
+import { useNavigate } from "react-router-dom";
+import {
+  Button,
+  Container,
+  Typography,
+  Box,
+  Drawer,
+  List,
+  Divider,
+  ListItem,
+  ListItemText,
+  CircularProgress,
+} from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import {
+  PAID_STATUS,
+  Request,
+  createWaiterRequest,
+  deleteBooking,
+  deleteBookingByAccount,
+  deleteTableOrders,
+  deleteUser,
+  updateOrderPayStatus,
+} from "../Helper";
 
-// NOTE: find the differnce betwwen passing in arges like this and ({ orderItems, onDelete })
-const OrderDrawer = ({ orderItems, onDelete }) => {
+// TODO: Make delete cursor: pointer on hover
+const OrderDrawer = ({
+  orderItems,
+  onDelete,
+  handleSendOrder,
+  tableOrders,
+  loading,
+}) => {
+  const checkIn = useContext(RestaurantContext);
+  const navigate = useNavigate();
   const [state, setState] = useState({
     right: false,
   });
@@ -28,109 +49,278 @@ const OrderDrawer = ({ orderItems, onDelete }) => {
 
     setState({ ...state, [anchor]: open });
   };
-  const accountId = 1; // Need to get actual account id
-  const tableId = 1; // Need function to genererate the table id
 
-  console.log(orderItems);
-  // TODO: useEffect or something to update the orderItems with new orderItems
-  // returned from this function
-  // useEffect(() => {
-  //   const newOrderItems = applyFilters(orderItems);
-  //   setState({ ...state, orderItems: newOrderItems });
-  // }, [orderItems]);
-  // const handleDelete = (index) => {
-  //   deleteItem(index);
-  // };
+  const [orderSum, setOrderSum] = useState(0);
+  const [tableSum, setTableSum] = useState(0);
+  const [hasRequestedBill, setHasRequestedBill] = useState(
+    localStorage.getItem("billRequested")
+  );
+  const [hasPaid, setHasPaid] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleRemoveFromCart = (index) => {
     onDelete(index);
   };
 
-  const handleSendOrder = async () => {
-    const items = orderItems.map((item) => {
-      return {
-        id: item.itemId,
-        quantity: item.quantity,
-        note: item.note,
-      };
-    });
-    console.log("items are ", items);
-    const body = {
-      accountId: accountId,
-      tableId: tableId,
-      items: items,
-    };
-    console.log("body is ", body);
-    await sendOrder(body);
+  const handleRequestBill = async () => {
+    const orderIdArr = tableOrders.map((tableOrder) => tableOrder.id);
+    let res = await updateOrderPayStatus(orderIdArr, PAID_STATUS.Requesting);
+    alert(`${res.message}. Staff will be with you soon.`);
+    localStorage.setItem("billRequested", true);
+    const tableId = localStorage.getItem("tableId");
+    res = await createWaiterRequest(tableId, Request.Type.Bill);
+    setHasRequestedBill(true);
   };
 
-  // TODO: Get accountId from email of user? Generate int for tableId -> useState increment
+  const handleRequestAssistance = async () => {
+    const tableId = localStorage.getItem("tableId");
+    const res = await createWaiterRequest(tableId, Request.Type.Assistance);
+    alert(`${res.message}. We will be with you soon.`);
+  };
+
+  const handleCheckOut = async () => {
+    // TODO: delete all table orders before clearing local storage
+    await deleteTableOrders();
+
+    // if guest check in, delete that account and all bookings associated
+    // otherwise, for a regular customer who may have other bookings, just delete
+    // their current booking
+    if (localStorage.getItem("isGuest")) {
+      await deleteBookingByAccount(localStorage.getItem("accountId"));
+      await deleteUser(localStorage.getItem("accountId"));
+    } else {
+      await deleteBooking(localStorage.getItem("bookingId"));
+      // TODO: update loyalty points here
+    }
+    alert("Thank you for dining with us!");
+    checkIn.setIsCheckedIn(false);
+    localStorage.removeItem("token");
+    localStorage.removeItem("checkedIn");
+    localStorage.removeItem("bookingId");
+    localStorage.removeItem("isGuest");
+    localStorage.removeItem("tableId");
+    localStorage.removeItem("billRequested");
+    navigate("/restaurant");
+  };
+
+  // Updated order total everytime the order is updated
+  useEffect(() => {
+    setIsLoading(true);
+    let total = 0;
+    if (orderItems && orderItems.length > 0) {
+      orderItems.forEach((item) => {
+        total += item.quantity * item.price;
+      });
+    }
+    let tableTotal = 0;
+    if (tableOrders.length > 0) {
+      tableOrders.forEach((tableOrder) => {
+        tableTotal += tableOrder.subtotal;
+      });
+    }
+    setTableSum(tableTotal);
+    setOrderSum(+total.toFixed(2));
+    setIsLoading(false);
+  }, [orderItems, tableOrders]);
+
+  useEffect(() => {
+    const socket = new WebSocket("ws://localhost:8080");
+
+    socket.onopen = () => {
+      console.log("Connection established with websocket");
+    };
+
+    // Event listener for WebSocket events
+    // note that useEffect runs twice due to StrictMode
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (
+        data.type === "billPaid" &&
+        data.accountId === localStorage.getItem("accountId")
+      ) {
+        alert(data.message);
+        setHasPaid(true);
+      }
+    };
+
+    return () => {
+      // Clean up WebSocket connection when the component is unmounted/rerendered
+      if (socket.readyState === 1) {
+        socket.close();
+      }
+    };
+  }, []);
+
+  const handleSubmit = () => {
+    setIsLoading(true);
+    setTableSum(+(tableSum + orderSum).toFixed(2));
+    handleSendOrder();
+    setIsLoading(false);
+  };
+
+  // TODO: Get accountId from email of user?
   const list = (anchor) => (
     <Box
-      sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}
-      role='presentation'
+      role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
+      {hasRequestedBill ? null : (
+        <>
+          <Typography
+            variant="h4"
+            gutterBottom
+            align="center"
+            sx={{ margin: "10px" }}
+          >
+            Current Order
+          </Typography>
+          <List>
+            {orderItems && orderItems.length > 0
+              ? orderItems.map((item, index) => (
+                  <Box key={`pending-order-ctn-${item.id}-${index}`}>
+                    {index !== 0 ? <Divider key={`Divider-${index}`} /> : null}
+                    <ListItem
+                      key={`pending-order-${item}-${index}`}
+                      sx={{ display: "flex", justifyContent: "flex-end" }}
+                    >
+                      <Container>
+                        <ListItemText
+                          primary={item.name}
+                          secondary={"$" + item.price}
+                        />
+                        <ListItemText
+                          primary={`Qty: ${item.quantity}`}
+                          secondary={item.note ? `Notes: ${item.note}` : null}
+                        />
+                      </Container>
+                      <DeleteOutlineIcon
+                        color="warning"
+                        sx={{ cursor: "pointer" }}
+                        onClick={() => handleRemoveFromCart(index)}
+                      />
+                    </ListItem>
+                  </Box>
+                ))
+              : null}
+          </List>
+
+          {/* TODO: useState fn to check hasSentOrder - if has sent then
+      disable this button and enable the req bill button */}
+          <Container sx={{ mt: "0.5rem" }}>
+            <Typography align="center">Order Total: ${orderSum}</Typography>
+            <Button
+              color="secondary"
+              disabled={orderItems.length === 0}
+              onClick={handleSubmit}
+              fullWidth
+            >
+              Submit order
+            </Button>
+          </Container>
+        </>
+      )}
+      <Divider sx={{ borderBottomWidth: 3 }} />
+      {loading && <CircularProgress sx={{ alignSelf: "center", mt: "50%" }} />}
       <Typography
-        variant='h4'
+        variant="h4"
         gutterBottom
-        align='center'
+        align="center"
         sx={{ margin: "10px" }}
       >
-        My Order
+        Order History
       </Typography>
-      <List>
-        {orderItems && orderItems.length > 0
-          ? orderItems.map((item, index) => (
-              <>
-                {index !== 0 ? <Divider /> : null}
-                <ListItem
-                  key={item}
-                  sx={{ display: "flex", justifyContent: "flex-end" }}
+      {tableOrders.length !== 0 ? (
+        <List>
+          {tableOrders.map((order) => (
+            <Box key={`order-ctn-${order.id}`}>
+              <ListItem key={`order-${order.id}`}>
+                <ListItemText primary={`Order ID: ${order.id}`} />
+                <ListItemText primary={`$${order.subtotal}`} />
+              </ListItem>
+              {order.menuItems && order.menuItems.length !== 0 && (
+                <List
+                  key={`order-item-list-${order.id}`}
+                  sx={{ padding: "0 28px" }}
                 >
-                  <ListItemAvatar>
-                    {index % 2 === 0 ? (
-                      <Avatar>R</Avatar>
-                    ) : (
-                      <Avatar variant='square'>S</Avatar>
-                    )}
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={item.name}
-                    secondary={"$" + item.price}
-                  />
-                  <ListItemText primary={item.note} secondary={item.quantity} />
-                  <DeleteOutlineIcon
-                    color='warning'
-                    onClick={() => handleRemoveFromCart(index)}
-                  />
-                </ListItem>
-                {/* Could remove if clutters UI */}
-                {/* <Divider /> */}
-              </>
-            ))
-          : null}
-      </List>
-      <Divider sx={{ borderBottomWidth: 5 }} />
-      {/* TODO: get sum of bill with sum(quantity * price of all items) */}
-      {/* TODO: useState fn to check hasSentOrder - if has sent then
-      disable this button and enable the req bill button */}
-      <Button onClick={() => handleSendOrder()}>Submit order</Button>
-      <Button disabled>Request Bill</Button>
+                  {order.menuItems.map((item) => (
+                    <Box key={`order-item-ctn-${item.orderItemId}`}>
+                      <ListItemText
+                        key={`order-item-${item.orderItemId}`}
+                        primary={item.itemName}
+                        secondary={`Qty: ${item.quantity}`}
+                      />
+                      <ListItemText
+                        key={`order-item-status-${item.orderItemId}`}
+                        secondary={item.status}
+                      />
+                    </Box>
+                  ))}
+                </List>
+              )}
+            </Box>
+          ))}
+        </List>
+      ) : null}
+      <Container sx={{ mt: "0.5rem" }}>
+        <Typography align="center">Table Total: ${tableSum}</Typography>
+        {hasRequestedBill ? (
+          <>
+            {hasPaid ? (
+              <Button
+                color="secondary"
+                disabled={tableOrders.length === 0}
+                onClick={handleCheckOut}
+                fullWidth
+              >
+                Check Out
+              </Button>
+            ) : (
+              <Typography
+                variant="body1"
+                gutterBottom
+                align="center"
+                sx={{ margin: "10px" }}
+              >
+                Bill has been requested...
+              </Typography>
+            )}
+          </>
+        ) : (
+          <Button
+            color="secondary"
+            disabled={tableOrders.length === 0}
+            onClick={handleRequestBill}
+            fullWidth
+          >
+            Request Bill
+          </Button>
+        )}
+        <Button color="secondary" onClick={handleRequestAssistance} fullWidth>
+          Request Assistance
+        </Button>
+      </Container>
     </Box>
   );
 
   return (
     <div>
       <Fragment key={"right"}>
-        <Button onClick={toggleDrawer("right", true)}>View order</Button>
         <Drawer
           anchor={"right"}
           open={state["right"]}
           onClose={toggleDrawer("right", false)}
+          variant="permanent"
+          sx={{
+            width: "400px",
+            flexShrink: 0,
+            "& .MuiDrawer-paper": {
+              width: "400px",
+              boxSizing: "border-box",
+            },
+          }}
         >
-          {list("right")}
+          {isLoading ? <CircularProgress /> : list("right")}
         </Drawer>
       </Fragment>
     </div>

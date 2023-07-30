@@ -1,5 +1,46 @@
+import { PREPARING_STATUS } from "../Helper";
+import { Typography } from "@mui/material";
+import OrderDashboard from "../UI/OrderDashboard";
+import { useEffect } from "react";
+
 const KitchenStaff = () => {
-  return <div>Kitchen staff here!</div>;
+  useEffect(() => {
+    const socket = new WebSocket("ws://localhost:8080");
+
+    socket.onopen = () => {
+      console.log("Connection established with websocket");
+    };
+
+    // Event listener for WebSocket events
+    // note that useEffect runs twice due to StrictMode
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === "newOrder") {
+        alert(data.message);
+      }
+    };
+
+    return () => {
+      // Clean up WebSocket connection when the component is unmounted
+      if (socket.readyState === 1) {
+        socket.close();
+      }
+    };
+  });
+  return (
+    <>
+      <Typography
+        component="h1"
+        variant="h2"
+        color="secondary"
+        gutterBottom
+        sx={{ mb: 3 }}
+      >
+        Kitchen Staff Dashboard
+      </Typography>
+      <OrderDashboard status={PREPARING_STATUS} />
+    </>
+  );
 };
 
 export default KitchenStaff;

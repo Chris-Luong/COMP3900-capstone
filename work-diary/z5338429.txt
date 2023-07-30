@@ -42,8 +42,12 @@ Week 6:
     Refactored and adjust the design of the backend for order user stories.
 
 Week 7:
-    pass
-
+    Attended Wednesday meeting to discuss the finalising of sprint 2, give updates, and raise concerns.
+    I handled the backend of requesting the bill, making new columns for the pay status of orders and preparation status of the items, removing orders that have been marked both served and paid.
+    Worked on the backend to add and remove categories
+    Attended Saturday meeting to discuss the status of sprint 3.
+    Worked on the backend for updating the pay status and and item status for the kitchen and wait staff.
+    Researching/looking into VM and docker for final showcase.
 
 Week 8:
     pass

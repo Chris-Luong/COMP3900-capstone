@@ -54,3 +54,27 @@ backend inserts orderItems and created an orderId.
 
 Week 7:
 Wednesday: Finished the backend implementations for removing the orders by orderId.
+Friday: Finished and tested the implementations for viewing all pending orders and refactored the orderItems table
+
+Week8:
+Tuesday: We helped Alan to prepare for the demo and fixed a few backend bugs regarding errors when deleting categories. Will be creating 
+some dummy data for next sprint for easier debugging and preparing for demo. 
+Wednesday: We finished the demo and did the retrospective session afterwards. THen, we allcoated the work for the next sprint. I will be 
+responsible for the table booking user stories for backend. So, I spent some time looking through the user stories and wrote down what I should 
+do for backend.
+Friday & Saturday: Working on the structuring and desiging the tables for table bookings. We decided to only allow users to book tables for a
+fixed duration. Also implemented the backend API for creating bookings given the userId, datetime and number of guests. Tomorrow 
+will be testing it.
+Sunday: Implemented the backend GET request for viewing the table details for wait stuff. Tested the APIs successfully. Discussed with the team 
+and we need to allow customers to book more than 1 hours, so need to add "numHours" to the field of POST request for creating bookings. This means 
+that I need to restructure the database. 
+
+Week9:
+Monday: Added the bookingEnd for "bookings" table to accomodate users' needs to book more than 1 hours. Updated the POST API /bookings/create
+to fetch available tables that have non-overlapping booking time and to include end_time in the insert query.
+Updated the GET API /bookings/:date to also include the bookingEnd in the response body.
+Tuesday: Chris requested GET API to include date and accountId parameter, so I udpated the /bookings route. Also discussed with the team about
+the table booking for guest check in and we agreed to create a guest account and book available table for 1 hour. 
+Wednesday: We discussed about what we need to do for the report, I am assigned the work to finish backend for table bookings including verifyBookingByAccount,
+getBookingsByStatus and updateBookingToSeated. I am also going to review my code and add comments where necessary.
+Friday: Worked on and tested the endpoints: /bookings/update, /bookings/verify and also updated bookings tables to include field status.

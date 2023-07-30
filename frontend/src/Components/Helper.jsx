@@ -1,8 +1,35 @@
-// contains functions that are used by multiple components
-
 import sendRequest from "./Utils/Request";
 import * as Yup from "yup";
 
+// contains functions that are used by multiple components
+
+/*
+  account functions
+*/
+export const loginUser = async (body) => {
+  try {
+    const res = await sendRequest("/login", "POST", body);
+    localStorage.setItem("token", res.token);
+    return res;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+};
+
+export const deleteUser = async (id) => {
+  try {
+    const res = await sendRequest("/account/delete", "DELETE", { id });
+    return res.message;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+};
+
+/*
+  menu functions
+*/
 export const getAllMenuItems = async () => {
   try {
     const res = await sendRequest("/menu", "GET");
@@ -63,6 +90,161 @@ export const sendOrder = async (body) => {
   }
 };
 
+export const getOrders = async () => {
+  try {
+    const res = await sendRequest("/orders", "GET");
+    return res;
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+};
+
+export const retrieveOrdersWithTableId = async (tableId) => {
+  try {
+    const res = await sendRequest(`/orders/tables/${tableId}`, "GET");
+    return res;
+  } catch (err) {
+    alert(err);
+    console.log(err);
+  }
+};
+
+export const retrieveOrderItems = async (orderId) => {
+  try {
+    const res = await sendRequest(`/orders?orderId=${orderId}`, "GET");
+    return res;
+  } catch (err) {
+    alert(err);
+    console.log(err);
+  }
+};
+
+export const deleteTableOrders = async () => {
+  try {
+    const body = { tableId: localStorage.getItem("tableId") };
+    const res = await sendRequest("/orders/delete", "DELETE", body);
+    return res.message;
+  } catch (err) {
+    alert(err);
+    console.log(err);
+  }
+};
+
+/*
+  String constants for status
+*/
+// TODO: replace with enum
+export const PREPARING_STATUS = "Preparing";
+export const READY_STATUS = "Ready To Serve";
+export const SERVED_STATUS = "Served";
+export const ITEM_STATUS = {
+  Preparing: "Preparing",
+  Ready: "Ready To Serve",
+  Served: "Served",
+};
+
+export const PAID_STATUS = {
+  Unpaid: "Unpaid",
+  Requesting: "Requesting",
+  Paid: "Paid",
+};
+
+export const Request = {
+  Status: {
+    Waiting: "Waiting",
+    Completed: "Completed",
+  },
+  Type: {
+    Bill: "Bill",
+    Assistance: "Assistance",
+  },
+};
+
+/*
+  request functions
+*/
+export const createWaiterRequest = async (tableId, type, description) => {
+  try {
+    const body = {
+      tableId,
+      type,
+      description,
+    };
+    const res = await sendRequest("/request/create", "POST", body);
+    return res;
+  } catch (err) {
+    alert(err);
+    console.log(err);
+  }
+};
+
+export const getWaiterRequests = async () => {
+  try {
+    const res = await sendRequest(
+      `/request?status=${Request.Status.Waiting}`,
+      "GET"
+    );
+    return res;
+  } catch (err) {
+    alert(err);
+    console.log(err);
+  }
+};
+
+export const completeWaiterRequest = async (id) => {
+  try {
+    const res = await sendRequest(`/request/complete?id=${id}`, "PUT");
+    return res;
+  } catch (err) {
+    alert(err);
+    console.log(err);
+  }
+};
+
+/*
+  order functions
+*/
+export const retrieveOrdersByStatus = async (status) => {
+  try {
+    const res = await sendRequest(`/orders/${status}`, "GET");
+    return res;
+  } catch (err) {
+    alert(err);
+    console.log(err);
+  }
+};
+
+export const updateOrderItemStatus = async (id, status) => {
+  try {
+    const res = await sendRequest(
+      `/orders/update?id=${id}&newStatus=${status}`,
+      "PUT"
+    );
+    return res;
+  } catch (err) {
+    alert(err);
+    console.log(err);
+  }
+};
+
+export const updateOrderPayStatus = async (orderArr, status, accountId) => {
+  let params = "";
+  orderArr.forEach((orderId) => {
+    params += `orderIds=${orderId}&`;
+  });
+  try {
+    const res = await sendRequest(
+      `/orders/pay?${params}accountId=${accountId}&status=${status}`,
+      "PUT"
+    );
+    return res;
+  } catch (err) {
+    alert(err);
+    console.log(err);
+  }
+};
+
 export function fileToDataUrl(file) {
   if (!file) {
     return null;
@@ -77,6 +259,9 @@ export function fileToDataUrl(file) {
   return dataUrlPromise;
 }
 
+/*
+  manager functions
+*/
 export const addItem = async ({
   name,
   description,
@@ -156,17 +341,102 @@ export const getCategoryNamesFromItemId = async (id) => {
     const res = await sendRequest(`/categories/${id}`, "GET");
     return res.categoryNames;
   } catch (err) {
-    console.log(err);
     return null;
   }
 };
 
+/*
+  booking functions here
+*/
+export const createBooking = async (body) => {
+  try {
+    const res = await sendRequest(`/bookings/create`, "POST", body);
+    return res;
+  } catch (err) {
+    return null;
+  }
+};
+
+// If using date, add an empty string before i.e. ("", {date})
+export const getBookings = async (account, date) => {
+  try {
+    let url = "/bookings?";
+    url += account ? `&account=${account}` : "";
+    url += date ? `&date=${date}` : "";
+    const res = await sendRequest(url, "GET");
+    return res;
+  } catch (err) {
+    return null;
+  }
+};
+
+export const deleteBooking = async (bookingId) => {
+  try {
+    const res = await sendRequest(`/bookings/delete`, "DELETE", {
+      id: bookingId,
+    });
+    return res.message;
+  } catch (err) {
+    alert(err);
+    return null;
+  }
+};
+
+export const deleteBookingByAccount = async (accountId) => {
+  try {
+    const res = await sendRequest(`/bookings/deleteAccount`, "DELETE", {
+      id: accountId,
+    });
+    return res.message;
+  } catch (err) {
+    alert(err);
+    return null;
+  }
+};
+
+export const getBookingById = async (bookingId) => {
+  try {
+    const res = await sendRequest(`/bookings/${bookingId}`, "GET");
+    return res[0];
+  } catch (err) {
+    alert(err);
+    return null;
+  }
+};
+
+export const verifyBookingId = async (bookingId) => {
+  try {
+    const res = await sendRequest(`/bookings/verify/${bookingId}`, "GET");
+    return res;
+  } catch (err) {
+    alert(err);
+    return null;
+  }
+};
+
+export const updateBooking = async (body) => {
+  try {
+    // TODO: clarify purpose and structure of bookings/update
+    const res = await sendRequest(`/bookings/update`, "PUT", body);
+    return res;
+  } catch (err) {
+    alert(err);
+    return null;
+  }
+};
+
+/*
+  style objects
+*/
 export const checkboxStyle = {
   display: "grid",
   gridTemplateColumns: "repeat(3, 1fr)",
 };
 
-export const menuItemSchema = Yup.object().shape({
+/*
+  form validation schema
+*/
+export const createMenuItemSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
   description: Yup.string().required("Description is required"),
   ingredients: Yup.string().required("Ingredients are required"),
@@ -178,4 +448,26 @@ export const menuItemSchema = Yup.object().shape({
     .min(0, "Price can't be negative")
     .max(1000, "Maximum price is 1000"),
   thumbnail: Yup.mixed().required("Thumbnail is required"),
+});
+
+export const editMenuItemSchema = Yup.object().shape({
+  name: Yup.string().required("Name is required"),
+  description: Yup.string().required("Description is required"),
+  ingredients: Yup.string().required("Ingredients are required"),
+  categories: Yup.array()
+    .required("Categories required.")
+    .min(1, "Categories required."),
+  price: Yup.number()
+    .required("Price is required")
+    .min(0, "Price can't be negative")
+    .max(1000, "Maximum price is 1000"),
+  thumbnail: Yup.mixed(),
+});
+
+export const newCategorySchema = Yup.object().shape({
+  name: Yup.string().required("Name is required"),
+});
+
+export const createBookingSchema = Yup.object().shape({
+  guests: Yup.string().required("Number of guests is required"),
 });

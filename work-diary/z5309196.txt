@@ -62,4 +62,37 @@ WEEK 6:
 Managed to connect MySQL Workbench with my code. Created the frontend for ordering
 menu items. Completed user stories MN3900-36, -46 and -47. Discussed with Grace how
 the backend could work with the frontend and took Rodney's suggested method of
-implementation. Added image/thumbnail functionality to the menu cards.
+implementation.
+
+WEEK 7:
+
+
+Helped add image/thumbnail functionality to the menu cards. Improved UI of orderDrawer component.
+Started working on the dashboard for waitstaff to view orders and order items according to their status
+ (Preparing, Ready To Serve and Served). Included the functionality to change the status of order items 
+by clicking on them.
+
+Helped Gungeet to improve the UI of the whole website - common colour scheme and modern design.
+Changed implementation of OrderDashboard to show only Ready To Serve order items and to match KitchenStaff
+UI after discussing with Alan.
+
+WEEK 8:
+
+
+Implemented the calculation and display of the table total in the frontend order component.
+Implemented logout button. Implemented a common dashboard for kitchen staff and wait staff.
+Improved the UI for staff and customer views.
+
+WEEK 9:
+
+
+Implemented the frontend for table reservations for customers, allowing them to select the date, time 
+and number of guests through a form. Implemented a dashboard for wait staff to view reservations for 
+the day. Put a placeholder for viewing reservations for the customer to prepare for the next sprint.
+Communicated with Grace to design the backend for the booking features to be implemented similar to 
+the rest of the backend to improve developer experience.
+
+WEEK 10
+
+Implemented the frontend for confirming reservations. Improved UI for customer and waitstaff pages 
+Researched Toastify and its alternatives to replace the current alert popups to improve UI/UX.
