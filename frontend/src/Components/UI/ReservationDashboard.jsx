@@ -53,7 +53,7 @@ const ReservationDashboard = () => {
     });
 
     return bookings.map((booking, idx) => {
-      return booking.is_seated === 0 ? (
+      return booking.isSeated === 0 ? (
         <Grid item xs={12} sm={4} md={3} key={booking.bookId}>
           <Card
             sx={{
