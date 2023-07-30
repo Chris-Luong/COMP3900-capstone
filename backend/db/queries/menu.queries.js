@@ -13,9 +13,9 @@ WHERE categories.id = ?
 `;
 
 const getCategoryNamesFromItemId = `
-  SELECT name FROM categories JOIN menuitemscategories
-  ON categories.id = menuitemscategories.categoryId
-  WHERE menuitemscategories.itemId = ?;
+  SELECT name FROM categories JOIN menuItemsCategories
+  ON categories.id = menuItemsCategories.categoryId
+  WHERE menuItemsCategories.itemId = ?;
 `;
 
 const getCategory = `
@@ -29,32 +29,32 @@ WHERE menuItemsCategories.categoryId = ?
 `;
 
 const getAllMenuItems = `
-SELECT menuitems.* FROM menuItems
+SELECT menuItems.* FROM menuItems
 `;
 
 const filterCategory = `
-JOIN menuitemscategories ON menuitems.id = menuitemscategories.itemId
-JOIN categories ON menuitemscategories.categoryId = categories.id
+JOIN menuItemsCategories ON menuItems.id = menuItemsCategories.itemId
+JOIN categories ON menuItemsCategories.categoryId = categories.id
 WHERE categories.name = ?
 `;
 
 const filterPrice = `
-WHERE menuitems.price <= ? AND menuitems.price >= ?
+WHERE menuItems.price <= ? AND menuItems.price >= ?
 `;
 
 const filterPriceAND = `
-AND menuitems.price <= ? AND menuitems.price >= ?
+AND menuItems.price <= ? AND menuItems.price >= ?
 `;
 
 const sortMenuItems = `
 ORDER BY`;
 
 const searchMenuItems = `
-WHERE menuitems.name LIKE ?
+WHERE menuItems.name LIKE ?
 `;
 
 const searchMenuItemsAND = `
-AND menuitems.name LIKE ?
+AND menuItems.name LIKE ?
 `;
 
 const deleteMenuItem = `

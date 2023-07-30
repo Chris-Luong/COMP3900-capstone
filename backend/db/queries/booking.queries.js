@@ -11,7 +11,7 @@ WHERE user_id = ? AND date = ?
 `;
 
 const viewBookingsByAccountId = `
-SELECT b.id as bookId, t.id as tableId, t.capacity as tableCapacity, b.start_time as bookingStart, b.end_time as bookingEnd, b.guests as guests, IF(b.status = 'seated', true, false) AS is_seated
+SELECT b.id as bookId, t.id as tableId, t.capacity as tableCapacity, b.start_time as bookingStart, b.end_time as bookingEnd, b.guests as guests, IF(b.status = 'seated', true, false) AS isSeated, b.date as date
 FROM bookings b
 JOIN account a ON b.user_id = a.accountId
 JOIN tables t ON b.table_id = t.id
@@ -28,7 +28,7 @@ const createBookingByTableId = `INSERT INTO bookings(user_id, table_id, date, st
 VALUES (?, ?, ?, ?, ?, ?);`;
 
 const viewBookingsByDate = `
-SELECT b.id as bookId, a.email AS email, t.id as tableId, t.capacity as tableCapacity, b.start_time as bookingStart, b.end_time as bookingEnd, b.guests as guests, IF(b.status = 'seated', true, false) AS is_seated
+SELECT b.id as bookId, a.email AS email, t.id as tableId, t.capacity as tableCapacity, b.start_time as bookingStart, b.end_time as bookingEnd, b.guests as guests, IF(b.status = 'seated', true, false) AS isSeated
 FROM bookings b
 JOIN account a ON b.user_id = a.accountId
 JOIN tables t ON b.table_id = t.id

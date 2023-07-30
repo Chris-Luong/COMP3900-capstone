@@ -28,7 +28,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { Formik } from "formik";
-import { createBooking, createBookingSchema } from "../Helper";
+import { createBooking, createBookingSchema, getBookings } from "../Helper";
+import ReservationDashboard from "../UI/ReservationDashboard";
 import sendRequest from "../Utils/Request";
 
 dayjs.extend(utc);
@@ -37,6 +38,9 @@ const TIMEZONE_SYDNEY = "Australia/Sydney";
 const TODAY = dayjs().format("YYYY-MM-DD");
 const START = dayjs().set("hour", 9).startOf("hour").format("HH:mm");
 const END = dayjs().set("hour", 20).startOf("hour").format("HH:mm");
+const FORM_VALIDATION_MESSAGE =
+  "The number of guests must be at least 1. Please also check if your booking times are valid.";
+const accountId = localStorage.getItem("login-accountId");
 
 const LoyaltyContainer = ({ loyaltyStatus, handleJoinLoyalty }) => {
   console.log(loyaltyStatus);
@@ -100,11 +104,11 @@ const LoyaltyContainer = ({ loyaltyStatus, handleJoinLoyalty }) => {
 
 const Customer = () => {
   const [datetime, setDatetime] = useState(dayjs().add(1, "day").utc());
-  const accountId = localStorage.getItem("login-accountId");
-  const [temp, setTemp] = useState();
+
   const [numGuests, setNumGuests] = useState(1);
-  const [valid, setValid] = useState(true);
   const [loyaltyStatus, setLoyaltyStatus] = useState(false);
+  const [valid, setValid] = useState(true);
+  // TODO: get bookings from current date onwards, sort earliest (current - future)
 
   useEffect(() => {
     // get loyalty status
@@ -164,9 +168,7 @@ const Customer = () => {
 
   const handleSubmit = async () => {
     if (!valid) {
-      alert(
-        "The number of guests must be at least 1. Please also check if your booking times are valid."
-      );
+      alert(FORM_VALIDATION_MESSAGE);
       return;
     }
     const dateTimeObj = dayjs(datetime).tz(TIMEZONE_SYDNEY);
@@ -184,8 +186,6 @@ const Customer = () => {
     try {
       const res = await createBooking(body);
       console.log(res);
-      // Temp var for dashboard
-      setTemp(res.bookingId);
       console.log(`bookingId is ${res.bookingId}`);
       alert(`bookingId is ${res.bookingId}`);
     } catch (err) {
@@ -283,113 +283,6 @@ const Customer = () => {
     </Box>
   );
 
-  const dashboard = () => {
-    const retrieveOrders = async () => {
-      // TODO: get bookings with account id. Make past bookings a greyed out colour
-      // could use reservation dashboard from waitstaff
-
-      // const orderData = await retrieveOrdersByStatus(status);
-      const orderData = {};
-      // console.log(orderData);
-      return orderData;
-    };
-    const bookings = retrieveOrders();
-
-    return (
-      <Paper
-        elevation={6}
-        sx={{
-          p: 2,
-          display: "flex",
-          flexDirection: "column",
-          padding: 5,
-          margin: 5,
-        }}
-      >
-        <Typography
-          component="h2"
-          variant="h5"
-          color="secondary"
-          gutterBottom
-          sx={{ mb: 3 }}
-        >
-          Your Reservations
-        </Typography>
-        <Typography>{temp ? `Booking ID: ${temp}` : temp}</Typography>
-        {/* {Object.keys(bookings).length === 0 ? (
-          <Typography sx={{ mt: "35px" }}>
-            No existing reservations. Make one today!
-          </Typography>
-        ) : (
-          <></>
-          <Grid container spacing={2}>
-              <>
-                {Object.keys(bookings).map((orderId) => (
-                  <Grid item xs={12} sm={4} md={3} key={orderId}>
-                    <Card
-                      sx={{
-                        width: "100%",
-                        height: "100%",
-                        margin: "10px",
-                        cursor: "pointer",
-                        border: 1,
-                        borderColor: "rgba(216, 206, 222, 0.8)",
-                        transition: "all 0.3s ease-out",
-                        "box-shadow": "0 14px 26px rgba(0, 0, 0, 0.04)",
-                        "&:hover": {
-                          transform:
-                            "translateY(-5px) scale(1.005) translateZ(0)",
-                          "box-shadow": "0 12px 24px rgba(156, 39, 176, 0.5)",
-                        },
-                      }}
-                    >
-                      <CardHeader
-                        title={`Order ${orderId} Table ${orders[orderId].tableId}`}
-                        subheader={orders[orderId].orderTime}
-                      />
-                      <Divider />
-                      <CardContent>
-                        <List>
-                          {orders[orderId].items.map((item, index) => (
-                            <ListItem
-                              key={`${orderId}-${item.itemId}-${index}`}
-                              onClick={() => handleStatusUpdate(item.orderItemId)}
-                              sx={{
-                                "&:hover": {
-                                  backgroundColor: "rgba(125, 50, 168)",
-                                  color: "white",
-                                  cursor: "pointer",
-                                },
-                                borderRadius: "5px",
-                              }}
-                            >
-                              <ListItemText
-                                disableTypography
-                                primary={
-                                  <Typography>
-                                    {item.quantity} {item.itemName}
-                                  </Typography>
-                                }
-                                secondary={
-                                  <Typography>
-                                    {item.note ? `Note: ${item.note}` : null}
-                                  </Typography>
-                                }
-                              />
-                            </ListItem>
-                          ))}
-                        </List>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-              </>
-          </Grid>
-        )} */}
-      </Paper>
-    );
-  };
-
   return (
     <>
       <Typography
@@ -428,7 +321,7 @@ const Customer = () => {
         {/* Maybe map each dashboard to an order and clean up dashboard UI */}
         {/* </Box> */}
       </Grid>
-      {dashboard()}
+      <ReservationDashboard accountId={accountId} />
     </>
   );
 };

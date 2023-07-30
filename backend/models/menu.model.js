@@ -232,7 +232,7 @@ class Menu {
       final_query += filterPrice;
     }
     params.push(max_price, min_price);
-    final_query += sortMenuItems + " menuitems." + sort_type + ' ' + sort_order;
+    final_query += sortMenuItems + " menuItems." + sort_type + ' ' + sort_order;
 
     db.query(final_query, params, (err, result) => {
       if (err) {

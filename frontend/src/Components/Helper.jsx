@@ -270,11 +270,23 @@ export const createBooking = async (body) => {
 
 // If using date, add an empty string before i.e. ("", {date})
 export const getBookings = async (account, date) => {
+<<<<<<< HEAD
   let url = "/bookings?";
   url += account ? `&account=${account}` : "";
   url += date ? `&date=${date}` : "";
   const res = await sendRequest(url, "GET");
   return res;
+=======
+  try {
+    let url = "/bookings?";
+    url += account ? `&accountId=${account}` : "";
+    url += date ? `&date=${date}` : "";
+    const res = await sendRequest(url, "GET");
+    return res;
+  } catch (err) {
+    return null;
+  }
+>>>>>>> main
 };
 
 export const deleteBooking = async (bookingId) => {
@@ -304,6 +316,17 @@ export const getBookingById = async (bookingId) => {
 export const verifyBookingId = async (bookingId) => {
   const res = await sendRequest(`/bookings/verify/${bookingId}`, "GET");
   return res;
+};
+
+export const updateBooking = async (body) => {
+  try {
+    // TODO: clarify purpose and structure of bookings/update
+    const res = await sendRequest(`/bookings/update`, "PUT", body);
+    return res;
+  } catch (err) {
+    alert(err);
+    return null;
+  }
 };
 
 /*
