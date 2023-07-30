@@ -1,34 +1,16 @@
 import { useEffect, useState } from "react";
 
 import dayjs from "dayjs";
-// might need to npm install the below
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  CircularProgress,
-  Divider,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  Modal,
-  Paper,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { Formik } from "formik";
-import { createBooking, createBookingSchema, getBookings } from "../Helper";
+import { createBooking, createBookingSchema } from "../Helper";
 import ReservationDashboard from "../UI/ReservationDashboard";
 
 dayjs.extend(utc);
@@ -46,7 +28,6 @@ const Customer = () => {
 
   const [numGuests, setNumGuests] = useState(1);
   const [valid, setValid] = useState(true);
-  // TODO: get bookings from current date onwards, sort earliest (current - future)
 
   useEffect(() => {
     if (numGuests < 1) {
@@ -57,13 +38,6 @@ const Customer = () => {
     const formattedDate = dateTimeObj.format("YYYY-MM-DD");
     const formattedTime = dateTimeObj.format("HH:mm");
 
-    // console.log(`formattedDate: ${formattedDate}
-    // TODAY: ${TODAY}
-    // formattedTime: ${formattedTime}
-    // START: ${START}
-    // END: ${END}
-    // ${formattedDate < TODAY}
-    // ${!(START <= formattedTime && formattedTime <= END)}`);
     if (
       formattedDate < TODAY ||
       !(START <= formattedTime && formattedTime <= END)
@@ -96,7 +70,6 @@ const Customer = () => {
       accountId: accountId,
       numHours: setDuration(numGuests),
     };
-    // console.log(body);
     const res = await createBooking(body);
 
     console.log(`bookingId is ${res.bookingId}`);
