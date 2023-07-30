@@ -64,19 +64,29 @@ const OrderDrawer = ({
   };
 
   const handleRequestBill = async () => {
-    const orderIdArr = tableOrders.map((tableOrder) => tableOrder.id);
-    let res = await updateOrderPayStatus(orderIdArr, PAID_STATUS.Requesting);
-    alert(`${res.message}. Staff will be with you soon.`);
-    localStorage.setItem("billRequested", true);
-    const tableId = localStorage.getItem("tableId");
-    res = await createWaiterRequest(tableId, Request.Type.Bill);
-    setHasRequestedBill(true);
+    try {
+      const orderIdArr = tableOrders.map((tableOrder) => tableOrder.id);
+      let res = await updateOrderPayStatus(orderIdArr, PAID_STATUS.Requesting);
+      alert(`${res.message}. Staff will be with you soon.`);
+      localStorage.setItem("billRequested", true);
+      const tableId = localStorage.getItem("tableId");
+      res = await createWaiterRequest(tableId, Request.Type.Bill);
+      setHasRequestedBill(true);
+    } catch (err) {
+      console.log(err);
+      alert(err);
+    }
   };
 
   const handleRequestAssistance = async () => {
     const tableId = localStorage.getItem("tableId");
-    const res = await createWaiterRequest(tableId, Request.Type.Assistance);
-    alert(`${res.message}. We will be with you soon.`);
+    try {
+      const res = await createWaiterRequest(tableId, Request.Type.Assistance);
+      alert(`${res.message}. We will be with you soon.`);
+    } catch (err) {
+      console.log(err);
+      alert(err);
+    }
   };
 
   const handleCheckOut = async () => {

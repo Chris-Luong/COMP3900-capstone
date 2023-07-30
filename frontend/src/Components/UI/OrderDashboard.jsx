@@ -35,19 +35,29 @@ const OrderDashboard = (props) => {
   const handleStatusUpdate = async (orderItemId) => {
     setLoading(true);
     console.log(orderItemId);
-    const res = await updateOrderItemStatus(orderItemId, newStatus);
-    alert(res.message);
-    setTriggerRerender(!triggerRerender);
+    try {
+      const res = await updateOrderItemStatus(orderItemId, newStatus);
+      alert(res.message);
+      setTriggerRerender(!triggerRerender);
+    } catch (err) {
+      console.log(err);
+      alert(err);
+    }
     setLoading(false);
   };
 
   useEffect(() => {
     setLoading(true);
     const retrieveOrders = async () => {
-      const orderData = await retrieveOrdersByStatus(status);
-      console.log(orderData);
-      setOrders(orderData);
-      setLoading(false);
+      try {
+        const orderData = await retrieveOrdersByStatus(status);
+        console.log(orderData);
+        setOrders(orderData);
+        setLoading(false);
+      } catch (err) {
+        console.log(err);
+        alert(err);
+      }
     };
     retrieveOrders();
   }, [status, triggerRerender]);

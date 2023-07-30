@@ -26,12 +26,15 @@ const ReservationDashboard = () => {
   const date = "2023-07-22";
 
   useEffect(() => {
-    // setLoading(true);
     const retrieveReservations = async () => {
-      const bookingData = await getBookings("", date);
-      console.log(`bookingdata is ${JSON.stringify(bookingData)}`);
-      setBookings(bookingData);
-      // setLoading(false);
+      try {
+        const bookingData = await getBookings("", date);
+        console.log(`bookingdata is ${JSON.stringify(bookingData)}`);
+        setBookings(bookingData);
+      } catch (err) {
+        console.log(err);
+        alert(err);
+      }
     };
     retrieveReservations();
   }, []);

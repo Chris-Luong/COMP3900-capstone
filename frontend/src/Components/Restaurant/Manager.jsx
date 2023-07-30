@@ -27,18 +27,23 @@ const Manager = () => {
   };
 
   const handleNewItemSubmit = async (values) => {
-    let fileToUrl = await fileToDataUrl(values.thumbnail);
-    console.log(values);
-    const body = {
-      ...values,
-      price: parseFloat(values.price).toFixed(2),
-      thumbnail: fileToUrl,
-    };
+    try {
+      let fileToUrl = await fileToDataUrl(values.thumbnail);
+      console.log(values);
+      const body = {
+        ...values,
+        price: parseFloat(values.price).toFixed(2),
+        thumbnail: fileToUrl,
+      };
 
-    let message = await addItem(body);
-    alert(message);
-    setTriggerRerender(!triggerRerender);
-    toggleNewItemModal();
+      let message = await addItem(body);
+      alert(message);
+      setTriggerRerender(!triggerRerender);
+      toggleNewItemModal();
+    } catch (err) {
+      console.log(err);
+      alert(err);
+    }
   };
 
   const handleItemDelete = async (id) => {
@@ -86,11 +91,16 @@ const Manager = () => {
   useEffect(() => {
     setLoading(true);
     const getMenuData = async () => {
-      let itemsData = await getAllMenuItems();
-      setMenuItems(itemsData);
-      let categoriesData = await getAllCategories();
-      setCategories(categoriesData);
-      setLoading(false);
+      try {
+        let itemsData = await getAllMenuItems();
+        setMenuItems(itemsData);
+        let categoriesData = await getAllCategories();
+        setCategories(categoriesData);
+        setLoading(false);
+      } catch (err) {
+        console.log(err);
+        alert(err);
+      }
     };
     getMenuData();
   }, [triggerRerender]);

@@ -13,13 +13,6 @@ export const loginUser = async (body) => {
 };
 
 export const deleteUser = async (id) => {
-  // try {
-  //   const res = await sendRequest("/account/delete", "DELETE", { id });
-  //   return res.message;
-  // } catch (err) {
-  //   console.log(err);
-  //   return null;
-  // }
   const res = await sendRequest("/account/delete", "DELETE", { id });
   return res.message;
 };
@@ -28,27 +21,17 @@ export const deleteUser = async (id) => {
   menu functions
 */
 export const getAllMenuItems = async () => {
-  try {
-    const res = await sendRequest("/menu", "GET");
-    return res;
-  } catch (err) {
-    console.log(err);
-    return [];
-  }
+  const res = await sendRequest("/menu", "GET");
+  return res;
 };
 
 export const getAllCategories = async () => {
-  try {
-    const res = await sendRequest("/categories", "GET");
-    const categories = [];
-    for (const category in res.categories) {
-      categories.push(res.categories[category]);
-    }
-    return categories;
-  } catch (err) {
-    console.log(err);
-    return [];
+  const res = await sendRequest("/categories", "GET");
+  const categories = [];
+  for (const category in res.categories) {
+    categories.push(res.categories[category]);
   }
+  return categories;
 };
 
 export const applyFilters = async (
@@ -59,32 +42,22 @@ export const applyFilters = async (
   sortType,
   sortOrder
 ) => {
-  try {
-    let url = "/menu?";
-    url += search ? `&search=${search}` : "";
-    url += category ? `&category=${category}` : "";
-    url += minPrice || minPrice === 0 ? `&min_price=${minPrice}` : "";
-    url += maxPrice || maxPrice === 0 ? `&max_price=${maxPrice}` : "";
-    url += sortType ? `&sort_type=${sortType}` : "";
-    url += sortOrder ? `&sort_order=${sortOrder}` : "";
+  let url = "/menu?";
+  url += search ? `&search=${search}` : "";
+  url += category ? `&category=${category}` : "";
+  url += minPrice || minPrice === 0 ? `&min_price=${minPrice}` : "";
+  url += maxPrice || maxPrice === 0 ? `&max_price=${maxPrice}` : "";
+  url += sortType ? `&sort_type=${sortType}` : "";
+  url += sortOrder ? `&sort_order=${sortOrder}` : "";
 
-    const res = await sendRequest(url, "GET");
-    return res;
-  } catch (err) {
-    console.log(err);
-    return [];
-  }
+  const res = await sendRequest(url, "GET");
+  return res;
 };
 
 export const sendOrder = async (body) => {
-  try {
-    const res = await sendRequest("/orders/create", "POST", body);
-    console.log(res);
-    alert("SUCCESS: order id is " + res.orderId);
-  } catch (error) {
-    alert(error);
-    console.log(error);
-  }
+  const res = await sendRequest("/orders/create", "POST", body);
+  console.log(res);
+  alert("SUCCESS: order id is " + res.orderId);
 };
 
 export const getOrders = async () => {
@@ -98,48 +71,27 @@ export const getOrders = async () => {
 };
 
 export const retrieveOrdersWithTableId = async (tableId) => {
-  try {
-    const res = await sendRequest(`/orders/tables/${tableId}`, "GET");
-    return res;
-  } catch (err) {
-    alert(err);
-    console.log(err);
-  }
+  const res = await sendRequest(`/orders/tables/${tableId}`, "GET");
+  return res;
 };
 
 export const retrieveOrderItems = async (orderId) => {
-  try {
-    const res = await sendRequest(`/orders?orderId=${orderId}`, "GET");
-    return res;
-  } catch (err) {
-    alert(err);
-    console.log(err);
-  }
+  const res = await sendRequest(`/orders?orderId=${orderId}`, "GET");
+  return res;
 };
 
 export const deleteTableOrders = async () => {
-  try {
-    const body = { tableId: localStorage.getItem("tableId") };
-    const res = await sendRequest("/orders/delete", "DELETE", body);
-    return res.message;
-  } catch (err) {
-    alert(err);
-    console.log(err);
-  }
+  const body = { tableId: localStorage.getItem("tableId") };
+  const res = await sendRequest("/orders/delete", "DELETE", body);
+  return res.message;
 };
 
 /*
   String constants for status
 */
-// TODO: replace with enum
 export const PREPARING_STATUS = "Preparing";
 export const READY_STATUS = "Ready To Serve";
 export const SERVED_STATUS = "Served";
-export const ITEM_STATUS = {
-  Preparing: "Preparing",
-  Ready: "Ready To Serve",
-  Served: "Served",
-};
 
 export const PAID_STATUS = {
   Unpaid: "Unpaid",
@@ -162,68 +114,42 @@ export const Request = {
   request functions
 */
 export const createWaiterRequest = async (tableId, type, description) => {
-  try {
-    const body = {
-      tableId,
-      type,
-      description,
-    };
-    const res = await sendRequest("/request/create", "POST", body);
-    return res;
-  } catch (err) {
-    alert(err);
-    console.log(err);
-  }
+  const body = {
+    tableId,
+    type,
+    description,
+  };
+  const res = await sendRequest("/request/create", "POST", body);
+  return res;
 };
 
 export const getWaiterRequests = async () => {
-  try {
-    const res = await sendRequest(
-      `/request?status=${Request.Status.Waiting}`,
-      "GET"
-    );
-    return res;
-  } catch (err) {
-    alert(err);
-    console.log(err);
-  }
+  const res = await sendRequest(
+    `/request?status=${Request.Status.Waiting}`,
+    "GET"
+  );
+  return res;
 };
 
 export const completeWaiterRequest = async (id) => {
-  try {
-    const res = await sendRequest(`/request/complete?id=${id}`, "PUT");
-    return res;
-  } catch (err) {
-    alert(err);
-    console.log(err);
-  }
+  const res = await sendRequest(`/request/complete?id=${id}`, "PUT");
+  return res;
 };
 
 /*
   order functions
 */
 export const retrieveOrdersByStatus = async (status) => {
-  try {
-    const res = await sendRequest(`/orders/${status}`, "GET");
-    console.log(res);
-    return res;
-  } catch (err) {
-    alert(err);
-    console.log(err);
-  }
+  const res = await sendRequest(`/orders/${status}`, "GET");
+  return res;
 };
 
 export const updateOrderItemStatus = async (id, status) => {
-  try {
-    const res = await sendRequest(
-      `/orders/update?id=${id}&newStatus=${status}`,
-      "PUT"
-    );
-    return res;
-  } catch (err) {
-    alert(err);
-    console.log(err);
-  }
+  const res = await sendRequest(
+    `/orders/update?id=${id}&newStatus=${status}`,
+    "PUT"
+  );
+  return res;
 };
 
 export const updateOrderPayStatus = async (orderArr, status, accountId) => {
@@ -231,16 +157,11 @@ export const updateOrderPayStatus = async (orderArr, status, accountId) => {
   orderArr.forEach((orderId) => {
     params += `orderIds=${orderId}&`;
   });
-  try {
-    const res = await sendRequest(
-      `/orders/pay?${params}accountId=${accountId}&status=${status}`,
-      "PUT"
-    );
-    return res;
-  } catch (err) {
-    alert(err);
-    console.log(err);
-  }
+  const res = await sendRequest(
+    `/orders/pay?${params}accountId=${accountId}&status=${status}`,
+    "PUT"
+  );
+  return res;
 };
 
 export function fileToDataUrl(file) {
@@ -335,12 +256,8 @@ export const editItem = async (
 };
 
 export const getCategoryNamesFromItemId = async (id) => {
-  try {
-    const res = await sendRequest(`/categories/${id}`, "GET");
-    return res.categoryNames;
-  } catch (err) {
-    return null;
-  }
+  const res = await sendRequest(`/categories/${id}`, "GET");
+  return res.categoryNames;
 };
 
 /*
@@ -353,39 +270,25 @@ export const createBooking = async (body) => {
 
 // If using date, add an empty string before i.e. ("", {date})
 export const getBookings = async (account, date) => {
-  try {
-    let url = "/bookings?";
-    url += account ? `&account=${account}` : "";
-    url += date ? `&date=${date}` : "";
-    const res = await sendRequest(url, "GET");
-    return res;
-  } catch (err) {
-    return null;
-  }
+  let url = "/bookings?";
+  url += account ? `&account=${account}` : "";
+  url += date ? `&date=${date}` : "";
+  const res = await sendRequest(url, "GET");
+  return res;
 };
 
 export const deleteBooking = async (bookingId) => {
-  try {
-    const res = await sendRequest(`/bookings/delete`, "DELETE", {
-      id: bookingId,
-    });
-    return res.message;
-  } catch (err) {
-    alert(err);
-    return null;
-  }
+  const res = await sendRequest(`/bookings/delete`, "DELETE", {
+    id: bookingId,
+  });
+  return res;
 };
 
 export const deleteBookingByAccount = async (accountId) => {
-  try {
-    const res = await sendRequest(`/bookings/deleteAccount`, "DELETE", {
-      id: accountId,
-    });
-    return res.message;
-  } catch (err) {
-    alert(err);
-    return null;
-  }
+  const res = await sendRequest(`/bookings/deleteAccount`, "DELETE", {
+    id: accountId,
+  });
+  return res;
 };
 
 export const getBookingById = async (bookingId) => {
