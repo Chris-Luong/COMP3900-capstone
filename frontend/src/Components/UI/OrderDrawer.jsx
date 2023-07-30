@@ -24,8 +24,8 @@ import {
   deleteUser,
   updateOrderPayStatus,
 } from "../Helper";
+import sendRequest from "../Utils/Request";
 
-// TODO: Make delete cursor: pointer on hover
 const OrderDrawer = ({
   orderItems,
   onDelete,
@@ -52,6 +52,7 @@ const OrderDrawer = ({
 
   const [orderSum, setOrderSum] = useState(0);
   const [tableSum, setTableSum] = useState(0);
+  const [loyaltyDiscount, setLoyaltyDiscount] = useState(0);
   const [hasRequestedBill, setHasRequestedBill] = useState(
     localStorage.getItem("billRequested")
   );
@@ -63,49 +64,96 @@ const OrderDrawer = ({
   };
 
   const handleRequestBill = async () => {
-    const orderIdArr = tableOrders.map((tableOrder) => tableOrder.id);
-    let res = await updateOrderPayStatus(orderIdArr, PAID_STATUS.Requesting);
-    alert(`${res.message}. Staff will be with you soon.`);
-    localStorage.setItem("billRequested", true);
-    const tableId = localStorage.getItem("tableId");
-    res = await createWaiterRequest(tableId, Request.Type.Bill);
-    setHasRequestedBill(true);
+    try {
+      const orderIdArr = tableOrders.map((tableOrder) => tableOrder.id);
+      let res = await updateOrderPayStatus(orderIdArr, PAID_STATUS.Requesting);
+      alert(`${res.message}. Staff will be with you soon.`);
+      localStorage.setItem("billRequested", true);
+      const tableId = localStorage.getItem("tableId");
+      res = await createWaiterRequest(tableId, Request.Type.Bill);
+      setHasRequestedBill(true);
+    } catch (err) {
+      console.log(err);
+      alert(err);
+    }
   };
 
   const handleRequestAssistance = async () => {
     const tableId = localStorage.getItem("tableId");
-    const res = await createWaiterRequest(tableId, Request.Type.Assistance);
-    alert(`${res.message}. We will be with you soon.`);
+    try {
+      const res = await createWaiterRequest(tableId, Request.Type.Assistance);
+      alert(`${res.message}. We will be with you soon.`);
+    } catch (err) {
+      console.log(err);
+      alert(err);
+    }
   };
 
   const handleCheckOut = async () => {
-    // TODO: delete all table orders before clearing local storage
-    await deleteTableOrders();
-
     // if guest check in, delete that account and all bookings associated
     // otherwise, for a regular customer who may have other bookings, just delete
     // their current booking
-    if (localStorage.getItem("isGuest")) {
-      await deleteBookingByAccount(localStorage.getItem("accountId"));
-      await deleteUser(localStorage.getItem("accountId"));
-    } else {
-      await deleteBooking(localStorage.getItem("bookingId"));
-      // TODO: update loyalty points here
+    try {
+      if (localStorage.getItem("isGuest")) {
+        // delete all table orders before clearing local storage
+        await deleteTableOrders();
+        await deleteBookingByAccount(localStorage.getItem("accountId"));
+        await deleteUser(localStorage.getItem("accountId"));
+      } else {
+        // update loyalty points here
+        if (localStorage.getItem("isLoyaltyMember")) {
+          const loyaltyUpdateRes = await sendRequest(
+            `/loyalty/update`,
+            "POST",
+            {
+              accountId: localStorage.getItem("accountId"),
+              tableId: localStorage.getItem("tableId"),
+            }
+          );
+          console.log(loyaltyUpdateRes);
+        }
+        await deleteTableOrders();
+        await deleteBooking(localStorage.getItem("bookingId"));
+      }
+      alert("Thank you for dining with us!");
+      checkIn.setIsCheckedIn(false);
+      localStorage.removeItem("token");
+      localStorage.removeItem("isLoyaltyMember");
+      localStorage.removeItem("checkedIn");
+      localStorage.removeItem("bookingId");
+      localStorage.removeItem("isGuest");
+      localStorage.removeItem("tableId");
+      localStorage.removeItem("billRequested");
+      navigate("/restaurant");
+    } catch (err) {
+      alert(err);
+      console.log(err);
     }
-    alert("Thank you for dining with us!");
-    checkIn.setIsCheckedIn(false);
-    localStorage.removeItem("token");
-    localStorage.removeItem("checkedIn");
-    localStorage.removeItem("bookingId");
-    localStorage.removeItem("isGuest");
-    localStorage.removeItem("tableId");
-    localStorage.removeItem("billRequested");
-    navigate("/restaurant");
   };
 
   // Updated order total everytime the order is updated
   useEffect(() => {
     setIsLoading(true);
+    // get loyalty discount if it exists
+    const getLoyaltyStatus = async () => {
+      try {
+        const loyaltyRes = await sendRequest(
+          `/loyalty/status/${localStorage.getItem("accountId")}`,
+          "GET"
+        );
+        console.log(loyaltyRes);
+        if (loyaltyRes.isMember) {
+          localStorage.setItem("isLoyaltyMember", "true");
+        }
+        if (loyaltyRes.isMember && loyaltyRes.discountPercentage > 0) {
+          setLoyaltyDiscount(loyaltyRes.discountPercentage);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    getLoyaltyStatus();
     let total = 0;
     if (orderItems && orderItems.length > 0) {
       orderItems.forEach((item) => {
@@ -263,7 +311,25 @@ const OrderDrawer = ({
         </List>
       ) : null}
       <Container sx={{ mt: "0.5rem" }}>
-        <Typography align="center">Table Total: ${tableSum}</Typography>
+        {loyaltyDiscount ? (
+          <>
+            <Typography align="center" sx={{ textDecoration: "line-through" }}>
+              Table Total: ${tableSum.toFixed(2)}
+            </Typography>
+            <Typography align="center">
+              Table Total: $
+              {(tableSum * (1 - loyaltyDiscount / 100)).toFixed(2)}
+            </Typography>
+            <Typography align="center" color="text.secondary">
+              Thanks to loyalty perks, you get a ${loyaltyDiscount}% discount!
+            </Typography>
+          </>
+        ) : (
+          <Typography align="center">
+            Table Total: ${tableSum.toFixed(2)}
+          </Typography>
+        )}
+
         {hasRequestedBill ? (
           <>
             {hasPaid ? (

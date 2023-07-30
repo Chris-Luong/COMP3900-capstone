@@ -22,8 +22,6 @@ import {
   Typography,
 } from "@mui/material";
 
-// TODO: useTimeout or something to poll for new orders every 30 seconds
-
 const OrderDashboard = (props) => {
   const status = props.status;
   const newStatus = status === PREPARING_STATUS ? READY_STATUS : SERVED_STATUS;
@@ -37,18 +35,29 @@ const OrderDashboard = (props) => {
   const handleStatusUpdate = async (orderItemId) => {
     setLoading(true);
     console.log(orderItemId);
-    const res = await updateOrderItemStatus(orderItemId, newStatus);
-    alert(res.message);
-    setTriggerRerender(!triggerRerender);
+    try {
+      const res = await updateOrderItemStatus(orderItemId, newStatus);
+      alert(res.message);
+      setTriggerRerender(!triggerRerender);
+    } catch (err) {
+      console.log(err);
+      alert(err);
+    }
     setLoading(false);
   };
 
   useEffect(() => {
     setLoading(true);
     const retrieveOrders = async () => {
-      const orderData = await retrieveOrdersByStatus(status);
-      setOrders(orderData);
-      setLoading(false);
+      try {
+        const orderData = await retrieveOrdersByStatus(status);
+        console.log(orderData);
+        setOrders(orderData);
+        setLoading(false);
+      } catch (err) {
+        console.log(err);
+        alert(err);
+      }
     };
     retrieveOrders();
   }, [status, triggerRerender]);
@@ -65,9 +74,9 @@ const OrderDashboard = (props) => {
       }}
     >
       <Typography
-        component='h2'
-        variant='h5'
-        color='secondary'
+        component="h2"
+        variant="h5"
+        color="secondary"
         gutterBottom
         sx={{ mb: 3 }}
       >
@@ -101,8 +110,10 @@ const OrderDashboard = (props) => {
                     }}
                   >
                     <CardHeader
-                      title={`Order ${orderId} Table ${orders[orderId].tableId}`}
-                      subheader={orders[orderId].orderTime}
+                      title={`Order ${orders[orderId].orderNumber} Table ${orders[orderId].tableId}`}
+                      subheader={`${orders[orderId].orderTime}${
+                        orders[orderId].isPriority === 1 ? " (Priority)" : ""
+                      }`}
                     />
                     <Divider />
                     <CardContent>

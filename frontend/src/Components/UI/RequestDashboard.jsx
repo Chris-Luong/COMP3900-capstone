@@ -72,25 +72,40 @@ const RequestDashboard = () => {
   const completeRequestHandler = async (requestId, tableId, type) => {
     // if request is for a bill, update the paid status of all its orders
     if (type === Request.Type.Bill) {
-      const orders = await retrieveOrdersWithTableId(tableId);
-      const accountId = orders[0].accountId;
-      const orderIdArr = orders.map((order) => order.id);
-      const res = await updateOrderPayStatus(
-        orderIdArr,
-        PAID_STATUS.Paid,
-        accountId
-      );
-      console.log(res);
+      try {
+        const orders = await retrieveOrdersWithTableId(tableId);
+        const accountId = orders[0].accountId;
+        const orderIdArr = orders.map((order) => order.id);
+        const res = await updateOrderPayStatus(
+          orderIdArr,
+          PAID_STATUS.Paid,
+          accountId
+        );
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+        alert(err);
+      }
     }
-    await completeWaiterRequest(requestId);
+    try {
+      await completeWaiterRequest(requestId);
+    } catch (err) {
+      console.log(err);
+      alert(err);
+    }
   };
 
   useEffect(() => {
     setIsLoading(true);
     const getRequests = async () => {
-      let res = await getWaiterRequests();
-      console.log(res);
-      setRequests(res);
+      try {
+        let res = await getWaiterRequests();
+        console.log(res);
+        setRequests(res);
+      } catch (err) {
+        console.log(err);
+        alert(err);
+      }
     };
     getRequests();
     setIsLoading(false);

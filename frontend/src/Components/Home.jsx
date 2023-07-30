@@ -1,7 +1,7 @@
 import WaitStaff from "./Restaurant/WaitStaff";
 import KitchenStaff from "./Restaurant/KitchenStaff";
 import Manager from "./Restaurant/Manager";
-import { Button, Container } from "@mui/material";
+import { Button, Container, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import RestaurantContext from "./Context/restaurant-context";
@@ -27,13 +27,32 @@ const Home = () => {
   };
 
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth='xl'>
       <div>
         {role === "Customer" && <Customer />}
         {role === "Wait Staff" && <WaitStaff />}
         {role === "Kitchen Staff" && <KitchenStaff />}
         {role === "Manager" && <Manager />}
       </div>
+      <Typography
+        variant='h2'
+        component='h1'
+        sx={{
+          fontFamily: "Pacifico",
+          color: "#333",
+          fontWeight: 700,
+          position: "absolute",
+          left: 30,
+          top: 15,
+          "&:hover": {
+            cursor: "pointer",
+          },
+        }}
+        onClick={() => navigate("/")}
+        color='secondary'
+      >
+        QueueQuicker
+      </Typography>
       <Button
         sx={{
           position: "absolute",
@@ -41,7 +60,7 @@ const Home = () => {
           top: 15,
         }}
         onClick={handleLogout}
-        color="secondary"
+        color='secondary'
       >
         Logout
       </Button>

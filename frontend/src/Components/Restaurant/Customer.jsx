@@ -4,7 +4,15 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 
-import { Box, Button, Stack, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Grid,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -12,6 +20,7 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { Formik } from "formik";
 import { createBooking, createBookingSchema } from "../Helper";
 import ReservationDashboard from "../UI/ReservationDashboard";
+import sendRequest from "../Utils/Request";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -23,11 +32,99 @@ const FORM_VALIDATION_MESSAGE =
   "The number of guests must be at least 1. Please also check if your booking times are valid.";
 const accountId = localStorage.getItem("login-accountId");
 
+const LoyaltyContainer = ({ loyaltyStatus, handleJoinLoyalty }) => {
+  console.log(loyaltyStatus);
+  return (
+    <Box
+      sx={{
+        width: 400,
+        height: "380px",
+        bgcolor: "background.paper",
+        boxShadow: 2,
+        p: 4,
+      }}
+    >
+      {loyaltyStatus ? (
+        // if member, show points, tier id, benefits and points to next tier
+        <>
+          <Typography variant='h5' color='secondary' gutterBottom>
+            Loyalty Status
+          </Typography>
+          {/* show accountId */}
+          <Typography variant='subtitle1' color='text.secondary'>
+            Account ID: {loyaltyStatus.accountId}
+          </Typography>
+          <Typography variant='subtitle1' color='text.secondary'>
+            Points: {loyaltyStatus.points}
+          </Typography>
+          <Typography variant='subtitle1' color='text.secondary'>
+            Tier {loyaltyStatus.tierId}
+          </Typography>
+          {loyaltyStatus.pointsToNextTier ? (
+            <Typography variant='subtitle1' color='text.secondary'>
+              To Next Tier: {loyaltyStatus.pointsToNextTier}
+            </Typography>
+          ) : null}
+        </>
+      ) : (
+        // if not a member, show button to join loyalty program
+        <>
+          <Typography
+            variant='h5'
+            color='secondary'
+            gutterBottom
+            sx={{ mt: 3, mb: 3, textAlign: "center" }}
+          >
+            It doesn't seem like you're a member.
+          </Typography>
+          <Button variant='contained' onClick={handleJoinLoyalty} fullWidth>
+            Join Loyalty
+          </Button>
+        </>
+      )}
+      <Typography variant='body1' color='text.secondary' sx={{ mt: 3 }}>
+        Tier 2 members receive a small discount.
+      </Typography>
+      <Typography variant='body1' color='text.secondary'>
+        Tier 1 members receive a larger discount and a priority queue.
+      </Typography>
+    </Box>
+  );
+};
+
 const Customer = () => {
   const [datetime, setDatetime] = useState(dayjs().add(1, "day").utc());
 
   const [numGuests, setNumGuests] = useState(1);
+  const [loyaltyStatus, setLoyaltyStatus] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [valid, setValid] = useState(true);
+
+  useEffect(() => {
+    // get loyalty status
+    setIsLoading(true);
+    const getLoyaltyStatus = async () => {
+      console.log("getting loyalty");
+      try {
+        const loyaltyRes = await sendRequest(
+          `/loyalty/status/${accountId}`,
+          "GET"
+        );
+        console.log(loyaltyRes);
+        if (!loyaltyRes.isMember) {
+          setLoyaltyStatus(false);
+        } else {
+          setLoyaltyStatus(loyaltyRes);
+        }
+        setIsLoading(false);
+      } catch (err) {
+        console.log(err);
+        alert(err);
+      }
+    };
+
+    getLoyaltyStatus();
+  }, []);
 
   useEffect(() => {
     if (numGuests < 1) {
@@ -70,10 +167,33 @@ const Customer = () => {
       accountId: accountId,
       numHours: setDuration(numGuests),
     };
-    const res = await createBooking(body);
 
-    console.log(`bookingId is ${res.bookingId}`);
-    alert(`bookingId is ${res.bookingId}`);
+    try {
+      const res = await createBooking(body);
+      console.log(res);
+      console.log(`bookingId is ${res.bookingId}`);
+      alert(`bookingId is ${res.bookingId}`);
+    } catch (err) {
+      console.log(err);
+      alert(err);
+    }
+  };
+
+  const joinLoyaltyHandler = async () => {
+    try {
+      const joinLoyaltyRes = await sendRequest(`/loyalty/join`, "POST", {
+        accountId,
+      });
+      alert(joinLoyaltyRes.message);
+      const loyaltyRes = await sendRequest(
+        `/loyalty/status/${accountId}`,
+        "GET"
+      );
+      setLoyaltyStatus(loyaltyRes);
+    } catch (err) {
+      console.log(err);
+      alert(err);
+    }
   };
 
   const bookingForm = (
@@ -81,6 +201,7 @@ const Customer = () => {
       position='flex'
       sx={{
         width: 400,
+        height: "380px",
         bgcolor: "background.paper",
         boxShadow: 2,
         p: 4,
@@ -149,26 +270,37 @@ const Customer = () => {
 
   return (
     <>
-      <Typography
-        component='h1'
-        variant='h2'
-        color='secondary'
-        gutterBottom
-        sx={{ mb: 3 }}
-      >
-        Customer Dashboard
-      </Typography>
-      <Box
-        display='flex'
-        sx={{
-          flexDirection: "column",
-          alignItems: "center",
-          justifyItems: "center",
-        }}
-      >
-        {bookingForm}
-      </Box>
-      <ReservationDashboard accountId={accountId} />
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <>
+          <Typography
+            component='h1'
+            variant='h2'
+            color='secondary'
+            gutterBottom
+            sx={{ mb: 3, textAlign: "center" }}
+          >
+            Customer Dashboard
+          </Typography>
+          <Grid
+            container
+            justifyContent='center'
+            alignItems='center'
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            rowSpacing={3}
+          >
+            <Grid item>{bookingForm}</Grid>
+            <Grid item>
+              <LoyaltyContainer
+                loyaltyStatus={loyaltyStatus}
+                handleJoinLoyalty={joinLoyaltyHandler}
+              />
+            </Grid>
+          </Grid>
+          <ReservationDashboard accountId={accountId} />
+        </>
+      )}
     </>
   );
 };
