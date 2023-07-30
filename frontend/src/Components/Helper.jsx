@@ -7,24 +7,21 @@ import * as Yup from "yup";
   account functions
 */
 export const loginUser = async (body) => {
-  try {
-    const res = await sendRequest("/login", "POST", body);
-    localStorage.setItem("token", res.token);
-    return res;
-  } catch (err) {
-    console.log(err);
-    return null;
-  }
+  const res = await sendRequest("/login", "POST", body);
+  localStorage.setItem("token", res.token);
+  return res;
 };
 
 export const deleteUser = async (id) => {
-  try {
-    const res = await sendRequest("/account/delete", "DELETE", { id });
-    return res.message;
-  } catch (err) {
-    console.log(err);
-    return null;
-  }
+  // try {
+  //   const res = await sendRequest("/account/delete", "DELETE", { id });
+  //   return res.message;
+  // } catch (err) {
+  //   console.log(err);
+  //   return null;
+  // }
+  const res = await sendRequest("/account/delete", "DELETE", { id });
+  return res.message;
 };
 
 /*
@@ -208,6 +205,7 @@ export const completeWaiterRequest = async (id) => {
 export const retrieveOrdersByStatus = async (status) => {
   try {
     const res = await sendRequest(`/orders/${status}`, "GET");
+    console.log(res);
     return res;
   } catch (err) {
     alert(err);
@@ -349,12 +347,8 @@ export const getCategoryNamesFromItemId = async (id) => {
   booking functions here
 */
 export const createBooking = async (body) => {
-  try {
-    const res = await sendRequest(`/bookings/create`, "POST", body);
-    return res;
-  } catch (err) {
-    return null;
-  }
+  const res = await sendRequest(`/bookings/create`, "POST", body);
+  return res;
 };
 
 // If using date, add an empty string before i.e. ("", {date})
@@ -405,13 +399,8 @@ export const getBookingById = async (bookingId) => {
 };
 
 export const verifyBookingId = async (bookingId) => {
-  try {
-    const res = await sendRequest(`/bookings/verify/${bookingId}`, "GET");
-    return res;
-  } catch (err) {
-    alert(err);
-    return null;
-  }
+  const res = await sendRequest(`/bookings/verify/${bookingId}`, "GET");
+  return res;
 };
 
 /*

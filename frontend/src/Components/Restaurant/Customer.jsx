@@ -29,6 +29,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { Formik } from "formik";
 import { createBooking, createBookingSchema } from "../Helper";
+import sendRequest from "../Utils/Request";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -37,12 +38,72 @@ const TODAY = dayjs().format("YYYY-MM-DD");
 const START = dayjs().set("hour", 9).startOf("hour").format("HH:mm");
 const END = dayjs().set("hour", 20).startOf("hour").format("HH:mm");
 
+const LoyaltyContainer = ({ loyaltyStatus, handleJoinLoyalty }) => {
+  return (
+    <Box
+      sx={{
+        width: 400,
+        height: "380px",
+        bgcolor: "background.paper",
+        boxShadow: 2,
+        p: 4,
+      }}
+    >
+      {loyaltyStatus ? (
+        // if member, show points, tier id, benefits and points to next tier
+        <>
+          <Typography variant="h5" color="secondary" gutterBottom>
+            Loyalty Status
+          </Typography>
+          {/* show accountId */}
+          <Typography variant="subtitle1" color="text.secondary">
+            Account ID: {loyaltyStatus.accountId}
+          </Typography>
+          <Typography variant="subtitle1" color="text.secondary">
+            Points: {loyaltyStatus.points}
+          </Typography>
+          <Typography variant="subtitle1" color="text.secondary">
+            Tier {loyaltyStatus.tierId}
+          </Typography>
+          {loyaltyStatus.pointsToNextTier ? (
+            <Typography variant="subtitle1" color="text.secondary">
+              To Next Tier: {loyaltyStatus.pointsToNextTier}
+            </Typography>
+          ) : null}
+        </>
+      ) : (
+        // if not a member, show button to join loyalty program
+        <>
+          <Typography
+            variant="h5"
+            color="secondary"
+            gutterBottom
+            sx={{ mt: 3, mb: 3, textAlign: "center" }}
+          >
+            It doesn't seem like you're a member.
+          </Typography>
+          <Button variant="contained" onClick={handleJoinLoyalty} fullWidth>
+            Join Loyalty
+          </Button>
+        </>
+      )}
+      <Typography variant="body1" color="text.secondary" sx={{ mt: 3 }}>
+        Tier 2 members receive a small discount.
+      </Typography>
+      <Typography variant="body1" color="text.secondary">
+        Tier 1 members receive a larger discount and a priority queue.
+      </Typography>
+    </Box>
+  );
+};
+
 const Customer = () => {
   const [datetime, setDatetime] = useState(dayjs().add(1, "day").utc());
   const accountId = localStorage.getItem("login-accountId");
   const [temp, setTemp] = useState();
   const [numGuests, setNumGuests] = useState(1);
   const [valid, setValid] = useState(true);
+  const [loyaltyStatus, setLoyaltyStatus] = useState({});
 
   useEffect(() => {
     if (numGuests < 1) {
@@ -68,7 +129,28 @@ const Customer = () => {
       return;
     }
     setValid(true);
-  }, [numGuests, datetime]);
+
+    // get loyalty status
+    const getLoyaltyStatus = async () => {
+      try {
+        const loyaltyRes = await sendRequest(
+          `/loyalty/status/${accountId}`,
+          "GET"
+        );
+        console.log(loyaltyRes);
+        if (!loyaltyRes.isMember) {
+          setLoyaltyStatus(false);
+        } else {
+          setLoyaltyStatus(loyaltyRes);
+        }
+      } catch (err) {
+        console.log(err);
+        alert(err);
+      }
+    };
+
+    getLoyaltyStatus();
+  }, [numGuests, datetime, accountId]);
 
   const setDuration = (numGuests) => {
     if (numGuests <= 3) return 1;
@@ -94,13 +176,35 @@ const Customer = () => {
       accountId: accountId,
       numHours: setDuration(numGuests),
     };
-    // console.log(body);
-    const res = await createBooking(body);
 
-    // Temp var for dashboard
-    setTemp(res.bookingId);
-    console.log(`bookingId is ${res.bookingId}`);
-    alert(`bookingId is ${res.bookingId}`);
+    try {
+      const res = await createBooking(body);
+      console.log(res);
+      // Temp var for dashboard
+      setTemp(res.bookingId);
+      console.log(`bookingId is ${res.bookingId}`);
+      alert(`bookingId is ${res.bookingId}`);
+    } catch (err) {
+      console.log(err);
+      alert(err);
+    }
+  };
+
+  const joinLoyaltyHandler = async () => {
+    try {
+      const joinLoyaltyRes = await sendRequest(`/loyalty/join`, "POST", {
+        accountId,
+      });
+      alert(joinLoyaltyRes.message);
+      const loyaltyRes = await sendRequest(
+        `/loyalty/status/${accountId}`,
+        "GET"
+      );
+      setLoyaltyStatus(loyaltyRes);
+    } catch (err) {
+      console.log(err);
+      alert(err);
+    }
   };
 
   const bookingForm = (
@@ -108,6 +212,7 @@ const Customer = () => {
       position="flex"
       sx={{
         width: 400,
+        height: "380px",
         bgcolor: "background.paper",
         boxShadow: 2,
         p: 4,
@@ -288,22 +393,37 @@ const Customer = () => {
         variant="h2"
         color="secondary"
         gutterBottom
-        sx={{ mb: 3 }}
+        sx={{ mb: 3, textAlign: "center" }}
       >
         Customer Dashboard
       </Typography>
-      <Box
+      {/* <Box
         display="flex"
         sx={{
-          flexDirection: "column",
+          flexDirection: "row",
           alignItems: "center",
-          justifyItems: "center",
+          justifyContent: "center",
+          gap: 10,
         }}
+      > */}
+      <Grid
+        container
+        justifyContent="center"
+        alignItems="center"
+        columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+        rowSpacing={3}
       >
-        {bookingForm}
+        <Grid item>{bookingForm}</Grid>
+        <Grid item>
+          <LoyaltyContainer
+            loyaltyStatus={loyaltyStatus}
+            handleJoinLoyalty={joinLoyaltyHandler}
+          />
+        </Grid>
         {/* TODO: make a separate dashboard for customer, or tweak reservation dashboard */}
         {/* Maybe map each dashboard to an order and clean up dashboard UI */}
-      </Box>
+        {/* </Box> */}
+      </Grid>
       {dashboard()}
     </>
   );

@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS orders (
     tableId INT UNSIGNED,
     subtotal DECIMAL(9, 2) NOT NULL,
     orderTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    isPriority BOOLEAN DEFAULT false,
     paid ENUM("Unpaid", "Requesting", "Paid") NOT NULL DEFAULT "Unpaid",
     FOREIGN KEY (accountId) REFERENCES account(accountId)
 );
@@ -89,7 +90,8 @@ CREATE TABLE IF NOT EXISTS tiers (
     tierName ENUM('Tier 1', 'Tier 2', 'Tier 3') NOT NULL DEFAULT 'Tier 3',
     discountPercentage INT NOT NULL,
     pointsThreshold INT NOT NULL,
-    pointsToNextTier INT
+    pointsToNextTier INT,
+    isPriority BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS accountLoyaltyTier (
@@ -102,8 +104,8 @@ CREATE TABLE IF NOT EXISTS accountLoyaltyTier (
 );
 
 -- loyalty program tiers
-INSERT IGNORE INTO tiers(id, tierName, discountPercentage, pointsThreshold) VALUES
-(1, 'Tier 1', 15, 5000);
+INSERT IGNORE INTO tiers(id, tierName, discountPercentage, pointsThreshold, isPriority) VALUES
+(1, 'Tier 1', 15, 5000, TRUE);
 
 INSERT IGNORE INTO tiers(id, tierName, discountPercentage, pointsThreshold, pointsToNextTier) VALUES
 (2, 'Tier 2', 10, 2500, 5000);
@@ -171,29 +173,29 @@ INSERT INTO menuItemsCategories (itemId, categoryId) VALUES
     (10, 3) -- test item - dinner
 ;
 
-INSERT INTO orders (accountId, tableId, subtotal) VALUES 
-     (1, 1, 23.97),
-     (2, 2, 23.97),
-     (3, 3, 69.97),
-     (4, 3, 2.97)
-;
+-- INSERT INTO orders (accountId, tableId, subtotal) VALUES 
+--      (1, 1, 23.97),
+--      (2, 2, 23.97),
+--      (3, 3, 69.97),
+--      (4, 3, 2.97)
+-- ;
 
-INSERT INTO orderItems (orderId, itemId, quantity, note, status) VALUES 
-     (1, 1, 1, "test1", "Served"),
-     (1, 2, 1, "test2", "Served"),
-     (1, 3, 1, "test3", "Served"),
-     (2, 1, 2, "test4", "Preparing"),
-     (2, 2, 2, "test5", "Preparing"),
-     (2, 3, 2, "test6", "Preparing"),
-     (2, 5, 3, "test7", "Served"),
-     (3, 3, 1, "test8", "Ready To Serve"),
-     (3, 1, 2, "test9", "Ready To Serve"),
-     (3, 2, 3, "test10", "Ready To Serve"),
-     (3, 3, 2, "test11", "Ready To Serve"),
-     (3, 3, 2, "test12", "Served"),
-     (4, 3, 2, "test13", "Ready To Serve"),
-     (4, 3, 2, "", "Ready To Serve")
-;
+-- INSERT INTO orderItems (orderId, itemId, quantity, note, status) VALUES 
+--      (1, 1, 1, "test1", "Served"),
+--      (1, 2, 1, "test2", "Served"),
+--      (1, 3, 1, "test3", "Served"),
+--      (2, 1, 2, "test4", "Preparing"),
+--      (2, 2, 2, "test5", "Preparing"),
+--      (2, 3, 2, "test6", "Preparing"),
+--      (2, 5, 3, "test7", "Served"),
+--      (3, 3, 1, "test8", "Ready To Serve"),
+--      (3, 1, 2, "test9", "Ready To Serve"),
+--      (3, 2, 3, "test10", "Ready To Serve"),
+--      (3, 3, 2, "test11", "Ready To Serve"),
+--      (3, 3, 2, "test12", "Served"),
+--      (4, 3, 2, "test13", "Ready To Serve"),
+--      (4, 3, 2, "", "Ready To Serve")
+-- ;
 
 INSERT INTO tables(tableName, capacity) VALUES 
 ("table1", 2),

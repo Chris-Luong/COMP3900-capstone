@@ -79,7 +79,7 @@ router.get("/request/", getRequest);
 router.put("/request/complete", updateRequest);
 // loyalty endpoints
 router.post("/loyalty/join", joinLoyalty);
-router.get("/loyalty/status", getLoyaltyStatus);
+router.get("/loyalty/status/:accountId", getLoyaltyStatus);
 router.post("/loyalty/update", updateLoyalty);
 
 module.exports = router;

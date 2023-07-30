@@ -27,8 +27,8 @@ const getMenuItemsByAccount = `
 `;
 
 const createOrder = `
-  INSERT INTO orders (accountId, tableId, subtotal, paid)
-  VALUES(?, ?, ?, 1);
+  INSERT INTO orders (accountId, tableId, subtotal, paid, isPriority)
+  VALUES(?, ?, ?, 1, ?);
 `;
 
 const getItemPrice = `
@@ -58,12 +58,12 @@ const setNewTableId = `
 `;
 
 const getOrdersByStatus = `
-  SELECT OI.id as orderItemId, O.id as orderId, O.tableId as tableId, O.orderTime as orderTime, MI.name as itemName, MI.id as itemId, OI.quantity as quantity, OI.status as status, OI.note as note FROM 
+  SELECT OI.id as orderItemId, O.id as orderId, O.tableId as tableId, O.orderTime as orderTime, MI.name as itemName, MI.id as itemId, OI.quantity as quantity, OI.status as status, OI.note as note, O.isPriority as isPriority FROM 
   orders O 
     join orderItems OI on OI.orderId = O.id 
     join menuItems MI on MI.id = OI.itemId 
   WHERE OI.status = ?
-  order by O.orderTime, O.id
+  order by O.isPriority DESC, O.orderTime, O.id
 `;
 
 const updateOrderItemStatus = `
