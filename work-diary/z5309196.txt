@@ -91,3 +91,8 @@ and number of guests through a form. Implemented a dashboard for wait staff to v
 the day. Put a placeholder for viewing reservations for the customer to prepare for the next sprint.
 Communicated with Grace to design the backend for the booking features to be implemented similar to 
 the rest of the backend to improve developer experience.
+
+WEEK 10
+
+Implemented the frontend for confirming reservations. Improved UI for customer and waitstaff pages 
+Researched Toastify and its alternatives to replace the current alert popups to improve UI/UX.

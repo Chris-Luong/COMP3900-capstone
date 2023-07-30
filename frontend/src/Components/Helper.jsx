@@ -417,7 +417,7 @@ export const verifyBookingId = async (bookingId) => {
 export const updateBooking = async (body) => {
   try {
     // TODO: clarify purpose and structure of bookings/update
-    const res = await sendRequest(`/bookings/update`, "POST", body);
+    const res = await sendRequest(`/bookings/update`, "PUT", body);
     return res;
   } catch (err) {
     alert(err);
