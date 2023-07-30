@@ -10,6 +10,10 @@
   "author": "3900W18CMuffin",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
+    "jwt-decode": "^3.1.2",
+    "ws": "^8.4.0",
+    "multer": "^1.4.3",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
     "express": "^4.18.2",
