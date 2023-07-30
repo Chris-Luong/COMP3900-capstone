@@ -43,37 +43,6 @@ const {
 } = require("../controller/loyalty");
 const upload = multer({ dest: "uploads/" });
 
-/**
- * @swagger
- * /login:
- *   post:
- *     summary: User login
- *     tags: [Auth]
- *     parameters:
- *       name: body
- *       in: body
- *       schema:
- *          type: object
- *          properties:
- *            email:
- *              example: "any"
- *            password:
- *              example: "any"
- *     responses:
- *       200:
- *         description: Successful login
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 token:
- *                   type: string
- *                   description: JWT token
- *       401:
- *         description: Invalid credentials
- */
-
 // account endpoints
 router.post("/register", register);
 router.post("/login", login);
@@ -102,7 +71,7 @@ router.get("/bookings", viewBooking);
 router.get("/bookings/:bookingId", getBooking);
 router.delete("/bookings/delete", deleteBooking);
 router.delete("/bookings/deleteAccount", deleteBookingByAccountId);
-router.post("/bookings/update", updateBooking);
+router.put("/bookings/update", updateBooking);
 router.get("/bookings/verify/:bookingId", verifyBooking);
 // notifications endpoints
 router.post("/request/create", createRequest);
