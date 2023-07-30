@@ -4,6 +4,9 @@ import OrderDashboard from "../UI/OrderDashboard";
 import { PREPARING_STATUS, READY_STATUS } from "../Helper";
 import ReservationDashboard from "../UI/ReservationDashboard";
 import RequestDashboard from "../UI/RequestDashboard";
+import dayjs from "dayjs";
+
+const CURRENT_DAY = dayjs().format("YYYY-MM-DD");
 
 const WaitStaff = () => {
   useEffect(() => {
@@ -42,7 +45,7 @@ const WaitStaff = () => {
       </Typography>
       <RequestDashboard />
       <OrderDashboard status={READY_STATUS} />
-      <ReservationDashboard />
+      <ReservationDashboard date='2023-07-29' />
     </>
   );
 };
