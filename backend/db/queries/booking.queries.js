@@ -11,7 +11,7 @@ WHERE user_id = ? AND date = ?
 `;
 
 const viewBookingsByAccountId = `
-SELECT b.id as bookId, t.id as tableId, t.capacity as tableCapacity, b.start_time as bookingStart, b.end_time as bookingEnd, b.guests as guests, IF(b.status = 'seated', true, false) AS isSeated
+SELECT b.id as bookId, t.id as tableId, t.capacity as tableCapacity, b.start_time as bookingStart, b.end_time as bookingEnd, b.guests as guests, IF(b.status = 'seated', true, false) AS isSeated, b.date as date
 FROM bookings b
 JOIN account a ON b.user_id = a.accountId
 JOIN tables t ON b.table_id = t.id
