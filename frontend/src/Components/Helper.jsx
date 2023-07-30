@@ -361,7 +361,7 @@ export const createBooking = async (body) => {
 export const getBookings = async (account, date) => {
   try {
     let url = "/bookings?";
-    url += account ? `&account=${account}` : "";
+    url += account ? `&accountId=${account}` : "";
     url += date ? `&date=${date}` : "";
     const res = await sendRequest(url, "GET");
     return res;

@@ -16,30 +16,46 @@ import dayjs from "dayjs";
 
 const CURRENT_DAY = dayjs().format("YYYY-MM-DD");
 
-const ReservationDashboard = () => {
+const ReservationDashboard = (props) => {
+  const accountId = props.accountId;
+  console.log(accountId);
+  const date = props.date;
   const [bookings, setBookings] = useState([]);
   const [triggerRerender, setTriggerRerender] = useState(false);
-  const date = "2023-07-29";
 
   useEffect(() => {
-    // setLoading(true);
     const retrieveReservations = async () => {
-      const bookingData = await getBookings("", date);
+      console.log("insied usersdeftc");
+      let bookingData = null;
+      if (!accountId && !date) {
+        bookingData = await getBookings("", CURRENT_DAY);
+      } else {
+        bookingData = accountId
+          ? await getBookings(accountId, "")
+          : await getBookings("", date);
+      }
+
+      console.log("dddddddddddddddddddf");
       console.log(`bookingdata is ${JSON.stringify(bookingData)}`);
+      console.log("dskfhjskldjf");
       setBookings(bookingData);
-      // setLoading(false);
     };
+    console.log("out");
     retrieveReservations();
-  }, [triggerRerender]);
+  }, [triggerRerender, accountId, date]);
+
+  // putting date as title for customers instead of their email
+  // const title = (booking) => {
+  //   return accountId ? booking.date : `Booking ${booking.bookId}: ${booking.email}`
+  // }
 
   const handleStatusUpdate = async (bookId) => {
-    console.log("clicked confirm customer");
-
     const body = { bookingId: bookId };
     const res = await updateBooking(body);
     console.log(res);
     setTriggerRerender(!triggerRerender);
   };
+
   // TODO: implement notification banner instead of alerts
   const bookingCards = () => {
     const dates = bookings.map((booking) => {
@@ -53,7 +69,7 @@ const ReservationDashboard = () => {
     });
 
     return bookings.map((booking, idx) => {
-      return booking.is_seated === 0 ? (
+      return booking.isSeated === 0 ? (
         <Grid item xs={12} sm={4} md={3} key={booking.bookId}>
           <Card
             sx={{
@@ -85,13 +101,15 @@ const ReservationDashboard = () => {
               <Typography variant='body2' color='textSecondary' gutterBottom>
                 Table capacity: {booking.tableCapacity}
               </Typography>
-              <Button
-                variant='contained'
-                color='secondary'
-                onClick={() => handleStatusUpdate(booking.bookId)}
-              >
-                Confirm Customer Arrival
-              </Button>
+              {!accountId ? (
+                <Button
+                  variant='contained'
+                  color='secondary'
+                  onClick={() => handleStatusUpdate(booking.bookId)}
+                >
+                  Confirm Customer Arrival
+                </Button>
+              ) : null}
             </CardContent>
           </Card>
         </Grid>
