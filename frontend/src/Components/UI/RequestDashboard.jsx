@@ -32,20 +32,20 @@ const RequestCard = ({ request, onCompleted }) => {
   return (
     <Card sx={{ minWidth: 275, marginBottom: 4 }}>
       <CardContent>
-        <Typography variant="h6" component="div">
+        <Typography variant='h6' component='div'>
           Request ID: {id}
         </Typography>
-        <Typography variant="body1" color="text.secondary" gutterBottom>
+        <Typography variant='body1' color='text.secondary' gutterBottom>
           Table ID: {tableId}
         </Typography>
-        <Typography variant="body2" color="text.secondary" gutterBottom>
+        <Typography variant='body2' color='text.secondary' gutterBottom>
           Timestamp: {timestamp}
         </Typography>
-        <Typography variant="body2" color="text.secondary" gutterBottom>
+        <Typography variant='body2' color='text.secondary' gutterBottom>
           Type: {type}
         </Typography>
         <Typography
-          variant="body2"
+          variant='body2'
           color={completed ? "text.secondary" : "error"}
           gutterBottom
         >
@@ -53,8 +53,8 @@ const RequestCard = ({ request, onCompleted }) => {
         </Typography>
         {!completed && (
           <Button
-            variant="contained"
-            color="secondary"
+            variant='contained'
+            color='secondary'
             onClick={handleCompleted}
           >
             Mark as Completed
@@ -100,7 +100,6 @@ const RequestDashboard = () => {
     const getRequests = async () => {
       try {
         let res = await getWaiterRequests();
-        console.log(res);
         setRequests(res);
       } catch (err) {
         console.log(err);
@@ -137,7 +136,7 @@ const RequestDashboard = () => {
               },
             }}
           >
-            <Typography component="h2" variant="h5" color="secondary">
+            <Typography component='h2' variant='h5' color='secondary'>
               Requests
             </Typography>
           </AccordionSummary>

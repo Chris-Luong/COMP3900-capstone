@@ -32,6 +32,7 @@ const FORM_VALIDATION_MESSAGE =
   "The number of guests must be at least 1. Please also check if your booking times are valid.";
 const accountId = localStorage.getItem("login-accountId");
 
+// TODO: Refactor this and booking form into individual components
 const LoyaltyContainer = ({ loyaltyStatus, handleJoinLoyalty }) => {
   console.log(loyaltyStatus);
   return (
@@ -172,7 +173,9 @@ const Customer = () => {
       const res = await createBooking(body);
       console.log(res);
       console.log(`bookingId is ${res.bookingId}`);
-      alert(`bookingId is ${res.bookingId}`);
+      alert(
+        `bookingId is ${res.bookingId}, refresh the page to see the new booking in your dashboard.`
+      );
     } catch (err) {
       console.log(err);
       alert(err);
@@ -218,7 +221,7 @@ const Customer = () => {
         backgroundColor='rgba(223, 199, 242, 0.2)'
       >
         Please note that our policy only allows customers to have one
-        reservation per day 😊
+        reservation per day 😊. Our kitchen hours are 9AM-8PM.
       </Typography>
       <Formik
         validationSchema={createBookingSchema}

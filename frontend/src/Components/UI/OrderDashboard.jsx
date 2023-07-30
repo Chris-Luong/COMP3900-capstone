@@ -51,7 +51,6 @@ const OrderDashboard = (props) => {
     const retrieveOrders = async () => {
       try {
         const orderData = await retrieveOrdersByStatus(status);
-        console.log(orderData);
         setOrders(orderData);
         setLoading(false);
       } catch (err) {
@@ -74,9 +73,9 @@ const OrderDashboard = (props) => {
       }}
     >
       <Typography
-        component="h2"
-        variant="h5"
-        color="secondary"
+        component='h2'
+        variant='h5'
+        color='secondary'
         gutterBottom
         sx={{ mb: 3 }}
       >
