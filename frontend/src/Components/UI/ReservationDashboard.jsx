@@ -18,8 +18,8 @@ const CURRENT_DAY = dayjs().format("YYYY-MM-DD");
 
 const ReservationDashboard = (props) => {
   const accountId = props.accountId;
-  console.log(accountId);
   const date = props.date;
+
   const [bookings, setBookings] = useState([]);
   const [triggerRerender, setTriggerRerender] = useState(false);
 
@@ -34,22 +34,18 @@ const ReservationDashboard = (props) => {
             ? await getBookings(accountId, "")
             : await getBookings("", date);
         }
-
-        console.log(`bookingdata is ${JSON.stringify(bookingData)}`);
         setBookings(bookingData);
       } catch (err) {
         console.log(err);
         alert(err);
       }
     };
-    console.log("out");
     retrieveReservations();
   }, [triggerRerender, accountId, date]);
 
-  // putting date as title for customers instead of their email
+  // Changing the displayed title depending on waitstaff/customer view
   const title = (booking) => {
     if (accountId) {
-      // formate date then return string
       const date = dayjs(booking.date).format("dddd, MMMM D, YYYY");
       return date;
     } else {
@@ -63,7 +59,6 @@ const ReservationDashboard = (props) => {
     console.log(res);
     setTriggerRerender(!triggerRerender);
   };
-  console.log(title);
 
   // TODO: implement notification banner instead of alerts
   const bookingCards = () => {
@@ -101,19 +96,19 @@ const ReservationDashboard = (props) => {
             />
             <Divider />
             <CardContent>
-              <Typography variant="body2" color="textSecondary">
+              <Typography variant='body2' color='textSecondary' gutterBottom>
                 Table: {booking.tableId}
               </Typography>
-              <Typography variant="body2" color="textSecondary">
+              <Typography variant='body2' color='textSecondary' gutterBottom>
                 Party Size: {booking.guests}
               </Typography>
-              <Typography variant="body2" color="textSecondary" gutterBottom>
+              <Typography variant='body2' color='textSecondary' gutterBottom>
                 Table capacity: {booking.tableCapacity}
               </Typography>
               {!accountId ? (
                 <Button
-                  variant="contained"
-                  color="secondary"
+                  variant='contained'
+                  color='secondary'
                   onClick={() => handleStatusUpdate(booking.bookId)}
                 >
                   Confirm Customer Arrival
@@ -138,9 +133,9 @@ const ReservationDashboard = (props) => {
       }}
     >
       <Typography
-        component="h2"
-        variant="h5"
-        color="secondary"
+        component='h2'
+        variant='h5'
+        color='secondary'
         gutterBottom
         sx={{ mb: 3 }}
       >

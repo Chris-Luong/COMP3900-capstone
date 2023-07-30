@@ -27,7 +27,7 @@ const Home = () => {
   };
 
   return (
-    <Container maxWidth='xl'>
+    <Container maxWidth='xl' sx={{ pt: 4 }}>
       <div>
         {role === "Customer" && <Customer />}
         {role === "Wait Staff" && <WaitStaff />}
@@ -43,7 +43,7 @@ const Home = () => {
           fontWeight: 700,
           position: "absolute",
           left: 30,
-          top: 15,
+          top: 20,
           "&:hover": {
             cursor: "pointer",
           },
@@ -57,7 +57,7 @@ const Home = () => {
         sx={{
           position: "absolute",
           right: 30,
-          top: 15,
+          top: 20,
         }}
         onClick={handleLogout}
         color='secondary'
