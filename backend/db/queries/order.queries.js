@@ -32,8 +32,8 @@ const createOrder = `
 `;
 
 const getItemPrice = `
-  SELECT menuitems.price FROM menuItems
-  WHERE menuitems.id = ?
+  SELECT menuItems.price FROM menuItems
+  WHERE menuItems.id = ?
 `;
 
 const deleteTableOrderItems = `

@@ -2,8 +2,8 @@ const mysql = require("mysql");
 const fs = require("fs");
 
 const INIT_DB = fs.readFileSync("init_db.sql", "utf8").split(/;\r?\n/);
-const HOST = "127.0.0.1"
-//const HOST = "mysql"
+//const HOST = "127.0.0.1"
+const HOST = "mysql"
 
 // Create connection to MySQL
 const db = mysql.createConnection({
