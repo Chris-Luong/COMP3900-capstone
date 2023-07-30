@@ -39,6 +39,7 @@ const START = dayjs().set("hour", 9).startOf("hour").format("HH:mm");
 const END = dayjs().set("hour", 20).startOf("hour").format("HH:mm");
 
 const LoyaltyContainer = ({ loyaltyStatus, handleJoinLoyalty }) => {
+  console.log(loyaltyStatus);
   return (
     <Box
       sx={{
@@ -103,7 +104,31 @@ const Customer = () => {
   const [temp, setTemp] = useState();
   const [numGuests, setNumGuests] = useState(1);
   const [valid, setValid] = useState(true);
-  const [loyaltyStatus, setLoyaltyStatus] = useState({});
+  const [loyaltyStatus, setLoyaltyStatus] = useState(false);
+
+  useEffect(() => {
+    // get loyalty status
+    const getLoyaltyStatus = async () => {
+      console.log("getting loyalty");
+      try {
+        const loyaltyRes = await sendRequest(
+          `/loyalty/status/${accountId}`,
+          "GET"
+        );
+        console.log(loyaltyRes);
+        if (!loyaltyRes.isMember) {
+          setLoyaltyStatus(false);
+        } else {
+          setLoyaltyStatus(loyaltyRes);
+        }
+      } catch (err) {
+        console.log(err);
+        alert(err);
+      }
+    };
+
+    getLoyaltyStatus();
+  }, [accountId]);
 
   useEffect(() => {
     if (numGuests < 1) {
@@ -129,28 +154,7 @@ const Customer = () => {
       return;
     }
     setValid(true);
-
-    // get loyalty status
-    const getLoyaltyStatus = async () => {
-      try {
-        const loyaltyRes = await sendRequest(
-          `/loyalty/status/${accountId}`,
-          "GET"
-        );
-        console.log(loyaltyRes);
-        if (!loyaltyRes.isMember) {
-          setLoyaltyStatus(false);
-        } else {
-          setLoyaltyStatus(loyaltyRes);
-        }
-      } catch (err) {
-        console.log(err);
-        alert(err);
-      }
-    };
-
-    getLoyaltyStatus();
-  }, [numGuests, datetime, accountId]);
+  }, [numGuests, datetime]);
 
   const setDuration = (numGuests) => {
     if (numGuests <= 3) return 1;

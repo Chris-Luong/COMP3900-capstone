@@ -69,4 +69,9 @@ MN3900-8, MN3900-10 and MN3900-4 have finished.
 Week9:
 
 Helping out with Booking epic. Found a few issues and am trying to resolve them.
+Completed the backend and frontend for loyalty program. Chris and I have found a few issues with the way we have structured our frontend code. Will be working on fixing that.
+============================================================================================================================================================================================================
+Week10:
+
+Fixing bug from last week and reviewing frontend code to ensure good software quality.
 ============================================================================================================================================================================================================
