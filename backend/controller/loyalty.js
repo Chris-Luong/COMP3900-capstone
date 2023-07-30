@@ -9,6 +9,7 @@ const { Order } = require("../models/order.model");
  */
 joinLoyalty = async (req, res) => {
   const accountId = req.body.accountId;
+  console.log(accountId);
   try {
     const result = await Loyalty.addCustomerToLoyalty(accountId);
     return res.status(200).json({ message: "Joined loyalty!" });
@@ -16,6 +17,7 @@ joinLoyalty = async (req, res) => {
     if (e.code === "ER_DUP_ENTRY") {
       return res.status(200).json({ message: "Already joined loyalty!" });
     }
+    console.log(e);
     return res.status(500).json({ error: e.message });
   }
 };

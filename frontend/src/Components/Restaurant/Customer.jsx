@@ -107,11 +107,13 @@ const Customer = () => {
 
   const [numGuests, setNumGuests] = useState(1);
   const [loyaltyStatus, setLoyaltyStatus] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [valid, setValid] = useState(true);
   // TODO: get bookings from current date onwards, sort earliest (current - future)
 
   useEffect(() => {
     // get loyalty status
+    setIsLoading(true);
     const getLoyaltyStatus = async () => {
       console.log("getting loyalty");
       try {
@@ -125,6 +127,7 @@ const Customer = () => {
         } else {
           setLoyaltyStatus(loyaltyRes);
         }
+        setIsLoading(false);
       } catch (err) {
         console.log(err);
         alert(err);
@@ -132,7 +135,7 @@ const Customer = () => {
     };
 
     getLoyaltyStatus();
-  }, [accountId]);
+  }, []);
 
   useEffect(() => {
     if (numGuests < 1) {
@@ -285,43 +288,37 @@ const Customer = () => {
 
   return (
     <>
-      <Typography
-        component="h1"
-        variant="h2"
-        color="secondary"
-        gutterBottom
-        sx={{ mb: 3, textAlign: "center" }}
-      >
-        Customer Dashboard
-      </Typography>
-      {/* <Box
-        display="flex"
-        sx={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 10,
-        }}
-      > */}
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="center"
-        columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-        rowSpacing={3}
-      >
-        <Grid item>{bookingForm}</Grid>
-        <Grid item>
-          <LoyaltyContainer
-            loyaltyStatus={loyaltyStatus}
-            handleJoinLoyalty={joinLoyaltyHandler}
-          />
-        </Grid>
-        {/* TODO: make a separate dashboard for customer, or tweak reservation dashboard */}
-        {/* Maybe map each dashboard to an order and clean up dashboard UI */}
-        {/* </Box> */}
-      </Grid>
-      <ReservationDashboard accountId={accountId} />
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <>
+          <Typography
+            component="h1"
+            variant="h2"
+            color="secondary"
+            gutterBottom
+            sx={{ mb: 3, textAlign: "center" }}
+          >
+            Customer Dashboard
+          </Typography>
+          <Grid
+            container
+            justifyContent="center"
+            alignItems="center"
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            rowSpacing={3}
+          >
+            <Grid item>{bookingForm}</Grid>
+            <Grid item>
+              <LoyaltyContainer
+                loyaltyStatus={loyaltyStatus}
+                handleJoinLoyalty={joinLoyaltyHandler}
+              />
+            </Grid>
+          </Grid>
+          <ReservationDashboard accountId={accountId} />
+        </>
+      )}
     </>
   );
 };

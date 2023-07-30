@@ -270,23 +270,11 @@ export const createBooking = async (body) => {
 
 // If using date, add an empty string before i.e. ("", {date})
 export const getBookings = async (account, date) => {
-<<<<<<< HEAD
   let url = "/bookings?";
-  url += account ? `&account=${account}` : "";
+  url += account ? `&accountId=${account}` : "";
   url += date ? `&date=${date}` : "";
   const res = await sendRequest(url, "GET");
   return res;
-=======
-  try {
-    let url = "/bookings?";
-    url += account ? `&accountId=${account}` : "";
-    url += date ? `&date=${date}` : "";
-    const res = await sendRequest(url, "GET");
-    return res;
-  } catch (err) {
-    return null;
-  }
->>>>>>> main
 };
 
 export const deleteBooking = async (bookingId) => {

@@ -49,16 +49,16 @@ class Booking {
           );
         }
 
-        // if (results.length >= 1) {
-        //   return next(
-        //     {
-        //       status: CANNOT_CREATE,
-        //       message: "Same Account Cannot Book Twice On the Same Date",
-        //       kind: CANNOT_CREATE_KIND,
-        //     },
-        //     null
-        //   );
-        // }
+        if (results.length >= 1) {
+          return next(
+            {
+              status: CANNOT_CREATE,
+              message: "Same Account Cannot Book Twice On the Same Date",
+              kind: CANNOT_CREATE_KIND,
+            },
+            null
+          );
+        }
 
         const start_time_date = new Date(`1970-01-01T${start_time}`);
 
