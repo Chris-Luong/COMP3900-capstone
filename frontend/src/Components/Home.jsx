@@ -1,7 +1,7 @@
 import WaitStaff from "./Restaurant/WaitStaff";
 import KitchenStaff from "./Restaurant/KitchenStaff";
 import Manager from "./Restaurant/Manager";
-import { Button, Container, Typography } from "@mui/material";
+import { Button, Container } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import RestaurantContext from "./Context/restaurant-context";
@@ -21,13 +21,17 @@ const Home = () => {
     checkIn.setIsCheckedIn(false);
     localStorage.removeItem("checkedIn");
     login.setIsLoggedIn(false);
-    localStorage.clear();
+    localStorage.removeItem("login-accountId");
+    localStorage.removeItem("role");
+    localStorage.removeItem("user-email");
+    localStorage.removeItem("auth");
+    localStorage.removeItem("token");
     console.log(items);
     navigate("/");
   };
 
   return (
-    <Container maxWidth='xl' sx={{ pt: 4 }}>
+    <Container maxWidth="xl" sx={{ pt: 4 }}>
       <div>
         {role === "Customer" && <Customer />}
         {role === "Wait Staff" && <WaitStaff />}
@@ -41,7 +45,7 @@ const Home = () => {
           top: 20,
         }}
         onClick={handleLogout}
-        color='secondary'
+        color="secondary"
       >
         Logout
       </Button>
