@@ -124,6 +124,7 @@ const OrderDrawer = ({
       localStorage.removeItem("isGuest");
       localStorage.removeItem("tableId");
       localStorage.removeItem("billRequested");
+      localStorage.removeItem("accountId");
       navigate("/restaurant");
     } catch (err) {
       alert(err);
