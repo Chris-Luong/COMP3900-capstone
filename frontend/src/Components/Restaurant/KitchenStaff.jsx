@@ -17,7 +17,7 @@ const KitchenStaff = () => {
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.type === "newOrder") {
-        // alert(data.message);/
+        // alert(data.message);
         toast(data.message);
       }
     };

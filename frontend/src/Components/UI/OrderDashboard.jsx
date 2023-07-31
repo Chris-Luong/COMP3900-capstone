@@ -22,6 +22,9 @@ import {
   Typography,
 } from "@mui/material";
 
+import toast, { Toaster } from "react-hot-toast";
+
+// TODO: adjust duration of toast and see if you can add a timer bar for all components
 const OrderDashboard = (props) => {
   const status = props.status;
   const newStatus = status === PREPARING_STATUS ? READY_STATUS : SERVED_STATUS;
@@ -37,11 +40,14 @@ const OrderDashboard = (props) => {
     console.log(orderItemId);
     try {
       const res = await updateOrderItemStatus(orderItemId, newStatus);
-      alert(res.message);
+      // alert(res.message);
+      toast(res.message);
       setTriggerRerender(!triggerRerender);
     } catch (err) {
       console.log(err);
-      alert(err);
+      // alert(err);
+      // TODO: make error colour
+      toast(err);
     }
     setLoading(false);
   };
@@ -55,7 +61,9 @@ const OrderDashboard = (props) => {
         setLoading(false);
       } catch (err) {
         console.log(err);
-        alert(err);
+        // alert(err);
+        // TODO: make error colour
+        toast(err);
       }
     };
     retrieveOrders();
@@ -155,6 +163,7 @@ const OrderDashboard = (props) => {
           )}
         </Grid>
       )}
+      <Toaster />
     </Paper>
   );
 };

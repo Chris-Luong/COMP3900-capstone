@@ -97,4 +97,5 @@ WEEK 10
 Implemented the frontend for confirming reservations. Improved UI for customer and waitstaff pages 
 Researched Toastify and its alternatives to replace the current alert popups to improve UI/UX. Refactored 
 code so that waitstaff and customer pages both use the same reservation dashboard with different parameters. 
-Improved code quality by removing unused bits of code.
+Improved code quality by removing unused bits of code. Implemented toasts to replace alerts for better UI/UX 
+in the kitchen staff, waitstaff and menu pages. 

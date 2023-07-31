@@ -358,22 +358,18 @@ const OrderDrawer = ({
             )}
           </>
         ) : (
-          <>
-            <Button
-              color='secondary'
-              disabled={tableOrders.length === 0}
-              onClick={handleRequestBill}
-              fullWidth
-            >
-              Request Bill
-            </Button>
-            {/* <Toaster />      */}
-          </>
+          <Button
+            color='secondary'
+            disabled={tableOrders.length === 0}
+            onClick={handleRequestBill}
+            fullWidth
+          >
+            Request Bill
+          </Button>
         )}
         <Button color='secondary' onClick={handleRequestAssistance} fullWidth>
           Request Assistance
         </Button>
-        <Toaster />
       </Container>
     </Box>
   );
@@ -397,6 +393,7 @@ const OrderDrawer = ({
         >
           {isLoading ? <CircularProgress /> : list("right")}
         </Drawer>
+        <Toaster />
       </Fragment>
     </div>
   );
