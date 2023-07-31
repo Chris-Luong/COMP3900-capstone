@@ -43,6 +43,10 @@ const ReservationDashboard = (props) => {
     retrieveReservations();
   }, [triggerRerender, accountId, date]);
 
+  const dashboardHeading = () => {
+    return accountId ? "Your Reservations" : "Today's Reservations";
+  };
+
   // Changing the displayed title depending on waitstaff/customer view
   const title = (booking) => {
     if (accountId) {
@@ -139,7 +143,7 @@ const ReservationDashboard = (props) => {
         gutterBottom
         sx={{ mb: 3 }}
       >
-        Today's Reservations
+        {dashboardHeading()}
       </Typography>
       <Grid container spacing={2}>
         {bookingCards()}
