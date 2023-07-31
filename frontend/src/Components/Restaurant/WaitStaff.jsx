@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Typography } from "@mui/material";
 import OrderDashboard from "../UI/OrderDashboard";
-import { PREPARING_STATUS, READY_STATUS } from "../Helper";
+import { READY_STATUS } from "../Helper";
 import ReservationDashboard from "../UI/ReservationDashboard";
 import RequestDashboard from "../UI/RequestDashboard";
 import dayjs from "dayjs";
@@ -23,7 +23,9 @@ const WaitStaff = () => {
       const data = JSON.parse(event.data);
       if (data.type === "orderReady" || data.type === "newRequest") {
         // alert(data.message);
-        toast(data.message);
+        toast.success(data.message, {
+          duration: 6000,
+        });
       }
     };
 

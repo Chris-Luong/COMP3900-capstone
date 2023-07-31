@@ -69,7 +69,9 @@ const OrderDrawer = ({
       const orderIdArr = tableOrders.map((tableOrder) => tableOrder.id);
       let res = await updateOrderPayStatus(orderIdArr, PAID_STATUS.Requesting);
       // alert(`${res.message}. Staff will be with you soon.`);
-      toast(`${res.message}. Staff will be with you soon.`);
+      toast.success(`${res.message}. Staff will be with you soon.`, {
+        duration: 6000,
+      });
       localStorage.setItem("billRequested", true);
       const tableId = localStorage.getItem("tableId");
       res = await createWaiterRequest(tableId, Request.Type.Bill);
@@ -77,7 +79,9 @@ const OrderDrawer = ({
     } catch (err) {
       console.log(err);
       // alert(err);
-      toast(err);
+      toast.error(err, {
+        duration: 6000,
+      });
     }
   };
 
@@ -86,11 +90,15 @@ const OrderDrawer = ({
     try {
       const res = await createWaiterRequest(tableId, Request.Type.Assistance);
       // alert(`${res.message}. We will be with you soon.`);
-      toast(`${res.message}. We will be with you soon.`);
+      toast.success(`${res.message}. We will be with you soon.`, {
+        duration: 6000,
+      });
     } catch (err) {
       console.log(err);
       // alert(err);
-      toast(err);
+      toast.error(err, {
+        duration: 6000,
+      });
     }
   };
 
@@ -120,7 +128,10 @@ const OrderDrawer = ({
         await deleteTableOrders();
         await deleteBooking(localStorage.getItem("bookingId"));
       }
-      alert("Thank you for dining with us!");
+      // alert("Thank you for dining with us!");
+      toast.success("Thank you for dining with us!", {
+        duration: 6000,
+      });
       checkIn.setIsCheckedIn(false);
       localStorage.removeItem("token");
       localStorage.removeItem("isLoyaltyMember");

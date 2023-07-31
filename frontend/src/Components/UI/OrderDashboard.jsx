@@ -41,13 +41,17 @@ const OrderDashboard = (props) => {
     try {
       const res = await updateOrderItemStatus(orderItemId, newStatus);
       // alert(res.message);
-      toast(res.message);
+      toast.success(res.message, {
+        duration: 6000,
+      });
       setTriggerRerender(!triggerRerender);
     } catch (err) {
       console.log(err);
       // alert(err);
       // TODO: make error colour
-      toast(err);
+      toast.error(err, {
+        duration: 6000,
+      });
     }
     setLoading(false);
   };
@@ -63,7 +67,9 @@ const OrderDashboard = (props) => {
         console.log(err);
         // alert(err);
         // TODO: make error colour
-        toast(err);
+        toast.error(err, {
+          duration: 6000,
+        });
       }
     };
     retrieveOrders();
