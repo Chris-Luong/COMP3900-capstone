@@ -5,6 +5,7 @@ import { PREPARING_STATUS, READY_STATUS } from "../Helper";
 import ReservationDashboard from "../UI/ReservationDashboard";
 import RequestDashboard from "../UI/RequestDashboard";
 import dayjs from "dayjs";
+import toast, { Toaster } from "react-hot-toast";
 
 const CURRENT_DAY = dayjs().format("YYYY-MM-DD");
 
@@ -21,7 +22,8 @@ const WaitStaff = () => {
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.type === "orderReady" || data.type === "newRequest") {
-        alert(data.message);
+        // alert(data.message);
+        toast(data.message);
       }
     };
 
@@ -46,6 +48,7 @@ const WaitStaff = () => {
       <RequestDashboard />
       <OrderDashboard status={READY_STATUS} />
       <ReservationDashboard date='2023-07-29' />
+      <Toaster />
     </>
   );
 };

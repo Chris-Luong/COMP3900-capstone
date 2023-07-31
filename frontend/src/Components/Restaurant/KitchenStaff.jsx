@@ -2,6 +2,7 @@ import { PREPARING_STATUS } from "../Helper";
 import { Typography } from "@mui/material";
 import OrderDashboard from "../UI/OrderDashboard";
 import { useEffect } from "react";
+import toast, {Toaster} from 'react-hot-toast';
 
 const KitchenStaff = () => {
   useEffect(() => {
@@ -16,7 +17,8 @@ const KitchenStaff = () => {
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.type === "newOrder") {
-        alert(data.message);
+        // alert(data.message);/
+        toast(data.message);
       }
     };
 
@@ -39,6 +41,7 @@ const KitchenStaff = () => {
         Kitchen Staff Dashboard
       </Typography>
       <OrderDashboard status={PREPARING_STATUS} />
+      <Toaster />
     </>
   );
 };
