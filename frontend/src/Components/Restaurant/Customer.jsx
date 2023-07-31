@@ -34,7 +34,7 @@ const accountId = localStorage.getItem("login-accountId");
 
 // TODO: Refactor this and booking form into individual components
 const LoyaltyContainer = ({ loyaltyStatus, handleJoinLoyalty }) => {
-  console.log(loyaltyStatus);
+  console.log(`loyalty status: ${loyaltyStatus}`);
   return (
     <Box
       sx={{

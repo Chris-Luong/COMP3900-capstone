@@ -34,25 +34,6 @@ const Home = () => {
         {role === "Kitchen Staff" && <KitchenStaff />}
         {role === "Manager" && <Manager />}
       </div>
-      <Typography
-        variant='h2'
-        component='h1'
-        sx={{
-          fontFamily: "Pacifico",
-          color: "#333",
-          fontWeight: 700,
-          position: "absolute",
-          left: 30,
-          top: 20,
-          "&:hover": {
-            cursor: "pointer",
-          },
-        }}
-        onClick={() => navigate("/")}
-        color='secondary'
-      >
-        QueueQuicker
-      </Typography>
       <Button
         sx={{
           position: "absolute",
