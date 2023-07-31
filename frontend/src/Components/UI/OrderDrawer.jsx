@@ -128,10 +128,7 @@ const OrderDrawer = ({
         await deleteTableOrders();
         await deleteBooking(localStorage.getItem("bookingId"));
       }
-      // alert("Thank you for dining with us!");
-      toast.success("Thank you for dining with us!", {
-        duration: 6000,
-      });
+      alert("Thank you for dining with us!");
       checkIn.setIsCheckedIn(false);
       localStorage.removeItem("token");
       localStorage.removeItem("isLoyaltyMember");
