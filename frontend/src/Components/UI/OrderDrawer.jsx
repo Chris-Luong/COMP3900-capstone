@@ -73,8 +73,10 @@ const OrderDrawer = ({
         duration: 6000,
       });
       localStorage.setItem("billRequested", true);
-      const tableId = localStorage.getItem("tableId");
-      res = await createWaiterRequest(tableId, Request.Type.Bill);
+      res = await createWaiterRequest(
+        localStorage.getItem("tableId"),
+        Request.Type.Bill
+      );
       setHasRequestedBill(true);
     } catch (err) {
       console.log(err);
@@ -86,9 +88,11 @@ const OrderDrawer = ({
   };
 
   const handleRequestAssistance = async () => {
-    const tableId = localStorage.getItem("tableId");
     try {
-      const res = await createWaiterRequest(tableId, Request.Type.Assistance);
+      const res = await createWaiterRequest(
+        localStorage.getItem("tableId"),
+        Request.Type.Assistance
+      );
       // alert(`${res.message}. We will be with you soon.`);
       toast.success(`${res.message}. We will be with you soon.`, {
         duration: 6000,
@@ -223,16 +227,16 @@ const OrderDrawer = ({
   // TODO: Get accountId from email of user?
   const list = (anchor) => (
     <Box
-      role='presentation'
+      role="presentation"
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
       {hasRequestedBill ? null : (
         <>
           <Typography
-            variant='h4'
+            variant="h4"
             gutterBottom
-            align='center'
+            align="center"
             sx={{ margin: "10px" }}
           >
             Current Order
@@ -257,7 +261,7 @@ const OrderDrawer = ({
                         />
                       </Container>
                       <DeleteOutlineIcon
-                        color='warning'
+                        color="warning"
                         sx={{ cursor: "pointer" }}
                         onClick={() => handleRemoveFromCart(index)}
                       />
@@ -270,9 +274,9 @@ const OrderDrawer = ({
           {/* TODO: useState fn to check hasSentOrder - if has sent then
       disable this button and enable the req bill button */}
           <Container sx={{ mt: "0.5rem" }}>
-            <Typography align='center'>Order Total: ${orderSum}</Typography>
+            <Typography align="center">Order Total: ${orderSum}</Typography>
             <Button
-              color='secondary'
+              color="secondary"
               disabled={orderItems.length === 0}
               onClick={handleSubmit}
               fullWidth
@@ -285,9 +289,9 @@ const OrderDrawer = ({
       <Divider sx={{ borderBottomWidth: 3 }} />
       {loading && <CircularProgress sx={{ alignSelf: "center", mt: "50%" }} />}
       <Typography
-        variant='h4'
+        variant="h4"
         gutterBottom
-        align='center'
+        align="center"
         sx={{ margin: "10px" }}
       >
         Order History
@@ -327,19 +331,19 @@ const OrderDrawer = ({
       <Container sx={{ mt: "0.5rem" }}>
         {loyaltyDiscount ? (
           <>
-            <Typography align='center' sx={{ textDecoration: "line-through" }}>
+            <Typography align="center" sx={{ textDecoration: "line-through" }}>
               Table Total: ${tableSum.toFixed(2)}
             </Typography>
-            <Typography align='center'>
+            <Typography align="center">
               Table Total: $
               {(tableSum * (1 - loyaltyDiscount / 100)).toFixed(2)}
             </Typography>
-            <Typography align='center' color='text.secondary'>
+            <Typography align="center" color="text.secondary">
               Thanks to loyalty perks, you get a ${loyaltyDiscount}% discount!
             </Typography>
           </>
         ) : (
-          <Typography align='center'>
+          <Typography align="center">
             Table Total: ${tableSum.toFixed(2)}
           </Typography>
         )}
@@ -348,7 +352,7 @@ const OrderDrawer = ({
           <>
             {hasPaid ? (
               <Button
-                color='secondary'
+                color="secondary"
                 disabled={tableOrders.length === 0}
                 onClick={handleCheckOut}
                 fullWidth
@@ -357,9 +361,9 @@ const OrderDrawer = ({
               </Button>
             ) : (
               <Typography
-                variant='body1'
+                variant="body1"
                 gutterBottom
-                align='center'
+                align="center"
                 sx={{ margin: "10px" }}
               >
                 Bill has been requested...
@@ -368,7 +372,7 @@ const OrderDrawer = ({
           </>
         ) : (
           <Button
-            color='secondary'
+            color="secondary"
             disabled={tableOrders.length === 0}
             onClick={handleRequestBill}
             fullWidth
@@ -376,7 +380,7 @@ const OrderDrawer = ({
             Request Bill
           </Button>
         )}
-        <Button color='secondary' onClick={handleRequestAssistance} fullWidth>
+        <Button color="secondary" onClick={handleRequestAssistance} fullWidth>
           Request Assistance
         </Button>
       </Container>
@@ -390,7 +394,7 @@ const OrderDrawer = ({
           anchor={"right"}
           open={state["right"]}
           onClose={toggleDrawer("right", false)}
-          variant='permanent'
+          variant="permanent"
           sx={{
             width: "400px",
             flexShrink: 0,
