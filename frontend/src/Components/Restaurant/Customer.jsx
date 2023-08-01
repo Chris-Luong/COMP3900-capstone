@@ -30,7 +30,6 @@ const START = dayjs().set("hour", 9).startOf("hour").format("HH:mm");
 const END = dayjs().set("hour", 20).startOf("hour").format("HH:mm");
 const FORM_VALIDATION_MESSAGE =
   "The number of guests must be at least 1. Please also check if your booking times are valid.";
-const accountId = localStorage.getItem("login-accountId");
 
 // TODO: Refactor this and booking form into individual components
 const LoyaltyContainer = ({ loyaltyStatus, handleJoinLoyalty }) => {
@@ -108,7 +107,7 @@ const Customer = () => {
       console.log("getting loyalty");
       try {
         const loyaltyRes = await sendRequest(
-          `/loyalty/status/${accountId}`,
+          `/loyalty/status/${localStorage.getItem("login-accountId")}`,
           "GET"
         );
         console.log(loyaltyRes);
@@ -165,7 +164,7 @@ const Customer = () => {
       date: formattedDate,
       start_time: formattedTime,
       guests: numGuests,
-      accountId: accountId,
+      accountId: localStorage.getItem("login-accountId"),
       numHours: setDuration(numGuests),
     };
 
@@ -185,11 +184,11 @@ const Customer = () => {
   const joinLoyaltyHandler = async () => {
     try {
       const joinLoyaltyRes = await sendRequest(`/loyalty/join`, "POST", {
-        accountId,
+        accountId: localStorage.getItem("login-accountId"),
       });
       alert(joinLoyaltyRes.message);
       const loyaltyRes = await sendRequest(
-        `/loyalty/status/${accountId}`,
+        `/loyalty/status/${localStorage.getItem("login-accountId")}`,
         "GET"
       );
       setLoyaltyStatus(loyaltyRes);
@@ -301,7 +300,9 @@ const Customer = () => {
               />
             </Grid>
           </Grid>
-          <ReservationDashboard accountId={accountId} />
+          <ReservationDashboard
+            accountId={localStorage.getItem("login-accountId")}
+          />
         </>
       )}
     </>

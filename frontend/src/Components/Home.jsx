@@ -9,8 +9,6 @@ import LoginContext from "./Context/login-context";
 import Customer from "./Restaurant/Customer";
 
 const Home = () => {
-  const role = localStorage.getItem("role");
-
   const checkIn = useContext(RestaurantContext);
   const login = useContext(LoginContext);
   const navigate = useNavigate();
@@ -33,10 +31,10 @@ const Home = () => {
   return (
     <Container maxWidth="xl" sx={{ pt: 4 }}>
       <div>
-        {role === "Customer" && <Customer />}
-        {role === "Wait Staff" && <WaitStaff />}
-        {role === "Kitchen Staff" && <KitchenStaff />}
-        {role === "Manager" && <Manager />}
+        {localStorage.getItem("role") === "Customer" && <Customer />}
+        {localStorage.getItem("role") === "Wait Staff" && <WaitStaff />}
+        {localStorage.getItem("role") === "Kitchen Staff" && <KitchenStaff />}
+        {localStorage.getItem("role") === "Manager" && <Manager />}
       </div>
       <Button
         sx={{

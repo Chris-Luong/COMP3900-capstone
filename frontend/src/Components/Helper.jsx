@@ -57,7 +57,7 @@ export const applyFilters = async (
 export const sendOrder = async (body) => {
   const res = await sendRequest("/orders/create", "POST", body);
   console.log(res);
-  alert("SUCCESS: order id is " + res.orderId);
+  // alert("SUCCESS: order id is " + res.orderId);
 };
 
 export const getOrders = async () => {

@@ -14,6 +14,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import toast, { Toaster } from "react-hot-toast";
 import {
   PAID_STATUS,
   Request,
@@ -67,25 +68,41 @@ const OrderDrawer = ({
     try {
       const orderIdArr = tableOrders.map((tableOrder) => tableOrder.id);
       let res = await updateOrderPayStatus(orderIdArr, PAID_STATUS.Requesting);
-      alert(`${res.message}. Staff will be with you soon.`);
+      // alert(`${res.message}. Staff will be with you soon.`);
+      toast.success(`${res.message}. Staff will be with you soon.`, {
+        duration: 6000,
+      });
       localStorage.setItem("billRequested", true);
-      const tableId = localStorage.getItem("tableId");
-      res = await createWaiterRequest(tableId, Request.Type.Bill);
+      res = await createWaiterRequest(
+        localStorage.getItem("tableId"),
+        Request.Type.Bill
+      );
       setHasRequestedBill(true);
     } catch (err) {
       console.log(err);
-      alert(err);
+      // alert(err);
+      toast.error(err, {
+        duration: 6000,
+      });
     }
   };
 
   const handleRequestAssistance = async () => {
-    const tableId = localStorage.getItem("tableId");
     try {
-      const res = await createWaiterRequest(tableId, Request.Type.Assistance);
-      alert(`${res.message}. We will be with you soon.`);
+      const res = await createWaiterRequest(
+        localStorage.getItem("tableId"),
+        Request.Type.Assistance
+      );
+      // alert(`${res.message}. We will be with you soon.`);
+      toast.success(`${res.message}. We will be with you soon.`, {
+        duration: 6000,
+      });
     } catch (err) {
       console.log(err);
-      alert(err);
+      // alert(err);
+      toast.error(err, {
+        duration: 6000,
+      });
     }
   };
 
@@ -115,7 +132,9 @@ const OrderDrawer = ({
         await deleteTableOrders();
         await deleteBooking(localStorage.getItem("bookingId"));
       }
-      alert("Thank you for dining with us!");
+      toast.success("Thank you for dining with us!", {
+        duration: 6000,
+      });
       checkIn.setIsCheckedIn(false);
       localStorage.removeItem("token");
       localStorage.removeItem("isLoyaltyMember");
@@ -187,7 +206,10 @@ const OrderDrawer = ({
         data.type === "billPaid" &&
         data.accountId === localStorage.getItem("accountId")
       ) {
-        alert(data.message);
+        // alert(data.message);
+        toast.success(`${data.message}`, {
+          duration: 6000,
+        });
         setHasPaid(true);
       }
     };
@@ -389,6 +411,7 @@ const OrderDrawer = ({
         >
           {isLoading ? <CircularProgress /> : list("right")}
         </Drawer>
+        <Toaster />
       </Fragment>
     </div>
   );
