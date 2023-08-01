@@ -132,7 +132,9 @@ const OrderDrawer = ({
         await deleteTableOrders();
         await deleteBooking(localStorage.getItem("bookingId"));
       }
-      alert("Thank you for dining with us!");
+      toast.success("Thank you for dining with us!", {
+        duration: 6000,
+      });
       checkIn.setIsCheckedIn(false);
       localStorage.removeItem("token");
       localStorage.removeItem("isLoyaltyMember");
@@ -204,7 +206,10 @@ const OrderDrawer = ({
         data.type === "billPaid" &&
         data.accountId === localStorage.getItem("accountId")
       ) {
-        alert(data.message);
+        // alert(data.message);
+        toast.success(`${data.message}`, {
+          duration: 6000,
+        });
         setHasPaid(true);
       }
     };
