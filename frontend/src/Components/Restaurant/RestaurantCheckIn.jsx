@@ -69,9 +69,11 @@ const RestaurantCheckIn = () => {
     }
   };
 
-  const bookingCheckInHandler = async () => {
+  const bookingCheckInHandler = async (event) => {
+    event.preventDefault();
     try {
       const bookingRes = await verifyBookingId(bookingNumber);
+      console.log(bookingRes);
       if (bookingRes) {
         localStorage.setItem("checkedIn", true);
         localStorage.setItem("accountId", bookingRes.user_id);
@@ -100,7 +102,11 @@ const RestaurantCheckIn = () => {
         <Typography align="center" variant="h3" marginBottom={5}>
           Welcome!
         </Typography>
-        <Paper component="form" sx={{ display: "flex", alignItems: "center" }}>
+        <Paper
+          component="form"
+          sx={{ display: "flex", alignItems: "center" }}
+          onSubmit={bookingCheckInHandler}
+        >
           <InputBase
             sx={{ ml: 1, flex: 1 }}
             type="number"

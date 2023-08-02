@@ -9,8 +9,6 @@ import LoginContext from "./Context/login-context";
 import Customer from "./Restaurant/Customer";
 
 const Home = () => {
-  const role = localStorage.getItem("role");
-
   const checkIn = useContext(RestaurantContext);
   const login = useContext(LoginContext);
   const navigate = useNavigate();
@@ -21,24 +19,28 @@ const Home = () => {
     checkIn.setIsCheckedIn(false);
     localStorage.removeItem("checkedIn");
     login.setIsLoggedIn(false);
-    localStorage.clear();
+    localStorage.removeItem("login-accountId");
+    localStorage.removeItem("role");
+    localStorage.removeItem("user-email");
+    localStorage.removeItem("auth");
+    localStorage.removeItem("token");
     console.log(items);
     navigate("/");
   };
 
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth="xl" sx={{ pt: 4 }}>
       <div>
-        {role === "Customer" && <Customer />}
-        {role === "Wait Staff" && <WaitStaff />}
-        {role === "Kitchen Staff" && <KitchenStaff />}
-        {role === "Manager" && <Manager />}
+        {localStorage.getItem("role") === "Customer" && <Customer />}
+        {localStorage.getItem("role") === "Wait Staff" && <WaitStaff />}
+        {localStorage.getItem("role") === "Kitchen Staff" && <KitchenStaff />}
+        {localStorage.getItem("role") === "Manager" && <Manager />}
       </div>
       <Button
         sx={{
           position: "absolute",
           right: 30,
-          top: 15,
+          top: 20,
         }}
         onClick={handleLogout}
         color="secondary"

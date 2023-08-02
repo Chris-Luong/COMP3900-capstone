@@ -32,20 +32,20 @@ const RequestCard = ({ request, onCompleted }) => {
   return (
     <Card sx={{ minWidth: 275, marginBottom: 4 }}>
       <CardContent>
-        <Typography variant="h6" component="div">
+        <Typography variant='h6' component='div'>
           Request ID: {id}
         </Typography>
-        <Typography variant="body1" color="text.secondary" gutterBottom>
+        <Typography variant='body1' color='text.secondary' gutterBottom>
           Table ID: {tableId}
         </Typography>
-        <Typography variant="body2" color="text.secondary" gutterBottom>
+        <Typography variant='body2' color='text.secondary' gutterBottom>
           Timestamp: {timestamp}
         </Typography>
-        <Typography variant="body2" color="text.secondary" gutterBottom>
+        <Typography variant='body2' color='text.secondary' gutterBottom>
           Type: {type}
         </Typography>
         <Typography
-          variant="body2"
+          variant='body2'
           color={completed ? "text.secondary" : "error"}
           gutterBottom
         >
@@ -53,8 +53,8 @@ const RequestCard = ({ request, onCompleted }) => {
         </Typography>
         {!completed && (
           <Button
-            variant="contained"
-            color="secondary"
+            variant='contained'
+            color='secondary'
             onClick={handleCompleted}
           >
             Mark as Completed
@@ -72,25 +72,39 @@ const RequestDashboard = () => {
   const completeRequestHandler = async (requestId, tableId, type) => {
     // if request is for a bill, update the paid status of all its orders
     if (type === Request.Type.Bill) {
-      const orders = await retrieveOrdersWithTableId(tableId);
-      const accountId = orders[0].accountId;
-      const orderIdArr = orders.map((order) => order.id);
-      const res = await updateOrderPayStatus(
-        orderIdArr,
-        PAID_STATUS.Paid,
-        accountId
-      );
-      console.log(res);
+      try {
+        const orders = await retrieveOrdersWithTableId(tableId);
+        const accountId = orders[0].accountId;
+        const orderIdArr = orders.map((order) => order.id);
+        const res = await updateOrderPayStatus(
+          orderIdArr,
+          PAID_STATUS.Paid,
+          accountId
+        );
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+        alert(err);
+      }
     }
-    await completeWaiterRequest(requestId);
+    try {
+      await completeWaiterRequest(requestId);
+    } catch (err) {
+      console.log(err);
+      alert(err);
+    }
   };
 
   useEffect(() => {
     setIsLoading(true);
     const getRequests = async () => {
-      let res = await getWaiterRequests();
-      console.log(res);
-      setRequests(res);
+      try {
+        let res = await getWaiterRequests();
+        setRequests(res);
+      } catch (err) {
+        console.log(err);
+        alert(err);
+      }
     };
     getRequests();
     setIsLoading(false);
@@ -122,7 +136,7 @@ const RequestDashboard = () => {
               },
             }}
           >
-            <Typography component="h2" variant="h5" color="secondary">
+            <Typography component='h2' variant='h5' color='secondary'>
               Requests
             </Typography>
           </AccordionSummary>

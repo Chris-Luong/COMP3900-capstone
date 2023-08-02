@@ -267,16 +267,20 @@ class Booking {
     const month = today.getMonth() + 1;
     const day = today.getDate();
     const date = `${year}-${month}-${day}`;
-    const h = today.getHours();
-    const m = today.getMinutes();
-    const s = today.getSeconds();
-    const start_time = `${h}:${m}:${s}`;
+    const hours = String(today.getHours()).padStart(2, "0");
+    const minutes = String(today.getMinutes()).padStart(2, "0");
+    const seconds = String(today.getSeconds()).padStart(2, "0");
+    const start_time = `${hours}:${minutes}:${seconds}`;
 
     return db.query(
       verifyBookingById,
       [bookingId, date, start_time, start_time],
       (err, results) => {
         if (err || results.length === 0) {
+          console.log(err);
+          console.log(results.length);
+          console.log(date);
+          console.log(start_time);
           return next(
             {
               status: EXISTS,

@@ -22,8 +22,9 @@ import {
   Typography,
 } from "@mui/material";
 
-// TODO: useTimeout or something to poll for new orders every 30 seconds
+import toast, { Toaster } from "react-hot-toast";
 
+// TODO: adjust duration of toast and see if you can add a timer bar for all components
 const OrderDashboard = (props) => {
   const status = props.status;
   const newStatus = status === PREPARING_STATUS ? READY_STATUS : SERVED_STATUS;
@@ -37,18 +38,39 @@ const OrderDashboard = (props) => {
   const handleStatusUpdate = async (orderItemId) => {
     setLoading(true);
     console.log(orderItemId);
-    const res = await updateOrderItemStatus(orderItemId, newStatus);
-    alert(res.message);
-    setTriggerRerender(!triggerRerender);
+    try {
+      const res = await updateOrderItemStatus(orderItemId, newStatus);
+      // alert(res.message);
+      toast.success(res.message, {
+        duration: 6000,
+      });
+      setTriggerRerender(!triggerRerender);
+    } catch (err) {
+      console.log(err);
+      // alert(err);
+      // TODO: make error colour
+      toast.error(err, {
+        duration: 6000,
+      });
+    }
     setLoading(false);
   };
 
   useEffect(() => {
     setLoading(true);
     const retrieveOrders = async () => {
-      const orderData = await retrieveOrdersByStatus(status);
-      setOrders(orderData);
-      setLoading(false);
+      try {
+        const orderData = await retrieveOrdersByStatus(status);
+        setOrders(orderData);
+        setLoading(false);
+      } catch (err) {
+        console.log(err);
+        // alert(err);
+        // TODO: make error colour
+        toast.error(err, {
+          duration: 6000,
+        });
+      }
     };
     retrieveOrders();
   }, [status, triggerRerender]);
@@ -101,8 +123,10 @@ const OrderDashboard = (props) => {
                     }}
                   >
                     <CardHeader
-                      title={`Order ${orderId} Table ${orders[orderId].tableId}`}
-                      subheader={orders[orderId].orderTime}
+                      title={`Order ${orders[orderId].orderNumber} Table ${orders[orderId].tableId}`}
+                      subheader={`${orders[orderId].orderTime}${
+                        orders[orderId].isPriority === 1 ? " (Priority)" : ""
+                      }`}
                     />
                     <Divider />
                     <CardContent>
@@ -145,6 +169,7 @@ const OrderDashboard = (props) => {
           )}
         </Grid>
       )}
+      <Toaster />
     </Paper>
   );
 };

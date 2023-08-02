@@ -45,24 +45,28 @@ const ManageMenuItemCard = ({
   };
 
   const handleSubmit = async (values) => {
-    console.log(itemValues);
-    const thumbnail =
-      itemValues.thumbnail === defaultItemValues.thumbnail
-        ? defaultItemValues.thumbnail
-        : await fileToDataUrl(itemValues.thumbnail);
-    // let fileToUrl = await fileToDataUrl(itemValues.thumbnail);
-    let message = await editItem(
-      id,
-      itemValues.name,
-      itemValues.description,
-      itemValues.ingredients,
-      values.categories,
-      itemValues.price,
-      thumbnail
-    );
-    alert(message);
-    setTriggerRerender(!triggerRerender);
-    toggleModal();
+    try {
+      const thumbnail =
+        itemValues.thumbnail === defaultItemValues.thumbnail
+          ? defaultItemValues.thumbnail
+          : await fileToDataUrl(itemValues.thumbnail);
+      // let fileToUrl = await fileToDataUrl(itemValues.thumbnail);
+      let message = await editItem(
+        id,
+        itemValues.name,
+        itemValues.description,
+        itemValues.ingredients,
+        values.categories,
+        itemValues.price,
+        thumbnail
+      );
+      alert(message);
+      setTriggerRerender(!triggerRerender);
+      toggleModal();
+    } catch (err) {
+      console.log(err);
+      alert(err);
+    }
   };
 
   const handleClear = () => {
@@ -80,9 +84,14 @@ const ManageMenuItemCard = ({
   useEffect(() => {
     setLoading(true);
     const getCategoryNames = async () => {
-      let categoryData = await getCategoryNamesFromItemId(id);
-      setCheckedCategories(categoryData);
-      defaultItemValuesRef.current["checkedCategories"] = categoryData;
+      try {
+        let categoryData = await getCategoryNamesFromItemId(id);
+        setCheckedCategories(categoryData);
+        defaultItemValuesRef.current["checkedCategories"] = categoryData;
+      } catch (err) {
+        console.log(err);
+        alert(err);
+      }
       setLoading(false);
     };
     getCategoryNames();

@@ -1,9 +1,13 @@
 import { useEffect } from "react";
 import { Typography } from "@mui/material";
 import OrderDashboard from "../UI/OrderDashboard";
-import { PREPARING_STATUS, READY_STATUS } from "../Helper";
+import { READY_STATUS } from "../Helper";
 import ReservationDashboard from "../UI/ReservationDashboard";
 import RequestDashboard from "../UI/RequestDashboard";
+import dayjs from "dayjs";
+import toast, { Toaster } from "react-hot-toast";
+
+const CURRENT_DAY = dayjs().format("YYYY-MM-DD");
 
 const WaitStaff = () => {
   useEffect(() => {
@@ -18,7 +22,10 @@ const WaitStaff = () => {
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.type === "orderReady" || data.type === "newRequest") {
-        alert(data.message);
+        // alert(data.message);
+        toast.success(data.message, {
+          duration: 6000,
+        });
       }
     };
 
@@ -32,9 +39,9 @@ const WaitStaff = () => {
   return (
     <>
       <Typography
-        component="h1"
-        variant="h2"
-        color="secondary"
+        component='h1'
+        variant='h2'
+        color='secondary'
         gutterBottom
         sx={{ mb: 3 }}
       >
@@ -42,7 +49,8 @@ const WaitStaff = () => {
       </Typography>
       <RequestDashboard />
       <OrderDashboard status={READY_STATUS} />
-      <ReservationDashboard status={PREPARING_STATUS} />
+      <ReservationDashboard date='2023-07-29' />
+      <Toaster />
     </>
   );
 };

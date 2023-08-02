@@ -59,18 +59,23 @@ const Menu = () => {
 
   const handleFilters = async () => {
     setLoading(true);
-    let itemsData = await applyFilters(
-      searchString,
-      selectedCategory,
-      price[0],
-      price[1],
-      sortByValues[sort].by,
-      sortByValues[sort].order
-    );
-    console.log(itemsData);
-    setMenuItems(itemsData);
+    try {
+      let itemsData = await applyFilters(
+        searchString,
+        selectedCategory,
+        price[0],
+        price[1],
+        sortByValues[sort].by,
+        sortByValues[sort].order
+      );
+      console.log(itemsData);
+      setMenuItems(itemsData);
 
-    toggleFilter();
+      toggleFilter();
+    } catch (err) {
+      console.log(err);
+      alert(err);
+    }
     setLoading(false);
   };
 
@@ -80,8 +85,13 @@ const Menu = () => {
     setPrice([0, 100]);
     setSort(1);
     setLoading(true);
-    let itemsData = await getAllMenuItems();
-    setMenuItems(itemsData);
+    try {
+      let itemsData = await getAllMenuItems();
+      setMenuItems(itemsData);
+    } catch (err) {
+      console.log(err);
+      alert(err);
+    }
     toggleFilter();
     setLoading(false);
   };
@@ -103,27 +113,37 @@ const Menu = () => {
       tableId: tableId,
       items: items,
     };
-    await sendOrder(body);
-    setLoading(true);
-    await updateTableOrdersData();
-    setOrderItems([]);
+    try {
+      await sendOrder(body);
+      setLoading(true);
+      await updateTableOrdersData();
+      setOrderItems([]);
+    } catch (err) {
+      console.log(err);
+      alert(err);
+    }
     setLoading(false);
   };
 
   const updateTableOrdersData = useCallback(async () => {
     setLoading(true);
-    let ordersData = await retrieveOrdersWithTableId(tableId);
-    ordersData.forEach(async (order) => {
-      const orderedItems = await retrieveOrderItems(order.id);
-      order.menuItems = orderedItems;
-    });
-    await Promise.all(
-      ordersData.map(async (order) => {
-        const orderedItems = await retrieveOrderItems(order.id);
-        order.menuItems = orderedItems;
-      })
-    );
-    setTableOrders(ordersData);
+    try {
+      let ordersData = await retrieveOrdersWithTableId(tableId);
+      // ordersData.forEach(async (order) => {
+      //   const orderedItems = await retrieveOrderItems(order.id);
+      //   order.menuItems = orderedItems;
+      // });
+      await Promise.all(
+        ordersData.map(async (order) => {
+          const orderedItems = await retrieveOrderItems(order.id);
+          order.menuItems = orderedItems;
+        })
+      );
+      setTableOrders(ordersData);
+    } catch (err) {
+      console.log(err);
+      alert(err);
+    }
     setLoading(false);
   }, [tableId]);
 
@@ -131,15 +151,20 @@ const Menu = () => {
     setLoading(true);
     setTableId(localStorage.getItem("tableId"));
     const getMenuData = async () => {
-      let itemsData = await getAllMenuItems();
-      setMenuItems(itemsData);
-      let categoriesData = await getAllCategories();
-      let categoriesObject = {};
-      categoriesData.forEach((c) => {
-        // categories have id:name key:value pairs
-        categoriesObject[c.id] = c.name;
-      });
-      setCategories(categoriesObject);
+      try {
+        let itemsData = await getAllMenuItems();
+        setMenuItems(itemsData);
+        let categoriesData = await getAllCategories();
+        let categoriesObject = {};
+        categoriesData.forEach((c) => {
+          // categories have id:name key:value pairs
+          categoriesObject[c.id] = c.name;
+        });
+        setCategories(categoriesObject);
+      } catch (err) {
+        console.log(err);
+        alert(err);
+      }
     };
 
     getMenuData();

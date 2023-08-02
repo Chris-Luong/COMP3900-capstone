@@ -1,24 +1,14 @@
 import { useEffect, useState } from "react";
 
 import dayjs from "dayjs";
-// might need to npm install the below
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 
 import {
   Box,
   Button,
-  Card,
-  CardContent,
-  CardHeader,
   CircularProgress,
-  Divider,
   Grid,
-  List,
-  ListItem,
-  ListItemText,
-  Modal,
-  Paper,
   Stack,
   TextField,
   Typography,
@@ -29,6 +19,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { Formik } from "formik";
 import { createBooking, createBookingSchema } from "../Helper";
+import ReservationDashboard from "../UI/ReservationDashboard";
+import sendRequest from "../Utils/Request";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -36,13 +28,103 @@ const TIMEZONE_SYDNEY = "Australia/Sydney";
 const TODAY = dayjs().format("YYYY-MM-DD");
 const START = dayjs().set("hour", 9).startOf("hour").format("HH:mm");
 const END = dayjs().set("hour", 20).startOf("hour").format("HH:mm");
+const FORM_VALIDATION_MESSAGE =
+  "The number of guests must be at least 1. Please also check if your booking times are valid.";
+
+// TODO: Refactor this and booking form into individual components
+const LoyaltyContainer = ({ loyaltyStatus, handleJoinLoyalty }) => {
+  console.log(`loyalty status: ${loyaltyStatus}`);
+  return (
+    <Box
+      sx={{
+        width: 400,
+        height: "380px",
+        bgcolor: "background.paper",
+        boxShadow: 2,
+        p: 4,
+      }}
+    >
+      {loyaltyStatus ? (
+        // if member, show points, tier id, benefits and points to next tier
+        <>
+          <Typography variant="h5" color="secondary" gutterBottom>
+            Loyalty Status
+          </Typography>
+          {/* show accountId */}
+          <Typography variant="subtitle1" color="text.secondary">
+            Account ID: {loyaltyStatus.accountId}
+          </Typography>
+          <Typography variant="subtitle1" color="text.secondary">
+            Points: {loyaltyStatus.points}
+          </Typography>
+          <Typography variant="subtitle1" color="text.secondary">
+            Tier {loyaltyStatus.tierId}
+          </Typography>
+          {loyaltyStatus.pointsToNextTier ? (
+            <Typography variant="subtitle1" color="text.secondary">
+              To Next Tier: {loyaltyStatus.pointsToNextTier}
+            </Typography>
+          ) : null}
+        </>
+      ) : (
+        // if not a member, show button to join loyalty program
+        <>
+          <Typography
+            variant="h5"
+            color="secondary"
+            gutterBottom
+            sx={{ mt: 3, mb: 3, textAlign: "center" }}
+          >
+            It doesn't seem like you're a member.
+          </Typography>
+          <Button variant="contained" onClick={handleJoinLoyalty} fullWidth>
+            Join Loyalty
+          </Button>
+        </>
+      )}
+      <Typography variant="body1" color="text.secondary" sx={{ mt: 3 }}>
+        Tier 2 members receive a small discount.
+      </Typography>
+      <Typography variant="body1" color="text.secondary">
+        Tier 1 members receive a larger discount and a priority queue.
+      </Typography>
+    </Box>
+  );
+};
 
 const Customer = () => {
   const [datetime, setDatetime] = useState(dayjs().add(1, "day").utc());
-  const accountId = localStorage.getItem("login-accountId");
-  const [temp, setTemp] = useState();
+
   const [numGuests, setNumGuests] = useState(1);
+  const [loyaltyStatus, setLoyaltyStatus] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [valid, setValid] = useState(true);
+
+  useEffect(() => {
+    // get loyalty status
+    setIsLoading(true);
+    const getLoyaltyStatus = async () => {
+      console.log("getting loyalty");
+      try {
+        const loyaltyRes = await sendRequest(
+          `/loyalty/status/${localStorage.getItem("login-accountId")}`,
+          "GET"
+        );
+        console.log(loyaltyRes);
+        if (!loyaltyRes.isMember) {
+          setLoyaltyStatus(false);
+        } else {
+          setLoyaltyStatus(loyaltyRes);
+        }
+        setIsLoading(false);
+      } catch (err) {
+        console.log(err);
+        alert(err);
+      }
+    };
+
+    getLoyaltyStatus();
+  }, []);
 
   useEffect(() => {
     if (numGuests < 1) {
@@ -53,13 +135,6 @@ const Customer = () => {
     const formattedDate = dateTimeObj.format("YYYY-MM-DD");
     const formattedTime = dateTimeObj.format("HH:mm");
 
-    // console.log(`formattedDate: ${formattedDate}
-    // TODAY: ${TODAY}
-    // formattedTime: ${formattedTime}
-    // START: ${START}
-    // END: ${END}
-    // ${formattedDate < TODAY}
-    // ${!(START <= formattedTime && formattedTime <= END)}`);
     if (
       formattedDate < TODAY ||
       !(START <= formattedTime && formattedTime <= END)
@@ -78,9 +153,7 @@ const Customer = () => {
 
   const handleSubmit = async () => {
     if (!valid) {
-      alert(
-        "The number of guests must be at least 1. Please also check if your booking times are valid."
-      );
+      alert(FORM_VALIDATION_MESSAGE);
       return;
     }
     const dateTimeObj = dayjs(datetime).tz(TIMEZONE_SYDNEY);
@@ -91,16 +164,38 @@ const Customer = () => {
       date: formattedDate,
       start_time: formattedTime,
       guests: numGuests,
-      accountId: accountId,
+      accountId: localStorage.getItem("login-accountId"),
       numHours: setDuration(numGuests),
     };
-    // console.log(body);
-    const res = await createBooking(body);
 
-    // Temp var for dashboard
-    setTemp(res.bookingId);
-    console.log(`bookingId is ${res.bookingId}`);
-    alert(`bookingId is ${res.bookingId}`);
+    try {
+      const res = await createBooking(body);
+      console.log(res);
+      console.log(`bookingId is ${res.bookingId}`);
+      alert(
+        `bookingId is ${res.bookingId}, refresh the page to see the new booking in your dashboard.`
+      );
+    } catch (err) {
+      console.log(err);
+      alert(err);
+    }
+  };
+
+  const joinLoyaltyHandler = async () => {
+    try {
+      const joinLoyaltyRes = await sendRequest(`/loyalty/join`, "POST", {
+        accountId: localStorage.getItem("login-accountId"),
+      });
+      alert(joinLoyaltyRes.message);
+      const loyaltyRes = await sendRequest(
+        `/loyalty/status/${localStorage.getItem("login-accountId")}`,
+        "GET"
+      );
+      setLoyaltyStatus(loyaltyRes);
+    } catch (err) {
+      console.log(err);
+      alert(err);
+    }
   };
 
   const bookingForm = (
@@ -108,6 +203,7 @@ const Customer = () => {
       position="flex"
       sx={{
         width: 400,
+        height: "380px",
         bgcolor: "background.paper",
         boxShadow: 2,
         p: 4,
@@ -124,7 +220,7 @@ const Customer = () => {
         backgroundColor="rgba(223, 199, 242, 0.2)"
       >
         Please note that our policy only allows customers to have one
-        reservation per day 😊
+        reservation per day 😊. Our kitchen hours are 9AM-8PM.
       </Typography>
       <Formik
         validationSchema={createBookingSchema}
@@ -174,137 +270,41 @@ const Customer = () => {
     </Box>
   );
 
-  const dashboard = () => {
-    const retrieveOrders = async () => {
-      // TODO: get bookings with account id. Make past bookings a greyed out colour
-      // could use reservation dashboard from waitstaff
-
-      // const orderData = await retrieveOrdersByStatus(status);
-      const orderData = {};
-      // console.log(orderData);
-      return orderData;
-    };
-    const bookings = retrieveOrders();
-
-    return (
-      <Paper
-        elevation={6}
-        sx={{
-          p: 2,
-          display: "flex",
-          flexDirection: "column",
-          padding: 5,
-          margin: 5,
-        }}
-      >
-        <Typography
-          component="h2"
-          variant="h5"
-          color="secondary"
-          gutterBottom
-          sx={{ mb: 3 }}
-        >
-          Your Reservations
-        </Typography>
-        <Typography>{temp ? `Booking ID: ${temp}` : temp}</Typography>
-        {/* {Object.keys(bookings).length === 0 ? (
-          <Typography sx={{ mt: "35px" }}>
-            No existing reservations. Make one today!
-          </Typography>
-        ) : (
-          <></>
-          <Grid container spacing={2}>
-              <>
-                {Object.keys(bookings).map((orderId) => (
-                  <Grid item xs={12} sm={4} md={3} key={orderId}>
-                    <Card
-                      sx={{
-                        width: "100%",
-                        height: "100%",
-                        margin: "10px",
-                        cursor: "pointer",
-                        border: 1,
-                        borderColor: "rgba(216, 206, 222, 0.8)",
-                        transition: "all 0.3s ease-out",
-                        "box-shadow": "0 14px 26px rgba(0, 0, 0, 0.04)",
-                        "&:hover": {
-                          transform:
-                            "translateY(-5px) scale(1.005) translateZ(0)",
-                          "box-shadow": "0 12px 24px rgba(156, 39, 176, 0.5)",
-                        },
-                      }}
-                    >
-                      <CardHeader
-                        title={`Order ${orderId} Table ${orders[orderId].tableId}`}
-                        subheader={orders[orderId].orderTime}
-                      />
-                      <Divider />
-                      <CardContent>
-                        <List>
-                          {orders[orderId].items.map((item, index) => (
-                            <ListItem
-                              key={`${orderId}-${item.itemId}-${index}`}
-                              onClick={() => handleStatusUpdate(item.orderItemId)}
-                              sx={{
-                                "&:hover": {
-                                  backgroundColor: "rgba(125, 50, 168)",
-                                  color: "white",
-                                  cursor: "pointer",
-                                },
-                                borderRadius: "5px",
-                              }}
-                            >
-                              <ListItemText
-                                disableTypography
-                                primary={
-                                  <Typography>
-                                    {item.quantity} {item.itemName}
-                                  </Typography>
-                                }
-                                secondary={
-                                  <Typography>
-                                    {item.note ? `Note: ${item.note}` : null}
-                                  </Typography>
-                                }
-                              />
-                            </ListItem>
-                          ))}
-                        </List>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-              </>
-          </Grid>
-        )} */}
-      </Paper>
-    );
-  };
-
   return (
     <>
-      <Typography
-        component="h1"
-        variant="h2"
-        color="secondary"
-        gutterBottom
-        sx={{ mb: 3 }}
-      >
-        Customer Dashboard
-      </Typography>
-      <Box
-        display="flex"
-        sx={{
-          flexDirection: "column",
-          alignItems: "center",
-          justifyItems: "center",
-        }}
-      >
-        {bookingForm}
-        {/* TODO: make a separate dashboard for customer, or tweak reservation dashboard */}
-        {/* Maybe map each dashboard to an order and clean up dashboard UI */}
-      </Box>
-      {dashboard()}
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <>
+          <Typography
+            component="h1"
+            variant="h2"
+            color="secondary"
+            gutterBottom
+            sx={{ mb: 3, textAlign: "center" }}
+          >
+            Customer Dashboard
+          </Typography>
+          <Grid
+            container
+            justifyContent="center"
+            alignItems="center"
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            rowSpacing={3}
+          >
+            <Grid item>{bookingForm}</Grid>
+            <Grid item>
+              <LoyaltyContainer
+                loyaltyStatus={loyaltyStatus}
+                handleJoinLoyalty={joinLoyaltyHandler}
+              />
+            </Grid>
+          </Grid>
+          <ReservationDashboard
+            accountId={localStorage.getItem("login-accountId")}
+          />
+        </>
+      )}
     </>
   );
 };
