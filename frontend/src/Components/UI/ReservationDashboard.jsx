@@ -64,7 +64,6 @@ const ReservationDashboard = (props) => {
     setTriggerRerender(!triggerRerender);
   };
 
-  // TODO: implement notification banner instead of alerts
   const bookingCards = () => {
     const dates = bookings.map((booking) => {
       const formattedStart = dayjs(booking.bookingStart, "HH:mm:ss").format(
@@ -100,19 +99,19 @@ const ReservationDashboard = (props) => {
             />
             <Divider />
             <CardContent>
-              <Typography variant='body2' color='textSecondary' gutterBottom>
+              <Typography variant="body2" color="textSecondary" gutterBottom>
                 Table: {booking.tableId}
               </Typography>
-              <Typography variant='body2' color='textSecondary' gutterBottom>
+              <Typography variant="body2" color="textSecondary" gutterBottom>
                 Party Size: {booking.guests}
               </Typography>
-              <Typography variant='body2' color='textSecondary' gutterBottom>
+              <Typography variant="body2" color="textSecondary" gutterBottom>
                 Table capacity: {booking.tableCapacity}
               </Typography>
               {!accountId ? (
                 <Button
-                  variant='contained'
-                  color='secondary'
+                  variant="contained"
+                  color="secondary"
                   onClick={() => handleStatusUpdate(booking.bookId)}
                 >
                   Confirm Customer Arrival
@@ -137,9 +136,9 @@ const ReservationDashboard = (props) => {
       }}
     >
       <Typography
-        component='h2'
-        variant='h5'
-        color='secondary'
+        component="h2"
+        variant="h5"
+        color="secondary"
         gutterBottom
         sx={{ mb: 3 }}
       >

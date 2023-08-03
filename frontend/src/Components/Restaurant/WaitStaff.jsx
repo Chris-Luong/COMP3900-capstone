@@ -22,7 +22,6 @@ const WaitStaff = () => {
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.type === "orderReady" || data.type === "newRequest") {
-        // alert(data.message);
         toast.success(data.message, {
           duration: 6000,
         });
@@ -39,9 +38,9 @@ const WaitStaff = () => {
   return (
     <>
       <Typography
-        component='h1'
-        variant='h2'
-        color='secondary'
+        component="h1"
+        variant="h2"
+        color="secondary"
         gutterBottom
         sx={{ mb: 3 }}
       >
@@ -49,7 +48,7 @@ const WaitStaff = () => {
       </Typography>
       <RequestDashboard />
       <OrderDashboard status={READY_STATUS} />
-      <ReservationDashboard date='2023-07-29' />
+      <ReservationDashboard date={CURRENT_DAY} />
       <Toaster />
     </>
   );

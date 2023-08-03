@@ -52,7 +52,6 @@ const Login = () => {
         role: "",
       }}
     >
-      {/* Check if below prop things are all needed */}
       {({ handleSubmit, handleChange, values, errors, touched }) => (
         <form onSubmit={handleSubmit} noValidate>
           <CenterCard>

@@ -50,7 +50,6 @@ const ManageMenuItemCard = ({
         itemValues.thumbnail === defaultItemValues.thumbnail
           ? defaultItemValues.thumbnail
           : await fileToDataUrl(itemValues.thumbnail);
-      // let fileToUrl = await fileToDataUrl(itemValues.thumbnail);
       let message = await editItem(
         id,
         itemValues.name,

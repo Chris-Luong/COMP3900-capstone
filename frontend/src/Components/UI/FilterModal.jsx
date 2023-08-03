@@ -32,13 +32,6 @@ const radioStyle = {
   gridTemplateColumns: "repeat(3, 1fr)",
 };
 
-/*
-  TODO: user may add inputs into modal and then click the Close button.
-        filter inputs will then be saved in the modal, but not be applied.
-        might be good ux to indicate this 
-        e.g., search bar is green is currently applied, or helper text appears
-        saying what is being filtered
-*/
 const FilterModal = ({
   showFilter,
   toggleFilter,

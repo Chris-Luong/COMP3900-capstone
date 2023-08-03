@@ -24,7 +24,6 @@ import {
 
 import toast, { Toaster } from "react-hot-toast";
 
-// TODO: adjust duration of toast and see if you can add a timer bar for all components
 const OrderDashboard = (props) => {
   const status = props.status;
   const newStatus = status === PREPARING_STATUS ? READY_STATUS : SERVED_STATUS;
@@ -40,15 +39,12 @@ const OrderDashboard = (props) => {
     console.log(orderItemId);
     try {
       const res = await updateOrderItemStatus(orderItemId, newStatus);
-      // alert(res.message);
       toast.success(res.message, {
         duration: 6000,
       });
       setTriggerRerender(!triggerRerender);
     } catch (err) {
       console.log(err);
-      // alert(err);
-      // TODO: make error colour
       toast.error(err, {
         duration: 6000,
       });
@@ -65,8 +61,6 @@ const OrderDashboard = (props) => {
         setLoading(false);
       } catch (err) {
         console.log(err);
-        // alert(err);
-        // TODO: make error colour
         toast.error(err, {
           duration: 6000,
         });
@@ -87,9 +81,9 @@ const OrderDashboard = (props) => {
       }}
     >
       <Typography
-        component='h2'
-        variant='h5'
-        color='secondary'
+        component="h2"
+        variant="h5"
+        color="secondary"
         gutterBottom
         sx={{ mb: 3 }}
       >
@@ -157,7 +151,6 @@ const OrderDashboard = (props) => {
                                 </Typography>
                               }
                             />
-                            {/* <Typography align='right'>{item.amount}</Typography> */}
                           </ListItem>
                         ))}
                       </List>
