@@ -173,6 +173,7 @@ INSERT INTO menuItemsCategories (itemId, categoryId) VALUES
     (10, 3) -- test item - dinner
 ;
 
+-- examples of test orders
 -- INSERT INTO orders (accountId, tableId, subtotal) VALUES 
 --      (1, 1, 23.97),
 --      (2, 2, 23.97),
@@ -180,6 +181,7 @@ INSERT INTO menuItemsCategories (itemId, categoryId) VALUES
 --      (4, 3, 2.97)
 -- ;
 
+-- examples of test order items
 -- INSERT INTO orderItems (orderId, itemId, quantity, note, status) VALUES 
 --      (1, 1, 1, "test1", "Served"),
 --      (1, 2, 1, "test2", "Served"),
@@ -207,13 +209,14 @@ INSERT INTO tables(tableName, capacity) VALUES
 ("table7", 8)
 ;
 
-INSERT INTO bookings(user_id, table_id, date, start_time, end_time, guests, status) VALUES
-(1, 1, "2023-07-29", "18:00:00", "20:00:00", 2, 'pending'),
-(2, 2, "2023-07-29", "10:00:00", "12:00:00", 2, 'pending'),
-(3, 3, "2023-07-29", "10:00:00", "13:00:00", 2, 'pending'),
-(4, 4, "2023-07-28", "14:00:00", "15:00:00", 4, 'pending'),
-(5, 6, "2023-07-29", "16:30:00", "17:30:00", 6, 'seated'),
-(3, 2, "2023-07-28", "14:20:00", "15:20:00", 2, "pending"),
-(2, 3, "2023-07-28", "14:20:00", "15:20:00", 2, "seated"),
-(1, 1, "2023-07-28", "15:30:00", "16:30:00", 2, "pending")
-;
+-- examples of test bookings
+-- INSERT INTO bookings(user_id, table_id, date, start_time, end_time, guests, status) VALUES
+-- (1, 1, "2023-07-29", "18:00:00", "20:00:00", 2, 'pending'),
+-- (2, 2, "2023-07-29", "10:00:00", "12:00:00", 2, 'pending'),
+-- (3, 3, "2023-07-29", "10:00:00", "13:00:00", 2, 'pending'),
+-- (4, 4, "2023-07-28", "14:00:00", "15:00:00", 4, 'pending'),
+-- (5, 6, "2023-07-29", "16:30:00", "17:30:00", 6, 'seated'),
+-- (3, 2, "2023-07-28", "14:20:00", "15:20:00", 2, "pending"),
+-- (2, 3, "2023-07-28", "14:20:00", "15:20:00", 2, "seated"),
+-- (1, 1, "2023-07-28", "15:30:00", "16:30:00", 2, "pending")
+-- ;
