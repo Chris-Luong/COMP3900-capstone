@@ -57,7 +57,7 @@ const OrderDrawer = ({
   const [hasRequestedBill, setHasRequestedBill] = useState(
     localStorage.getItem("billRequested")
   );
-  const [hasPaid, setHasPaid] = useState(false);
+  const [hasPaid, setHasPaid] = useState(localStorage.getItem("hasPaid"));
   const [isLoading, setIsLoading] = useState(true);
 
   const handleRemoveFromCart = (index) => {
@@ -140,6 +140,7 @@ const OrderDrawer = ({
       localStorage.removeItem("tableId");
       localStorage.removeItem("billRequested");
       localStorage.removeItem("accountId");
+      localStorage.removeItem("hasPaid");
       navigate("/restaurant");
     } catch (err) {
       alert(err);
@@ -205,6 +206,7 @@ const OrderDrawer = ({
         toast.success(`${data.message}`, {
           duration: 6000,
         });
+        localStorage.setItem("hasPaid", true);
         setHasPaid(true);
       }
     };
