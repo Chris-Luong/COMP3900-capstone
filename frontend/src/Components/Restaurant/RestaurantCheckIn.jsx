@@ -11,7 +11,6 @@ import { v4 as uuidv4 } from "uuid";
 import jwtDecode from "jwt-decode";
 import { createBooking, loginUser, verifyBookingId } from "../Helper";
 import CheckInModal from "../UI/CheckInModal";
-// TODO: export duplicate code from Customer.jsx into helper function
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
@@ -26,6 +25,9 @@ const RestaurantCheckIn = () => {
   const [showCheckInModal, setShowCheckInModal] = useState(false);
   const [guestNumber, setGuestNumber] = useState(1);
 
+  // guest check-in consists of generating an account for them
+  // create a booking for the current time and
+  // checking in that booking
   const guestCheckInHandler = async () => {
     const uuid = uuidv4();
     const password = "guest123";
@@ -37,7 +39,6 @@ const RestaurantCheckIn = () => {
       role: 1,
     };
     try {
-      // TODO: see if we can share some code with enter booking number field submission
       // generate a new guest account
       await sendRequest("/register", "POST", registerBody);
       const loginRes = await loginUser({
@@ -69,6 +70,8 @@ const RestaurantCheckIn = () => {
     }
   };
 
+  // only check in if the booking id is valid (correct time and place)
+  // and actually exists
   const bookingCheckInHandler = async (event) => {
     event.preventDefault();
     try {

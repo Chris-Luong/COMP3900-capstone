@@ -28,6 +28,7 @@ const Manager = () => {
 
   const handleNewItemSubmit = async (values) => {
     try {
+      // use fileToDataUrl to pass bigger data over endpoints (thumbnail)
       let fileToUrl = await fileToDataUrl(values.thumbnail);
       console.log(values);
       const body = {
@@ -90,6 +91,7 @@ const Manager = () => {
 
   useEffect(() => {
     setLoading(true);
+    // at every render, retrieve menu
     const getMenuData = async () => {
       try {
         let itemsData = await getAllMenuItems();
@@ -146,6 +148,7 @@ const Manager = () => {
             onChange={(e) => setSearchString(e.target.value)}
           />
           <Grid container spacing={2} sx={{ display: "flex" }}>
+            {/* we need to display items based on filter/search/sort */}
             {menuItems
               .filter((item) =>
                 searchString

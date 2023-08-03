@@ -125,20 +125,6 @@ const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
                         label={categories[key].name}
                       />
                     ))}
-                    {/* {categories.map((c) => (
-                      <FormControlLabel
-                        key={c}
-                        control={
-                          <Checkbox
-                            name="categories"
-                            value={c}
-                            checked={values.categories.includes(c)}
-                            onChange={handleChange}
-                          />
-                        }
-                        label={c}
-                      />
-                    ))} */}
                   </FormGroup>
                   {errors.categories && (
                     <FormHelperText>{errors.categories}</FormHelperText>

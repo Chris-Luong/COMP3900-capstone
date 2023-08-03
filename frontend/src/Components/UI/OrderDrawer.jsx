@@ -68,7 +68,6 @@ const OrderDrawer = ({
     try {
       const orderIdArr = tableOrders.map((tableOrder) => tableOrder.id);
       let res = await updateOrderPayStatus(orderIdArr, PAID_STATUS.Requesting);
-      // alert(`${res.message}. Staff will be with you soon.`);
       toast.success(`${res.message}. Staff will be with you soon.`, {
         duration: 6000,
       });
@@ -80,7 +79,6 @@ const OrderDrawer = ({
       setHasRequestedBill(true);
     } catch (err) {
       console.log(err);
-      // alert(err);
       toast.error(err, {
         duration: 6000,
       });
@@ -93,13 +91,11 @@ const OrderDrawer = ({
         localStorage.getItem("tableId"),
         Request.Type.Assistance
       );
-      // alert(`${res.message}. We will be with you soon.`);
       toast.success(`${res.message}. We will be with you soon.`, {
         duration: 6000,
       });
     } catch (err) {
       console.log(err);
-      // alert(err);
       toast.error(err, {
         duration: 6000,
       });
@@ -206,7 +202,6 @@ const OrderDrawer = ({
         data.type === "billPaid" &&
         data.accountId === localStorage.getItem("accountId")
       ) {
-        // alert(data.message);
         toast.success(`${data.message}`, {
           duration: 6000,
         });
@@ -229,7 +224,6 @@ const OrderDrawer = ({
     setIsLoading(false);
   };
 
-  // TODO: Get accountId from email of user?
   const list = (anchor) => (
     <Box
       role="presentation"
@@ -276,8 +270,6 @@ const OrderDrawer = ({
               : null}
           </List>
 
-          {/* TODO: useState fn to check hasSentOrder - if has sent then
-      disable this button and enable the req bill button */}
           <Container sx={{ mt: "0.5rem" }}>
             <Typography align="center">Order Total: ${orderSum}</Typography>
             <Button

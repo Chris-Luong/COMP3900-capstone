@@ -18,7 +18,6 @@ function App() {
   const [role, setRole] = useState(null);
 
   return (
-    // TODO: combine contexts and auth routes
     <LoginContext.Provider
       value={{
         isLoggedIn,

@@ -31,7 +31,7 @@ const END = dayjs().set("hour", 20).startOf("hour").format("HH:mm");
 const FORM_VALIDATION_MESSAGE =
   "The number of guests must be at least 1. Please also check if your booking times are valid.";
 
-// TODO: Refactor this and booking form into individual components
+// UI container to display loyalty information; used by Customer component
 const LoyaltyContainer = ({ loyaltyStatus, handleJoinLoyalty }) => {
   console.log(`loyalty status: ${loyaltyStatus}`);
   return (
@@ -127,6 +127,7 @@ const Customer = () => {
   }, []);
 
   useEffect(() => {
+    // validate time and date for bookings
     if (numGuests < 1) {
       setValid(false);
       return;
@@ -151,6 +152,7 @@ const Customer = () => {
     return 3;
   };
 
+  // booking submission handler
   const handleSubmit = async () => {
     if (!valid) {
       alert(FORM_VALIDATION_MESSAGE);
@@ -198,6 +200,7 @@ const Customer = () => {
     }
   };
 
+  // extract booking form
   const bookingForm = (
     <Box
       position="flex"

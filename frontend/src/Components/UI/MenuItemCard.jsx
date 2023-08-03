@@ -12,7 +12,6 @@ import { useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 
-// TODO: Check if formatting requires props.key rather than just key
 const MenuItemCard = ({
   itemId,
   name,
@@ -22,7 +21,6 @@ const MenuItemCard = ({
   onUpdateOrderItems,
 }) => {
   const [showModal, setShowModal] = useState(false);
-  // NOTE: might have to llft this state up so orderDrawer can update quantity
   const [quantity, setQuantity] = useState(1);
 
   // opens and closes
@@ -43,9 +41,6 @@ const MenuItemCard = ({
       note: note,
       thumbnail: thumbnail,
     };
-
-    // TODO: Will need to pass the list of orderitems to orderDrawer in menu
-    // https://stackoverflow.com/questions/70061442/how-to-pass-a-value-for-usestate-hook-from-another-component-in-reactjs
 
     // Add item to end of order items.
     const updatedOrderItems = (orderItems) => {

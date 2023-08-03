@@ -12,6 +12,7 @@ import FilterModal from "../UI/FilterModal";
 import MenuItemCard from "../UI/MenuItemCard";
 import OrderDrawer from "../UI/OrderDrawer";
 
+// constant object to handle ways to sort menu items
 const sortByValues = {
   1: {
     by: "name",
@@ -129,10 +130,6 @@ const Menu = () => {
     setLoading(true);
     try {
       let ordersData = await retrieveOrdersWithTableId(tableId);
-      // ordersData.forEach(async (order) => {
-      //   const orderedItems = await retrieveOrderItems(order.id);
-      //   order.menuItems = orderedItems;
-      // });
       await Promise.all(
         ordersData.map(async (order) => {
           const orderedItems = await retrieveOrderItems(order.id);
@@ -176,11 +173,6 @@ const Menu = () => {
     setOrderItems(updatedOrderItems);
   };
 
-  // Remove order item from cart given index.
-  // TODO: each item (orderItem object thing) in cart should have its own index
-  // Each menu item could also have a unique key so that changing its quantity
-  // through the MenuItemCard just changes the quantity in the cart instead of
-  // adding it to the cart (duplicating items with different quantities = bad UI)
   const handleRemoveOrderItem = (index) => {
     setOrderItems((prevArray) => {
       return prevArray.filter((item, i) => i !== index);
