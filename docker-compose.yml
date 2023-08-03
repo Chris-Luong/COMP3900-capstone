@@ -23,7 +23,7 @@ services:
       - mysql
     environment:
       WAIT_HOSTS: mysql:3306
-      WAIT_HOSTS_TIMEOUT: 300
+      WAIT_HOSTS_TIMEOUT: 900
   
   frontend:
     container_name: frontend
