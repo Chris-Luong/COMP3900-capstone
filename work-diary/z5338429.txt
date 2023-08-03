@@ -50,12 +50,17 @@ Week 7:
     Researching/looking into VM and docker for final showcase.
 
 Week 8:
-    pass
-
+    Prepared and finalised backend code for the sprint, conducting tests to see if there are any potential bugs.
+    Attended the Wednesday stand up meeting, dicussed the last sprint progress, I worked on the notifications backend functionalities.
+    No other meetings for the week, I am researching into how to get our application onto a virtual machine for submission.
 
 Week 9:
-    pass
-
+    Attended the Wednesday meeting, gave updates on the virtual machine progress. Attempted to test the installation process on the virutal machine provided by the project specification. I concluded that 
+    it was too much hassle to install and configure the many resources required to run our application, this meant that there were a lot of chances for something to go wrong with installation. 
+    I decided to go with Docker instead and began researching into how get it running.
 
 Week 10:
-    pass
+    Finalising and debugging/testing the docker container installation. Got everything working.
+    Participated in the final demonstration of the project, talked about the manager interactions and how our implementated functionalities enhance the managerial and customer experience.
+    Wrote sections in the final report regarding the installation guide and docker. Wrote about some backend functionalies and APIs/services used. Formatted and styles the whole document to be consistent 
+    with APA style.
