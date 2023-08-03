@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   mysql:
     container_name: mysql
@@ -12,6 +12,7 @@ services:
       MYSQL_USER: admin
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: password
+      TZ: Australia/Sydney
 
   backend:
     container_name: backend
@@ -24,7 +25,8 @@ services:
     environment:
       WAIT_HOSTS: mysql:3306
       WAIT_HOSTS_TIMEOUT: 900
-  
+      TZ: Australia/Sydney
+
   frontend:
     container_name: frontend
     build: ./frontend
@@ -32,3 +34,5 @@ services:
       - "3000:3000"
     depends_on:
       - backend
+    environment:
+      TZ: Australia/Sydney
