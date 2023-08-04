@@ -1,34 +1,88 @@
 Week 1
 
-Formed group and chose a group name. Started discussing potential topics that the group was interested in using for the assignment. Registered for Jira as scrum master 
-initially but then chose to change scrum masters (made Alan the scrum master). Also discussed which group members had more experience working with backend or frontend. 
+Formed group and chose a group name. Started discussing potential topics that the group 
+was interested in using for the assignment. Registered for Jira as scrum master 
+initially but then chose to change scrum masters (made Alan the scrum master). Also 
+discussed which group members had more experience working with backend or frontend. 
 Asked tutor some questions in relation to the general assignment spec.
 
 Week 2
 
-Agreed with team members to meet 3 times a week to work on the assignment and discuss how things are progressing (including the 2 hour tutorial we meet for on wednesdays). 
-Our group decided to go forward with project 1 (wait management project). I started a google docs for a rough outline of what was required for this project and assigned 
+Agreed with team members to meet 3 times a week to work on the assignment and discuss 
+how things are progressing (including the 2 hour tutorial we meet for on wednesdays). 
+Our group decided to go forward with project 1 (wait management project). I started 
+a google docs for a rough outline of what was required for this project and assigned 
 each team member with a section of criteria to deal with. 
 
-During meeting we came up with our core functionalities and novel functions that we were planning to include in our proposal. I personally dealt with the introduction of 
-our project and was assigned to find out existing wait management systems and their drawbacks. I also proposed the way our main functionality for the wait management staff 
-would function. As a team we came up with user stories for each component of the project separately and aimed to combine several user stories to build a certain functionality.
+During meeting we came up with our core functionalities and novel functions that we 
+were planning to include in our proposal. I personally dealt with the introduction of 
+our project and was assigned to find out existing wait management systems and their 
+drawbacks. I also proposed the way our main functionality for the wait management staff 
+would function. As a team we came up with user stories for each component of the project 
+separately and aimed to combine several user stories to build a certain functionality.
 
 Week 3
 
-Completed my research on existing wait management systems and decided to include NextMe, Yelp Waitlist and WaitlistMe as the three main systems I wanted to discuss in 
-the proposal. Started articulating the starting sections of our proposal where I came up with an introduction of the issues we were targeting and the solution we were proposing. 
+Completed my research on existing wait management systems and decided to include NextMe, 
+Yelp Waitlist and WaitlistMe as the three main systems I wanted to discuss in 
+the proposal. Started articulating the starting sections of our proposal where I came up
+with an introduction of the issues we were targeting and the solution we were proposing. 
+Had a couple of meetings with team before we finalised the proposal and submitted.
 
 Week 4
 
+Worked with Chris and Alan to learn some basics of React Js and frontend setups required 
+for our project. Had a meeting to discuss how to assign each member with objectives to 
+accomplish. I was assigned to develop the basics of the login page with Chris. Also worked 
+on the staff login page which was later merged with the generic login page to improve code 
+quality. End of week had another meeting to discuss how project demo should be conducted
+and agreed on Alan taking the lead to present. 
+
 Week 5
+
+Worked with chris to complete the staff login page and ensure that it is designed in a
+similar way as register. Learnt how to setup mySQL so I could start testing
+the staff login page. Made appropriate changes to the UI of the login page to match the 
+other pages of our website using the same scheme. Team met at tutorial for first demonstration
+with Alan lead. Tutor advised us to ensure our user stories are worded properly so that 
+it does not appear confusing to markers. After the demonstration we stayed in the tut
+to discuss the retrospective and deisgn appropriate strategies to improve our 
+teamwork going forward. 
 
 Week 6
 
+Used live share extension to work on frontend UI scheme. Implemented modern design by 
+getting assistance and guidance from Chris. Changed files to match colour scheme set to
+be consistent throughout frontend. Encountered some issues with updating mySQL but 
+resolved after talking with team members. Went through code written for current sprint and
+adjusting UI accordingly.
+
 Week 7
+
+Added carousel to landing page of website. This would be used to display our customer reviews
+as more and more customers were to use our site and leave reviews. Also added more emphasis on
+the main buttons on the page for easier viewing for users. Added images for each individual
+menu item and ensured these were able to be viewed by guests and logged in customers.
 
 Week 8
 
+Prepared for second demonstration by going over website UI with Chris and making changes 
+as necessary to make the website look more modern. Changes to UI for the dashboards of
+kitchen staff and wait staff were made. Fixed filter button colour schema to match rest of
+website.
+
 Week 9
 
+Early start on the final project report. Drafted the introduction, overview and core
+functionalities of our website. Added descriptions of the front-end and back-end architecture
+used within our wait management system. Communicated with Chris on more potential changes to
+UI to improve customer retention for the website. 
+
 Week 10
+
+Final touches being added to the codebase. Ensuring all colour schema was matching to make
+the website ready for final submission. Fixed reseravtion dashboard to include a bookingID
+when customers submit their reservation forms. Made sure that these can be seen on waiter
+pages as well. Finalised the final project report and added appropriate references for
+wait management systems we researched. Added to overview and introduction to better explain
+the main issues we were targeting to solve with our project.
