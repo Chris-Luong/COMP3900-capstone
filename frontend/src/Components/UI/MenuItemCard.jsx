@@ -12,27 +12,32 @@ import { useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 
+// MenuItemCard component to display a menu item card with a modal for adding to cart
 const MenuItemCard = ({
-  itemId,
-  name,
+  itemId, 
+  name, 
   description,
   price,
   thumbnail,
   onUpdateOrderItems,
 }) => {
+
   const [showModal, setShowModal] = useState(false);
+
+  
   const [quantity, setQuantity] = useState(1);
 
-  // opens and closes
   const toggleModal = () => {
     setShowModal(!showModal);
   };
 
+  // Function to handle adding the item to the cart
   function handleAddToCart(event, index) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const note = data.get("note");
 
+    // Create the new order item
     const newOrder = {
       itemId: itemId,
       name: name,
@@ -42,7 +47,7 @@ const MenuItemCard = ({
       thumbnail: thumbnail,
     };
 
-    // Add item to end of order items.
+    // Function to update the order items
     const updatedOrderItems = (orderItems) => {
       return [...orderItems, newOrder];
     };
@@ -50,16 +55,19 @@ const MenuItemCard = ({
     toggleModal();
   }
 
+  // Function to handle incrementing the quantity
   const handleIncrementQuantity = () => {
     setQuantity((prevQuantity) => prevQuantity + 1);
   };
 
+  // Function to handle decrementing the quantity
   const handleDecrementQuantity = () => {
     setQuantity((prevQuantity) => Math.max(prevQuantity - 1, 1));
   };
 
   return (
     <div>
+      {/* Menu item card */}
       <Grid item onClick={toggleModal}>
         <Card
           variant="outlined"
@@ -89,6 +97,7 @@ const MenuItemCard = ({
         </Card>
       </Grid>
 
+      {/* Add to cart modal */}
       <Modal
         open={showModal}
         onClose={toggleModal}
@@ -121,6 +130,7 @@ const MenuItemCard = ({
             Price: ${price}
           </Typography>
 
+          {/* Quantity selection */}
           <Typography
             variant="body1"
             component="div"
@@ -138,6 +148,7 @@ const MenuItemCard = ({
             </Button>
           </Typography>
 
+          {/* Notes for chef */}
           <TextField
             margin="normal"
             fullWidth
@@ -148,6 +159,7 @@ const MenuItemCard = ({
             id="note"
           />
 
+          {/* Add to cart button */}
           <Button
             label="AddItem"
             type="submit"
@@ -157,6 +169,8 @@ const MenuItemCard = ({
           >
             Add to Cart
           </Button>
+
+          {/* Close modal button */}
           <Grid container justifyContent="flex-end">
             <Button onClick={toggleModal} color="secondary">
               Close
