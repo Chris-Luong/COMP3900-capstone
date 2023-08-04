@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
+// Style for the modal content
 const style = {
   position: "absolute",
   top: "50%",
@@ -27,38 +28,44 @@ const style = {
   borderRadius: "15px",
 };
 
+// Style for radio buttons
 const radioStyle = {
   display: "grid",
   gridTemplateColumns: "repeat(3, 1fr)",
 };
 
+// FilterModal component that displays the filter form
 const FilterModal = ({
-  showFilter,
+  showFilter, 
   toggleFilter,
-  searchString,
+  searchString, 
   setSearchString,
   categories,
   selectedCategory,
   setSelectedCategory,
-  price,
-  setPrice,
-  sortByValues,
-  sort,
-  handleSortChange,
-  clearFilters,
-  onSubmit,
+  price, 
+  setPrice, 
+  sortByValues, 
+  sort, 
+  handleSortChange, 
+  clearFilters, 
+  onSubmit, 
 }) => {
+  // Handle price slider value change
   const handlePriceChange = (e, newPrice) => {
     setPrice(newPrice);
   };
 
+  // Handle category radio button value change
   const handleCategoryRadioChange = (e) => {
     setSelectedCategory(e.target.value);
   };
 
   return (
     <Modal open={showFilter}>
+      {/* Card containing the modal content */}
       <Card sx={style}>
+        {/* Modal title and close button */}
         <DialogTitle sx={{ px: "24px" }}>
           <Typography variant="h4">Filters</Typography>
           <IconButton
@@ -73,8 +80,10 @@ const FilterModal = ({
             <CloseIcon />
           </IconButton>
         </DialogTitle>
-        {/* Filter inputs here */}
+
+        {/* Modal content area */}
         <DialogContent dividers>
+          {/* Search input */}
           <FormGroup sx={{ paddingBottom: "20px" }}>
             <TextField
               size="small"
@@ -83,6 +92,8 @@ const FilterModal = ({
               onChange={(e) => setSearchString(e.target.value)}
             />
           </FormGroup>
+
+          {/* Category radio buttons */}
           <Typography variant="h6">Category</Typography>
           <RadioGroup
             sx={radioStyle}
@@ -104,6 +115,8 @@ const FilterModal = ({
               />
             ))}
           </RadioGroup>
+
+          {/* Price slider */}
           <Typography variant="h6">Price</Typography>
           <Slider
             color="secondary"
@@ -111,6 +124,8 @@ const FilterModal = ({
             onChange={handlePriceChange}
             valueLabelDisplay="auto"
           />
+
+          {/* Sort dropdown */}
           <Typography variant="h6">Sort</Typography>
           <TextField select fullWidth value={sort} onChange={handleSortChange}>
             {Object.keys(sortByValues).map((id) => (
@@ -120,7 +135,10 @@ const FilterModal = ({
             ))}
           </TextField>
         </DialogContent>
+
+        {/* Modal actions */}
         <DialogActions sx={{ padding: "10px" }}>
+          {/* Filter button */}
           <Button
             variant="contained"
             sx={{ backgroundColor: "green" }}
@@ -128,6 +146,8 @@ const FilterModal = ({
           >
             Filter
           </Button>
+
+          {/* Clear button */}
           <Button
             variant="contained"
             sx={{ backgroundColor: "grey" }}
