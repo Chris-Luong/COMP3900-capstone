@@ -14,17 +14,19 @@ import {
 import { Formik } from "formik";
 import { checkboxStyle, editMenuItemSchema } from "../Helper";
 
+// ManageItemModal component that displays a modal for managing item details
 const ManageItemModal = ({
   inputChanged,
   showModal,
   handleSubmit,
   handleClear,
-  setItemValues,
-  itemValues,
-  categories,
+  setItemValues, 
+  itemValues, 
+  categories, 
 }) => {
   return (
     <Modal open={showModal}>
+      {/* Modal content */}
       <Box
         sx={{
           position: "absolute",
@@ -59,6 +61,7 @@ const ManageItemModal = ({
           }) => (
             <form onSubmit={handleSubmit} noValidate>
               <Stack spacing={3} direction="column" width="100%">
+                {/* Change image button */}
                 <Button variant="contained" component="label">
                   Change Image
                   <input
@@ -75,16 +78,20 @@ const ManageItemModal = ({
                     hidden
                   />
                 </Button>
+                {/* Success message when thumbnail is uploaded */}
                 {touched.thumbnail && !errors.thumbnail ? (
                   <Typography variant="caption" sx={{ color: "green" }}>
                     Uploaded!
                   </Typography>
                 ) : null}
+                {/* Error message for thumbnail */}
                 {touched.thumbnail && errors.thumbnail ? (
                   <Typography variant="caption" sx={{ color: "red" }}>
                     {errors.thumbnail}
                   </Typography>
                 ) : null}
+
+                {/* Input field for item name */}
                 <TextField
                   label="Name"
                   name="name"
@@ -99,6 +106,8 @@ const ManageItemModal = ({
                   error={touched.name && errors.name}
                   helperText={touched.name && errors.name}
                 />
+
+                {/* Input field for item description */}
                 <TextField
                   label="Description"
                   name="description"
@@ -115,6 +124,8 @@ const ManageItemModal = ({
                   fullWidth
                   multiline
                 />
+
+                {/* Input field for item ingredients */}
                 <TextField
                   label="Ingredients"
                   name="ingredients"
@@ -131,6 +142,8 @@ const ManageItemModal = ({
                   fullWidth
                   multiline
                 />
+
+                {/* Checkbox group for selecting item categories */}
                 <FormControl
                   required
                   error={touched.categories && errors.categories}
@@ -159,10 +172,13 @@ const ManageItemModal = ({
                       />
                     ))}
                   </FormGroup>
+                  {/* Error message for categories */}
                   {errors.categories && (
                     <FormHelperText>{errors.categories}</FormHelperText>
                   )}
                 </FormControl>
+
+                {/* Input field for item price */}
                 <TextField
                   label="Price $"
                   name="price"
@@ -175,11 +191,14 @@ const ManageItemModal = ({
                   helperText={touched.price && errors.price}
                 />
               </Stack>
+              {/* Submit button */}
               {inputChanged && (
                 <Button color="success" onClick={handleSubmit}>
                   Submit
                 </Button>
               )}
+
+              {/* Close button */}
               <Button color="error" onClick={handleClear}>
                 Close
               </Button>
