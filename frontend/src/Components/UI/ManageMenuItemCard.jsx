@@ -13,22 +13,29 @@ import {
 import { editItem, fileToDataUrl } from "../Helper";
 import ManageItemModal from "../UI/ManageItemModal";
 
+// ManageMenuItemCard component to display and manage a menu item card
 const ManageMenuItemCard = ({
-  id,
-  name,
-  description,
-  ingredients,
-  price,
+  id, 
+  name, 
+  description, 
+  ingredients, 
+  price, 
   thumbnail,
-  categories,
-  handleItemDelete,
+  categories, 
+  handleItemDelete, 
   triggerRerender,
-  setTriggerRerender,
+  setTriggerRerender, 
 }) => {
+
   const [showModal, setShowModal] = useState(false);
+
   const [hasItemValuesChanged, setHasItemValuesChanged] = useState(false);
+
   const [checkedCategories, setCheckedCategories] = useState([]);
+
   const [loading, setLoading] = useState(false);
+
+  // Default item values to initialize the form
   const defaultItemValues = {
     name: name,
     description: description,
@@ -37,19 +44,23 @@ const ManageMenuItemCard = ({
     price: price,
     thumbnail: thumbnail,
   };
+
   const [itemValues, setItemValues] = useState(defaultItemValues);
+
   const defaultItemValuesRef = useRef(defaultItemValues);
 
   const toggleModal = () => {
     setShowModal(!showModal);
   };
 
+  // Function to handle form submission
   const handleSubmit = async (values) => {
     try {
       const thumbnail =
         itemValues.thumbnail === defaultItemValues.thumbnail
           ? defaultItemValues.thumbnail
           : await fileToDataUrl(itemValues.thumbnail);
+
       let message = await editItem(
         id,
         itemValues.name,
@@ -59,6 +70,7 @@ const ManageMenuItemCard = ({
         itemValues.price,
         thumbnail
       );
+
       alert(message);
       setTriggerRerender(!triggerRerender);
       toggleModal();
@@ -68,6 +80,7 @@ const ManageMenuItemCard = ({
     }
   };
 
+  // Function to clear form values and close the modal
   const handleClear = () => {
     toggleModal();
     setItemValues({
@@ -80,6 +93,7 @@ const ManageMenuItemCard = ({
     });
   };
 
+  // Fetch and set category names from the item ID on mount and when the ID changes
   useEffect(() => {
     setLoading(true);
     const getCategoryNames = async () => {
@@ -96,6 +110,7 @@ const ManageMenuItemCard = ({
     getCategoryNames();
   }, [id, setItemValues]);
 
+  // Check if any item values have changed and update the state accordingly
   useEffect(() => {
     const inputsChanged = Object.keys(itemValues).some(
       (key) => itemValues[key] !== defaultItemValuesRef.current[key]
@@ -105,9 +120,12 @@ const ManageMenuItemCard = ({
 
   return (
     <>
+      {/* Show loading spinner while loading */}
       {loading && <CircularProgress />}
+
       {!loading && (
         <>
+          {/* Item card */}
           <Grid item xs={12} sm={4} md={3}>
             <Card
               variant="outlined"
@@ -133,13 +151,18 @@ const ManageMenuItemCard = ({
               />
               <CardContent>
                 <Typography>${price}</Typography>
+                {/* Button to open the edit modal */}
                 <Button onClick={toggleModal}>Edit</Button>
+
+                {/* Button to delete the item */}
                 <Button onClick={() => handleItemDelete(id)} color="error">
                   Delete
                 </Button>
               </CardContent>
             </Card>
           </Grid>
+
+          {/* Edit item modal */}
           <ManageItemModal
             inputChanged={hasItemValuesChanged}
             showModal={showModal}

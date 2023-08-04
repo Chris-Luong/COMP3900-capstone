@@ -103,7 +103,7 @@ const ReservationDashboard = (props) => {
                 Table: {booking.tableId}
               </Typography>
               <Typography variant="body2" color="textSecondary" gutterBottom>
-                Booking: {booking.bookingId}
+                Booking: {booking.bookId}
               </Typography>
               <Typography variant="body2" color="textSecondary" gutterBottom>
                 Party Size: {booking.guests}
