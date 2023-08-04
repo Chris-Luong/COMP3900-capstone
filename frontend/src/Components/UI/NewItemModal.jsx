@@ -14,8 +14,10 @@ import {
 import { createMenuItemSchema, checkboxStyle } from "../Helper";
 import { Formik } from "formik";
 
+// NewItemModal component to display a modal for creating a new menu item
 const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
   return (
+    // Modal to display the form for creating a new menu item
     <Modal open={showModal}>
       <Box
         sx={{
@@ -50,7 +52,9 @@ const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
             setFieldValue,
           }) => (
             <form onSubmit={handleSubmit} noValidate>
+              {/* Form fields for creating a new menu item */}
               <Stack spacing={3} direction="column" width="100%">
+                {/* Upload image button */}
                 <Button variant="contained" component="label">
                   Upload Image
                   <input
@@ -73,6 +77,8 @@ const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
                     {errors.thumbnail}
                   </Typography>
                 ) : null}
+
+                {/* Name input field */}
                 <TextField
                   label="Name"
                   name="name"
@@ -82,6 +88,8 @@ const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
                   helperText={touched.name && errors.name}
                   required
                 />
+
+                {/* Description input field */}
                 <TextField
                   label="Description"
                   name="description"
@@ -93,6 +101,8 @@ const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
                   fullWidth
                   multiline
                 />
+
+                {/* Ingredients input field */}
                 <TextField
                   label="Ingredients"
                   name="ingredients"
@@ -104,6 +114,8 @@ const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
                   fullWidth
                   multiline
                 />
+
+                {/* Categories checkboxes */}
                 <FormControl
                   required
                   error={touched.categories && errors.categories}
@@ -130,6 +142,8 @@ const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
                     <FormHelperText>{errors.categories}</FormHelperText>
                   )}
                 </FormControl>
+
+                {/* Price input field */}
                 <TextField
                   label="Price $"
                   name="price"
@@ -140,6 +154,8 @@ const NewItemModal = ({ showModal, toggleModal, categories, handleSubmit }) => {
                   required
                 />
               </Stack>
+
+              {/* Submit and Close buttons */}
               <Button color="success" onClick={handleSubmit}>
                 Submit
               </Button>
