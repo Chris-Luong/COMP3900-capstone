@@ -1,5 +1,9 @@
-import { useEffect, useState } from "react";
+import * as React from "react";
+import { getBookings, updateBooking } from "../Helper";
+import { useState, useEffect } from "react";
+
 import {
+  Button,
   Card,
   CardContent,
   CardHeader,
@@ -9,7 +13,6 @@ import {
   Typography,
 } from "@mui/material";
 import dayjs from "dayjs";
-import { getBookings, updateBooking } from "../Helper";
 
 const CURRENT_DAY = dayjs().format("YYYY-MM-DD");
 
@@ -20,16 +23,13 @@ const ReservationDashboard = (props) => {
   const [bookings, setBookings] = useState([]);
   const [triggerRerender, setTriggerRerender] = useState(false);
 
-  // Fetch reservations from the server
   useEffect(() => {
     const retrieveReservations = async () => {
       let bookingData = null;
       try {
-        // If accountId and date are not provided, fetch today's reservations
         if (!accountId && !date) {
           bookingData = await getBookings("", CURRENT_DAY);
         } else {
-          // Fetch reservations based on accountId or date
           bookingData = accountId
             ? await getBookings(accountId, "")
             : await getBookings("", date);
@@ -43,22 +43,20 @@ const ReservationDashboard = (props) => {
     retrieveReservations();
   }, [triggerRerender, accountId, date]);
 
-  // Display the appropriate heading based on waitstaff/customer view
   const dashboardHeading = () => {
     return accountId ? "Your Reservations" : "Today's Reservations";
   };
 
-  // Display the title of the booking based on waitstaff/customer view
+  // Changing the displayed title depending on waitstaff/customer view
   const title = (booking) => {
     if (accountId) {
-      const formattedStart = dayjs(booking.date).format("dddd, MMMM D, YYYY");
-      return formattedStart;
+      const date = dayjs(booking.date).format("dddd, MMMM D, YYYY");
+      return date;
     } else {
       return `Booking ${booking.bookId}: ${booking.email}`;
     }
   };
 
-  // Function to handle confirming customer arrival
   const handleStatusUpdate = async (bookId) => {
     const body = { bookingId: bookId };
     const res = await updateBooking(body);
@@ -66,7 +64,6 @@ const ReservationDashboard = (props) => {
     setTriggerRerender(!triggerRerender);
   };
 
-  // Function to render the reservation cards
   const bookingCards = () => {
     const dates = bookings.map((booking) => {
       const formattedStart = dayjs(booking.bookingStart, "HH:mm:ss").format(
