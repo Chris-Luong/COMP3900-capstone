@@ -25,18 +25,15 @@ import {
 import toast, { Toaster } from "react-hot-toast";
 
 const OrderDashboard = (props) => {
-  // Destructuring props and determining the new status based on the current status
   const status = props.status;
   const newStatus = status === PREPARING_STATUS ? READY_STATUS : SERVED_STATUS;
   const dashboardHeading =
     status === PREPARING_STATUS ? "Orders To Prepare" : "Orders Ready To Serve";
 
-  // State variables to manage loading, orders data, and trigger rerender
   const [loading, setLoading] = useState(false);
   const [orders, setOrders] = useState({});
   const [triggerRerender, setTriggerRerender] = useState(false);
 
-  // Function to handle updating the status of an order item
   const handleStatusUpdate = async (orderItemId) => {
     setLoading(true);
     console.log(orderItemId);
@@ -55,7 +52,6 @@ const OrderDashboard = (props) => {
     setLoading(false);
   };
 
-  // Fetch orders data based on the current status
   useEffect(() => {
     setLoading(true);
     const retrieveOrders = async () => {
@@ -74,7 +70,6 @@ const OrderDashboard = (props) => {
   }, [status, triggerRerender]);
 
   return (
-    // Paper component representing the order dashboard
     <Paper
       elevation={6}
       sx={{
@@ -85,7 +80,6 @@ const OrderDashboard = (props) => {
         margin: 5,
       }}
     >
-      {/* Heading for the dashboard */}
       <Typography
         component="h2"
         variant="h5"
@@ -95,18 +89,14 @@ const OrderDashboard = (props) => {
       >
         {dashboardHeading}
       </Typography>
-
-      {/* Conditional rendering based on orders data */}
       {Object.keys(orders).length === 0 ? (
         <Typography sx={{ mt: "35px" }}>No orders 🥳</Typography>
       ) : (
-        // Grid to display the list of orders
         <Grid container spacing={2}>
           {loading ? (
             <CircularProgress />
           ) : (
             <>
-              {/* Looping through the orders and rendering each one as a Card */}
               {Object.keys(orders).map((orderId) => (
                 <Grid item xs={12} sm={4} md={3} key={orderId}>
                   <Card
@@ -126,7 +116,6 @@ const OrderDashboard = (props) => {
                       },
                     }}
                   >
-                    {/* CardHeader with order details */}
                     <CardHeader
                       title={`Order ${orders[orderId].orderNumber} Table ${orders[orderId].tableId}`}
                       subheader={`${orders[orderId].orderTime}${
@@ -135,7 +124,6 @@ const OrderDashboard = (props) => {
                     />
                     <Divider />
                     <CardContent>
-                      {/* List of order items */}
                       <List>
                         {orders[orderId].items.map((item, index) => (
                           <ListItem
@@ -150,7 +138,6 @@ const OrderDashboard = (props) => {
                               borderRadius: "5px",
                             }}
                           >
-                            {/* Order item details */}
                             <ListItemText
                               disableTypography
                               primary={

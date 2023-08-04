@@ -20,7 +20,6 @@ import {
   updateOrderPayStatus,
 } from "../Helper";
 
-// This component represents an individual request card.
 const RequestCard = ({ request, onCompleted }) => {
   const { id, tableId, timestamp, status, type } = request;
   const [completed, setCompleted] = useState(status === "Completed");
@@ -67,13 +66,11 @@ const RequestCard = ({ request, onCompleted }) => {
 };
 
 const RequestDashboard = () => {
-  // State variables for requests and loading status
   const [requests, setRequests] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Function to handle completing a request
   const completeRequestHandler = async (requestId, tableId, type) => {
-    // If request is for a bill, update the paid status of all its orders
+    // if request is for a bill, update the paid status of all its orders
     if (type === Request.Type.Bill) {
       try {
         const orders = await retrieveOrdersWithTableId(tableId);
@@ -98,7 +95,6 @@ const RequestDashboard = () => {
     }
   };
 
-  // Fetch requests from the server
   useEffect(() => {
     setIsLoading(true);
     const getRequests = async () => {
